@@ -1,0 +1,6 @@
+*
+!.npmrc
+!lib/*
+!lib/*/**
+!README.md
+!LICENSE
