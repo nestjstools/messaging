@@ -5,6 +5,12 @@
   "author": "Sebastian Iwanczyszyn",
   "license": "MIT",
   "main": "main.js",
+  "files": [
+    "dist",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
   "scripts": {
     "build": "node_modules/.bin/nest build",
     "format": "node_modules/.bin/prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
