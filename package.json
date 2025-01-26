@@ -1,12 +1,12 @@
 {
   "name": "@nestjstools/messaging",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "Simplifies asynchronous and synchronous message handling with support for buses, handlers, channels, and consumers. Build scalable, decoupled applications with ease and reliability.",
   "author": "Sebastian Iwanczyszyn",
   "license": "MIT",
-  "main": "main.js",
+  "main": "lib/index.js",
   "files": [
-    "dist",
+    "lib",
     "LICENSE",
     "package.json",
     "README.md"
