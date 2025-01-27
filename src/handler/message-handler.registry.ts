@@ -5,9 +5,7 @@ import { HandlerForMessageNotFoundException } from '../exception/handler-for-mes
 export class MessageHandlerRegistry {
   private registry: Map<string, IMessageHandler<any>[]> = new Map();
 
-  register(handler: IMessageHandler<any>): void {
-    const name = DecoratorExtractor.extractMessageHandler(handler);
-
+  register(name: string, handler: IMessageHandler<any>): void {
     if (this.registry.has(name)) {
       const bucket = this.registry.get(name) as Array<IMessageHandler<any>>;
 

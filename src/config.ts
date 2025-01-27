@@ -1,7 +1,7 @@
 type DefineChannels = AmqpChannelConfig[] | InMemoryChannelConfig[];
 
 export interface MessagingModuleOptions {
-  messageHandlers: object[];
+  messageHandlers?: object[]; //TODO Temporary unsupported
   buses?: DefineBusOption[];
   channels?: DefineChannels;
   debug?: boolean;

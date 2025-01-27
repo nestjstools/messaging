@@ -13,7 +13,7 @@ import { MessagingLogger } from './logger/messaging-logger';
 import { IMessageBus } from './bus/i-message-bus';
 import { DistributedMessageBus } from './bus/distributed-message.bus';
 import { ClassNameProvider } from './shared/class-name.provider';
-import { DiscoveryModule, ModuleRef } from '@nestjs/core';
+import {DiscoveryModule, DiscoveryService, ModuleRef} from '@nestjs/core';
 import { InMemoryMessageBus } from './bus/in-memory-message.bus';
 import { MessageHandlerRegistry } from './handler/message-handler.registry';
 import { Channel } from './channel/channel';
@@ -25,13 +25,6 @@ import { registerHandlers } from './dependency-injection/register';
 @Module({})
 export class MessagingModule implements OnModuleInit {
   static forRoot(options: MessagingModuleOptions): DynamicModule {
-    const defineHandlers = (): any[] => {
-      return options.messageHandlers.map((handler) => ({
-        provide: handler,
-        useClass: handler,
-      }));
-    };
-
     const registerChannels = (): any => {
       return {
         provide: Service.CHANNELS,
@@ -87,7 +80,6 @@ export class MessagingModule implements OnModuleInit {
       imports: [DiscoveryModule],
       providers: [
         ...defineMiddlewares(),
-        ...defineHandlers(),
         ...defineBuses(),
         registerChannels(),
         {
@@ -126,10 +118,11 @@ export class MessagingModule implements OnModuleInit {
     };
   }
 
-  constructor(private readonly moduleRef: ModuleRef) {}
+  constructor(private readonly moduleRef: ModuleRef, private readonly discoveryService: DiscoveryService) {
+  }
 
   onModuleInit(): any {
-    registerHandlers(this.moduleRef);
+    registerHandlers(this.moduleRef, this.discoveryService);
 
     const consumer = this.moduleRef.get(DistributedConsumer);
     consumer.run();

@@ -9,8 +9,8 @@ import {ClassNameProvider} from "../shared/class-name.provider";
 @Injectable()
 export class InMemoryMessageBus implements IMessageBus {
   constructor(
-    @Inject(Service.MESSAGE_HANDLERS_REGISTRY) private registry: MessageHandlerRegistry,
-    private readonly moduleRef: ModuleRef,
+      @Inject(Service.MESSAGE_HANDLERS_REGISTRY) private registry: MessageHandlerRegistry,
+      private readonly moduleRef: ModuleRef,
   ) {
   }
 
@@ -18,9 +18,7 @@ export class InMemoryMessageBus implements IMessageBus {
     const handlers = this.registry.getByRoutingKey(message.messageRoutingKey);
     let response = null;
 
-    for (const handlerClass of handlers) {
-      //@ts-ignore
-      const handler = this.moduleRef.get(handlerClass as string);
+    for (const handler of handlers) {
 
       let messageReference = message;
 
