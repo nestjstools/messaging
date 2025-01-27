@@ -122,7 +122,7 @@ export class MessagingModule implements OnModuleInit {
         InMemoryChannelFactory,
         DistributedConsumer,
       ],
-      exports: [Service.DEFAULT_MESSAGE_BUS, ...defineBuses()],
+      exports: [Service.DEFAULT_MESSAGE_BUS, ...defineBuses(), DistributedConsumer],
     };
   }
 

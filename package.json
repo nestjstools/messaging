@@ -1,10 +1,39 @@
 {
   "name": "@nestjstools/messaging",
-  "version": "1.0.16",
+  "version": "1.1.0",
   "description": "Simplifies asynchronous and synchronous message handling with support for buses, handlers, channels, and consumers. Build scalable, decoupled applications with ease and reliability.",
   "author": "Sebastian Iwanczyszyn",
   "license": "MIT",
   "main": "lib/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/nestjstools/messaging/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nestjstools/messaging"
+  },
+  "keywords": [
+    "nestjs",
+    "distributed",
+    "messaging",
+    "nestjs-messaging",
+    "message-handling",
+    "message-bus",
+    "message-consumers",
+    "event-driven",
+    "asynchronous-messaging",
+    "event-bus",
+    "distributed-systems",
+    "microservices",
+    "message-channels",
+    "event-handlers",
+    "nestjs-tools",
+    "scalable-applications",
+    "synchronous-messaging"
+  ],
   "scripts": {
     "build": "node_modules/.bin/nest build",
     "format": "node_modules/.bin/prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
