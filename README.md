@@ -39,10 +39,9 @@ import { SendMessageHandler } from './handlers/send-message.handler';
 @Module({
   imports: [
     MessagingModule.forRoot({
-      messageHandlers: [SendMessageHandler],
       buses: [
         {
-          name: 'command.bus',
+          name: 'message.bus',
           channels: ['my-channel'],
         },
       ],
@@ -167,7 +166,6 @@ import { SendMessageHandler } from './handlers/send-message.handler';
 @Module({
   imports: [
     MessagingModule.forRoot({
-      messageHandlers: [SendMessageHandler],
       buses: [
         {
           name: 'message.bus',
@@ -311,7 +309,6 @@ import { SendMessageHandler } from './handlers/send-message.handler';
 @Module({
   imports: [
     MessagingModule.forRoot({
-      messageHandlers: [SendMessageHandler],  // Register message handlers
       buses: [
         {
           name: 'message.bus',
@@ -368,13 +365,12 @@ Here’s a table with the documentation for the `MessagingModule.forRoot` config
 ### `MessagingModule.forRoot` Configuration
 <br>
 
-| **Property**                       | **Description**                                                      | **Default Value**             |
-|------------------------------------|----------------------------------------------------------------------|-------------------------------|
-| **`messageHandlers`**              | List of message handler classes that process messages.               | `[]` (empty array by default) |
-| **`buses`**                        | Array of message buses that define routing and processing of messages. | `[]` (empty array by default) |
-| **`channels`**                     | Array of channel configurations used by the message buses.           | `[]` (empty array by default) |
-| **`debug`**                        | Enables or disables debug mode for logging additional messages.       | `false`                       |
-| **`logging`**                      | Enables or disables logging for bus activity (e.g., message dispatch). | `false`                       |
+| **Property**   | **Description**                                                        | **Default Value**             |
+|----------------|------------------------------------------------------------------------|-------------------------------|
+| **`buses`**    | Array of message buses that define routing and processing of messages. | `[]` (empty array by default) |
+| **`channels`** | Array of channel configurations used by the message buses.             | `[]` (empty array by default) |
+| **`debug`**    | Enables or disables debug mode for logging additional messages.        | `false`                       |
+| **`logging`**  | Enables or disables logging for bus activity (e.g., message dispatch). | `false`                       |
 
 ---
 
