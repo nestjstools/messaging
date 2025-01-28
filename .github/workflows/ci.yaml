@@ -22,6 +22,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Run Tests
+        env:
+          NODE_ENV: test
+        run: npm run test
+
       - name: Build the package
         env:
           NODE_ENV: production

@@ -1,10 +1,10 @@
 import {
   DynamicModule,
   Logger as NestCommonLogger,
-  Module,
+  Module, OnApplicationBootstrap,
   OnModuleInit,
 } from '@nestjs/common';
-import { ChannelConfig, MessagingModuleOptions } from './config';
+import { ChannelConfig, InMemoryChannelConfig, MessagingModuleOptions } from './config';
 import { Service } from './dependency-injection/service';
 import { CompositeChannelFactory } from './channel/factory/composite-channel.factory';
 import { ChannelRegistry } from './channel/channel.registry';
@@ -20,10 +20,13 @@ import { Channel } from './channel/channel';
 import { NestLogger } from './logger/nest-logger';
 import { InMemoryChannelFactory } from './channel/factory/in-memory-channel.factory';
 import { DistributedConsumer } from './consumer/distributed.consumer';
-import { registerHandlers } from './dependency-injection/register';
+import { registerHandlers, registerMiddlewares } from './dependency-injection/register';
+import { MiddlewareRegistry } from './middleware/middleware.registry';
+import { InMemoryMessageBusFactory } from './bus/in-memory-message-bus.factory';
+import { InMemoryChannel } from './channel/in-memory.channel';
 
 @Module({})
-export class MessagingModule implements OnModuleInit {
+export class MessagingModule implements OnApplicationBootstrap {
   static forRoot(options: MessagingModuleOptions): DynamicModule {
     const registerChannels = (): any => {
       return {
@@ -79,7 +82,7 @@ export class MessagingModule implements OnModuleInit {
       module: MessagingModule,
       imports: [DiscoveryModule],
       providers: [
-        ...defineMiddlewares(),
+        // ...defineMiddlewares(),
         ...defineBuses(),
         registerChannels(),
         {
@@ -88,11 +91,18 @@ export class MessagingModule implements OnModuleInit {
         },
         {
           provide: Service.DEFAULT_MESSAGE_BUS,
-          useClass: InMemoryMessageBus,
+          useFactory: (messageHandlerRegistry: MessageHandlerRegistry, middlewareRegistry: MiddlewareRegistry) => {
+            return new InMemoryMessageBus(messageHandlerRegistry, middlewareRegistry, new InMemoryChannel(new InMemoryChannelConfig({name: 'default.bus', middlewares: [], avoidErrorsForNotExistedHandlers: true})));
+          },
+          inject: [Service.MESSAGE_HANDLERS_REGISTRY, Service.MIDDLEWARE_REGISTRY],
         },
         {
           provide: Service.MESSAGE_HANDLERS_REGISTRY,
           useClass: MessageHandlerRegistry,
+        },
+        {
+          provide: Service.MIDDLEWARE_REGISTRY,
+          useClass: MiddlewareRegistry,
         },
         {
           provide: Service.CHANNEL_REGISTRY,
@@ -111,6 +121,7 @@ export class MessagingModule implements OnModuleInit {
         },
         CompositeChannelFactory,
         CompositeMessageBusFactory,
+        InMemoryMessageBusFactory,
         InMemoryChannelFactory,
         DistributedConsumer,
       ],
@@ -121,8 +132,9 @@ export class MessagingModule implements OnModuleInit {
   constructor(private readonly moduleRef: ModuleRef, private readonly discoveryService: DiscoveryService) {
   }
 
-  onModuleInit(): any {
+  onApplicationBootstrap(): any {
     registerHandlers(this.moduleRef, this.discoveryService);
+    registerMiddlewares(this.moduleRef, this.discoveryService);
 
     const consumer = this.moduleRef.get(DistributedConsumer);
     consumer.run();

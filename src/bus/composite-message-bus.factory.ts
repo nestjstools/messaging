@@ -14,7 +14,7 @@ export class CompositeMessageBusFactory {
   ) {}
 
   create(channel: Channel): IMessageBus {
-    if (channel instanceof InMemoryChannel) {
+    if (channel instanceof InMemoryChannel && 'default.bus' === channel.config.name) {
       return this.defaultMessageBus;
     }
 
