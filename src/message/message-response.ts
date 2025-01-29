@@ -1,8 +1,7 @@
 export class MessageResponse {
-  constructor(public responses: object[] = []) {
-  }
+  constructor(public responses: object[] = []) {}
 
-  getFirst(): object|null {
+  getFirst(): object | null {
     if (this.responses.length === 0) {
       return null;
     }

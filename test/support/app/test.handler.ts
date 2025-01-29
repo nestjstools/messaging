@@ -6,9 +6,7 @@ import { TestService } from './test.service';
 @Injectable()
 @MessageHandler('message.void')
 export class VoidHandler implements IMessageHandler<TestMessage> {
-
-  constructor(private readonly testService: TestService) {
-  }
+  constructor(private readonly testService: TestService) {}
 
   handle(message: TestMessage): Promise<object | void> {
     this.testService.markAsDone(message.name);
@@ -26,6 +24,8 @@ export class ReturnedHandler implements IMessageHandler<TestMessage> {
 }
 
 class ReturnedHandlerResponse {
-  constructor(public readonly id: string, public readonly response: string) {
-  }
+  constructor(
+    public readonly id: string,
+    public readonly response: string,
+  ) {}
 }

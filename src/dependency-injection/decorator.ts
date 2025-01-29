@@ -21,12 +21,16 @@ export const ChannelFactory = (
 };
 
 export const MessageBusFactory = (channel: any): ClassDecorator => {
+  classValidator(channel, 'Channel');
+
   return (target: Function) => {
     Reflect.defineMetadata(MESSAGE_BUS_FACTORY_METADATA, channel, target);
   };
 };
 
 export const MessageConsumer = (channel: any): ClassDecorator => {
+  classValidator(channel, 'Channel');
+
   return (target: Function) => {
     Reflect.defineMetadata(MESSAGE_CONSUMER_METADATA, channel, target);
   };
@@ -37,3 +41,9 @@ export const MessagingMiddleware = (name: string): ClassDecorator => {
     Reflect.defineMetadata(MESSAGING_MIDDLEWARE_METADATA, name, target);
   };
 };
+
+const classValidator = (value: object, type: string): void => {
+  if (Object.getPrototypeOf(value).name !== type) {
+    throw new Error(`Given value must be instance of [${type}]`);
+  }
+}

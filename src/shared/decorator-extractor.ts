@@ -1,5 +1,8 @@
 import { IMessageHandler } from '../handler/i-message.handler';
-import { MESSAGE_HANDLER_METADATA, MESSAGING_MIDDLEWARE_METADATA } from '../dependency-injection/decorator';
+import {
+  MESSAGE_HANDLER_METADATA,
+  MESSAGING_MIDDLEWARE_METADATA,
+} from '../dependency-injection/decorator';
 
 export class DecoratorExtractor {
   static extractMessageHandler(handler: IMessageHandler<any>): string {
@@ -7,6 +10,9 @@ export class DecoratorExtractor {
   }
 
   static extractMessageMiddleware(instance: object): string {
-    return Reflect.getMetadata(MESSAGING_MIDDLEWARE_METADATA, instance) as string;
+    return Reflect.getMetadata(
+      MESSAGING_MIDDLEWARE_METADATA,
+      instance,
+    ) as string;
   }
 }

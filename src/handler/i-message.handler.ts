@@ -1,3 +1,3 @@
 export interface IMessageHandler<T> {
-  handle(message: T): Promise<object|void>;
+  handle(message: T): Promise<object | void>;
 }

@@ -1,4 +1,5 @@
 import { Middleware } from './middleware';
+import { MessagingException } from '../exception/messaging.exception';
 
 export class MiddlewareRegistry {
   private registry: Map<string, Middleware> = new Map();
@@ -13,7 +14,7 @@ export class MiddlewareRegistry {
 
   getByName(name: string): Middleware {
     if (!this.registry.has(name)) {
-      throw new Error(`There is no middleware with name: ${name}`);
+      throw new MessagingException(`There is no middleware with name: ${name}`);
     }
 
     return this.registry.get(name);
