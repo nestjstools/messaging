@@ -4,6 +4,7 @@ import { RoutingMessage } from '../message/routing-message';
 import { MiddlewareRegistry } from '../middleware/middleware.registry';
 import { InMemoryChannel } from '../channel/in-memory.channel';
 import { DecoratorExtractor } from '../shared/decorator-extractor';
+import { HandlerForMessageNotFoundException } from '../exception/handler-for-message-not-found.exception';
 
 export class InMemoryMessageBus implements IMessageBus {
   constructor(
@@ -19,7 +20,21 @@ export class InMemoryMessageBus implements IMessageBus {
       ...(message.messageOptions?.middlewares ?? []),
     );
 
-    const handlers = this.registry.getByRoutingKey(message.messageRoutingKey);
+    let handlers = [];
+    try {
+      handlers = this.registry.getByRoutingKey(message.messageRoutingKey);
+    } catch (e) {
+      if (!(e instanceof HandlerForMessageNotFoundException)) {
+        throw e;
+      }
+
+      if (this.channel.config?.avoidErrorsForNotExistedHandlers ?? true) {
+        return Promise.resolve();
+      }
+
+      throw e;
+    }
+
     let response = null;
 
     for (const handler of handlers) {

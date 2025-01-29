@@ -49,7 +49,7 @@ export class AmqpChannelConfig implements ChannelConfig {
     this.autoCreate = autoCreate ?? true;
     this.deadLetterQueueFeature = deadLetterQueueFeature ?? true;
     this.avoidErrorsForNotExistedHandlers =
-      avoidErrorsForNotExistedHandlers ?? false;
+      avoidErrorsForNotExistedHandlers ?? true;
     this.middlewares = middlewares ?? [];
   }
 }
@@ -66,7 +66,7 @@ export class InMemoryChannelConfig implements ChannelConfig {
   }: InMemoryChannelConfig) {
     this.name = name;
     this.avoidErrorsForNotExistedHandlers =
-      avoidErrorsForNotExistedHandlers ?? false;
+      avoidErrorsForNotExistedHandlers ?? true;
     this.middlewares = middlewares ?? [];
   }
 }
@@ -76,15 +76,6 @@ export class ChannelConfig {
   avoidErrorsForNotExistedHandlers?: boolean;
   middlewares?: object[];
   enableConsumer?: boolean;
-}
-
-export interface Consumer {
-  name: string;
-}
-
-export enum ChannelType {
-  AMQP = 'AMQP',
-  IN_MEMORY = 'IN_MEMORY',
 }
 
 export enum ExchangeType {
