@@ -12,7 +12,7 @@ export class SpyDataService {
     return this.collection;
   }
 
-  getFirst(): null|string {
+  getFirst(): null | string {
     if (this.collection.length === 0) {
       return null;
     }

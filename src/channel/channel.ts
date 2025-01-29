@@ -1,5 +1,8 @@
 import { ChannelConfig } from '../config';
 
 export class Channel {
-  config: ChannelConfig;
+  constructor(
+    public readonly config: ChannelConfig,
+  ) {
+  }
 }

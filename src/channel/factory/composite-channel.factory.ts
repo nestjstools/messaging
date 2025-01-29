@@ -3,6 +3,7 @@ import { DiscoveryService } from '@nestjs/core';
 import { Channel } from '../channel';
 import { ChannelConfig } from '../../config';
 import { CHANNEL_FACTORY_METADATA } from '../../dependency-injection/decorator';
+import { UnsupportedChannelFactoryException } from '../../exception/unsupported-channel-factory.exception';
 
 @Injectable()
 export class CompositeChannelFactory {
@@ -25,9 +26,7 @@ export class CompositeChannelFactory {
       );
 
     if (factory.length !== 1) {
-      throw new Error(
-        `Unsupported channel factory for channel ${channelConfig.constructor.name}`,
-      );
+      throw new UnsupportedChannelFactoryException(channelConfig.constructor.name);
     }
 
     return factory[0].instance.create(channelConfig);

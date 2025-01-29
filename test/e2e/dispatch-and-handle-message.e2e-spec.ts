@@ -28,19 +28,27 @@ describe('DispatchAndHandleMessage', () => {
   });
 
   it('will dispatch message to void handler and check if everything is correct via spy service', async () => {
-    await messageBus.dispatch(new RoutingMessage(new TestMessage('xyz'), 'message.void'));
+    await messageBus.dispatch(
+      new RoutingMessage(new TestMessage('xyz'), 'message.void'),
+    );
 
     expect(spyDataService.getFirst()).toBe('xyz');
   });
 
   it('will dispatch message to returned handler and expected returned result', async () => {
-    const result = await messageBus.dispatch(new RoutingMessage(new TestMessage('xyz'), 'message.returned'));
+    const result = await messageBus.dispatch(
+      new RoutingMessage(new TestMessage('xyz'), 'message.returned'),
+    );
 
-    expect(result).toEqual(new MessageResponse([{id: 'uuid', response: 'xyz'}]));
+    expect(result).toEqual(
+      new MessageResponse([{ id: 'uuid', response: 'xyz' }]),
+    );
   });
 
   it('check if middleware will correctly applied', async () => {
-    await middlewareMessageBus.dispatch(new RoutingMessage(new TestMessage('xyz'), 'message.void'));
+    await middlewareMessageBus.dispatch(
+      new RoutingMessage(new TestMessage('xyz'), 'message.void'),
+    );
     const data: string[] = spyDataService.getAllData();
 
     expect(data).toHaveLength(2);

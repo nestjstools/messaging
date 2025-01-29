@@ -11,12 +11,12 @@ import { SpyDataMiddleware } from './spy-data-middleware.service';
       buses: [
         {
           name: 'message.bus',
-          channels: ['simple']
+          channels: ['simple'],
         },
         {
           name: 'middleware-message.bus',
-          channels: ['middleware-simple']
-        }
+          channels: ['middleware-simple'],
+        },
       ],
       channels: [
         new InMemoryChannelConfig({
@@ -27,12 +27,10 @@ import { SpyDataMiddleware } from './spy-data-middleware.service';
         new InMemoryChannelConfig({
           avoidErrorsForNotExistedHandlers: false,
           name: 'middleware-simple',
-          middlewares: [
-            SpyDataMiddleware,
-          ],
+          middlewares: [SpyDataMiddleware],
         }),
-      ]
-    })
+      ],
+    }),
   ],
   providers: [
     SpyDataMiddleware,
@@ -42,6 +40,4 @@ import { SpyDataMiddleware } from './spy-data-middleware.service';
     TestService,
   ],
 })
-export class TestModule {
-
-}
+export class TestModule {}

@@ -21,3 +21,5 @@ export * from './channel/factory/in-memory-channel.factory';
 export * from './channel/i-channel-factory';
 export * from './channel/channel';
 export * from './middleware/middleware';
+export * from './exception/invalid-channel.exception';
+export * from './exception/invalid-channel-config.exception';

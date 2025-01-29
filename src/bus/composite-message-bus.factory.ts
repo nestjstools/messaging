@@ -5,6 +5,7 @@ import { IMessageBus } from './i-message-bus';
 import { Channel } from '../channel/channel';
 import { InMemoryChannel } from '../channel/in-memory.channel';
 import { MESSAGE_BUS_FACTORY_METADATA } from '../dependency-injection/decorator';
+import { MessagingException } from '../exception/messaging.exception';
 
 @Injectable()
 export class CompositeMessageBusFactory {
@@ -14,7 +15,10 @@ export class CompositeMessageBusFactory {
   ) {}
 
   create(channel: Channel): IMessageBus {
-    if (channel instanceof InMemoryChannel && 'default.bus' === channel.config.name) {
+    if (
+      channel instanceof InMemoryChannel &&
+      'default.bus' === channel.config.name
+    ) {
       return this.defaultMessageBus;
     }
 
@@ -37,7 +41,7 @@ export class CompositeMessageBusFactory {
       );
 
     if (factory.length !== 1) {
-      throw new Error(
+      throw new MessagingException(
         `Unsupported message bus factory for channel ${channel.constructor.name}`,
       );
     }

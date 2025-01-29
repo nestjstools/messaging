@@ -1,6 +1,7 @@
 import { Channel } from './channel';
 import { MessagingLogger } from '../logger/messaging-logger';
 import { ChannelType } from '../config';
+import { MessagingException } from '../exception/messaging.exception';
 
 export class ChannelRegistry {
   private registry: Map<string, Channel> = new Map();
@@ -25,7 +26,7 @@ export class ChannelRegistry {
 
   getByName(name: string): Channel {
     if (!this.registry.has(name)) {
-      throw new Error(`There is no channel with name: ${name}`);
+      throw new MessagingException(`There is no channel with name: ${name}`);
     }
 
     return this.registry.get(name);

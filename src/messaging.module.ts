@@ -1,10 +1,14 @@
 import {
   DynamicModule,
   Logger as NestCommonLogger,
-  Module, OnApplicationBootstrap,
-  OnModuleInit,
+  Module,
+  OnApplicationBootstrap,
 } from '@nestjs/common';
-import { ChannelConfig, InMemoryChannelConfig, MessagingModuleOptions } from './config';
+import {
+  ChannelConfig,
+  InMemoryChannelConfig,
+  MessagingModuleOptions,
+} from './config';
 import { Service } from './dependency-injection/service';
 import { CompositeChannelFactory } from './channel/factory/composite-channel.factory';
 import { ChannelRegistry } from './channel/channel.registry';
@@ -12,15 +16,17 @@ import { CompositeMessageBusFactory } from './bus/composite-message-bus.factory'
 import { MessagingLogger } from './logger/messaging-logger';
 import { IMessageBus } from './bus/i-message-bus';
 import { DistributedMessageBus } from './bus/distributed-message.bus';
-import { ClassNameProvider } from './shared/class-name.provider';
-import {DiscoveryModule, DiscoveryService, ModuleRef} from '@nestjs/core';
+import { DiscoveryModule, DiscoveryService, ModuleRef } from '@nestjs/core';
 import { InMemoryMessageBus } from './bus/in-memory-message.bus';
 import { MessageHandlerRegistry } from './handler/message-handler.registry';
 import { Channel } from './channel/channel';
 import { NestLogger } from './logger/nest-logger';
 import { InMemoryChannelFactory } from './channel/factory/in-memory-channel.factory';
 import { DistributedConsumer } from './consumer/distributed.consumer';
-import { registerHandlers, registerMiddlewares } from './dependency-injection/register';
+import {
+  registerHandlers,
+  registerMiddlewares,
+} from './dependency-injection/register';
 import { MiddlewareRegistry } from './middleware/middleware.registry';
 import { InMemoryMessageBusFactory } from './bus/in-memory-message-bus.factory';
 import { InMemoryChannel } from './channel/in-memory.channel';
@@ -69,20 +75,10 @@ export class MessagingModule implements OnApplicationBootstrap {
       }));
     };
 
-    const defineMiddlewares = (): any[] => {
-      return options.channels.flatMap((channel) =>
-        channel.middlewares.map((middleware) => ({
-          provide: ClassNameProvider.getClassName(middleware),
-          useClass: middleware,
-        })),
-      );
-    };
-
     return {
       module: MessagingModule,
       imports: [DiscoveryModule],
       providers: [
-        // ...defineMiddlewares(),
         ...defineBuses(),
         registerChannels(),
         {
@@ -91,10 +87,26 @@ export class MessagingModule implements OnApplicationBootstrap {
         },
         {
           provide: Service.DEFAULT_MESSAGE_BUS,
-          useFactory: (messageHandlerRegistry: MessageHandlerRegistry, middlewareRegistry: MiddlewareRegistry) => {
-            return new InMemoryMessageBus(messageHandlerRegistry, middlewareRegistry, new InMemoryChannel(new InMemoryChannelConfig({name: 'default.bus', middlewares: [], avoidErrorsForNotExistedHandlers: true})));
+          useFactory: (
+            messageHandlerRegistry: MessageHandlerRegistry,
+            middlewareRegistry: MiddlewareRegistry,
+          ) => {
+            return new InMemoryMessageBus(
+              messageHandlerRegistry,
+              middlewareRegistry,
+              new InMemoryChannel(
+                new InMemoryChannelConfig({
+                  name: 'default.bus',
+                  middlewares: [],
+                  avoidErrorsForNotExistedHandlers: true,
+                }),
+              ),
+            );
           },
-          inject: [Service.MESSAGE_HANDLERS_REGISTRY, Service.MIDDLEWARE_REGISTRY],
+          inject: [
+            Service.MESSAGE_HANDLERS_REGISTRY,
+            Service.MIDDLEWARE_REGISTRY,
+          ],
         },
         {
           provide: Service.MESSAGE_HANDLERS_REGISTRY,
@@ -125,12 +137,18 @@ export class MessagingModule implements OnApplicationBootstrap {
         InMemoryChannelFactory,
         DistributedConsumer,
       ],
-      exports: [Service.DEFAULT_MESSAGE_BUS, ...defineBuses(), DistributedConsumer],
+      exports: [
+        Service.DEFAULT_MESSAGE_BUS,
+        ...defineBuses(),
+        DistributedConsumer,
+      ],
     };
   }
 
-  constructor(private readonly moduleRef: ModuleRef, private readonly discoveryService: DiscoveryService) {
-  }
+  constructor(
+    private readonly moduleRef: ModuleRef,
+    private readonly discoveryService: DiscoveryService,
+  ) {}
 
   onApplicationBootstrap(): any {
     registerHandlers(this.moduleRef, this.discoveryService);

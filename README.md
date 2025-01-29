@@ -172,8 +172,8 @@ import { SendMessageHandler } from './handlers/send-message.handler';
           channels: ['my-channel'],
         },
         {
-          name: 'command-bus', //The naming is very flexible
-          channels: ['amqp-command'], //be sure if you defined same channels name as you defined below 
+          name: 'command-bus', // The naming is very flexible
+          channels: ['amqp-command'], // Be sure if you defined same channels name as you defined below 
         },
         {
           name: 'event-bus',
@@ -193,7 +193,7 @@ import { SendMessageHandler } from './handlers/send-message.handler';
           exchangeType: ExchangeType.TOPIC,
           middlewares: [],
           queue: 'my_app.command',
-          autoCreate: true, // create exchange, queue & bind keys
+          autoCreate: true, // Create exchange, queue & bind keys
         }),
         new AmqpChannelConfig({
           name: 'amqp-event',
@@ -287,6 +287,7 @@ import { Middleware } from '@nestjstools/messaging/middleware/middleware';
 import { RoutingMessage } from '@nestjstools/messaging/message/routing-message';
 
 @Injectable()
+@MessagingMiddleware('TestMiddleware-random-name')
 export class TestMiddleware implements Middleware {
   // This method is called when a message passes through this middleware
   async next(next: RoutingMessage): Promise<RoutingMessage> {
@@ -431,13 +432,7 @@ export class YourChannelConfig implements ChannelConfig {
 Next, create a class that implements the `Channel` interface. This class will serve as your `DataSource` and utilize the configuration you defined in the `ChannelConfig` class.
 
 ```typescript
-export class YourChannel implements Channel {
-  public readonly config: ChannelConfig;
-
-  constructor({ config }: AmqpChannelConfig) {
-    this.config = config;
-  }
-}
+export class YourChannel extends Channel {}
 ```
 
 ### 3. Create a `ChannelFactory`
@@ -446,14 +441,14 @@ A `ChannelFactory` is responsible for creating instances of your custom `Channel
 ```typescript
 @Injectable()
 @ChannelFactory(YourChannel)
-export class AmqpChannelFactory implements IChannelFactory {
-  create(channelConfig: ChannelConfig): Channel {
-    if (!(channelConfig instanceof YourChannel)) {
-      throw new Error('Channel config must be a YourChannel');
-    }
+export class YourChannelFactory implements IChannelFactory {
+   create(channelConfig: ChannelConfig): Channel {
+      if (!(channelConfig instanceof YourChannelConfig)) {
+         throw new InvalidChannelConfigException(YourChannel.name);
+      }
 
-    return new YourChannel(channelConfig);  // Return a fresh instance of your custom channel
-  }
+      return new YourChannel(channelConfig);
+   }
 }
 ```
 
@@ -480,7 +475,7 @@ The `MessageBusFactory` creates instances of your `MessageBus` and ensures it's 
 export class YourMessageBusFactory implements IMessageBusFactory {
   create(channel: Channel): IMessageBus {
     if (!(channel instanceof YourChannel)) {
-      throw new Error(`Cannot create a message bus for given channel ${channel}`);
+       throw new InvalidChannelException(YourChannel.name);
     }
 
     return new YourMessageBus(channel);  // Return a new instance of your message bus
@@ -488,7 +483,7 @@ export class YourMessageBusFactory implements IMessageBusFactory {
 }
 ```
 
-### 6. Create a Consumer with `MessageBusFactory`
+### 6. Create a Consumer `MessageConsumer`
 A consumer receives and processes messages. Create a class that implements the `IMessagingConsumer` interface and handle the message processing within the `consume` method.
 
 ```typescript
