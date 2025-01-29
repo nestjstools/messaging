@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, Logger } from '@nestjs/common';
 import { TestModule } from '../support/app/test.module';
 import { SpyLogger } from '../support/logger/spy.logger';
-import { Service } from '../../lib/dependency-injection/service';
+import { Service } from '../../src/dependency-injection/service';
 
 describe('CheckAppInitLogs', () => {
   let app: INestApplication;
