@@ -1,9 +1,10 @@
-name: Build
+name: CI
 
 on:
+  pull_request:
   push:
-    tags:
-      - '*'
+    branches:
+      - "main"
 
 jobs:
   build:
