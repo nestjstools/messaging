@@ -33,7 +33,7 @@ export class DistributedConsumer {
         continue;
       }
 
-      const chanelConsumer = this.discoveryService
+      const channelConsumer = this.discoveryService
         .getProviders()
         .filter((provider) => {
           if (!provider.metatype) {
@@ -46,19 +46,19 @@ export class DistributedConsumer {
           );
         })
         .filter(
-          (factory) =>
-            Reflect.getMetadata(MESSAGE_CONSUMER_METADATA, factory.metatype)
+          (consumer) =>
+            Reflect.getMetadata(MESSAGE_CONSUMER_METADATA, consumer.metatype)
               .name === channel.constructor.name,
         );
 
-      if (chanelConsumer.length !== 1) {
+      if (channelConsumer.length !== 1) {
         throw new Error(
           `Consumer for channel ${channel.constructor.name} does not found`,
         );
       }
 
       const mediator = new ConsumerMessageMediator();
-      const consumer: IMessagingConsumer<any> = chanelConsumer[0].instance;
+      const consumer: IMessagingConsumer<any> = channelConsumer[0].instance;
 
       await consumer.consume(mediator, channel);
 
@@ -67,22 +67,17 @@ export class DistributedConsumer {
           this.logger.debug(
             `Message handled [${JSON.stringify(consumerMessage.message)}] with routing key: [${consumerMessage.routingKey}]`,
           );
+
           const middlewares: Middleware[] = channel.config
             .middlewares as Middleware[];
-          await this.messageBus.dispatch(
-            new RoutingMessage(
-              consumerMessage.message,
-              consumerMessage.routingKey,
-            ).createWithOptions(new DefaultMessageOptions(middlewares)),
-          );
-        } catch (e) {
-          if (e instanceof HandlerForMessageNotFoundException) {
-            if (channel.config.avoidErrorsForNotExistedHandlers) {
-              this.logger.debug(e.message);
-              return;
-            }
-          }
 
+          const routingMessage = new RoutingMessage(
+            consumerMessage.message,
+            consumerMessage.routingKey,
+          ).createWithOptions(new DefaultMessageOptions(middlewares, channel.config?.avoidErrorsForNotExistedHandlers ?? false));
+
+          await this.messageBus.dispatch(routingMessage);
+        } catch (e) {
           await consumer.onError(
             new ConsumerDispatchedMessageError(consumerMessage, e),
             channel,
