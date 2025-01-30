@@ -49,7 +49,7 @@ export class AmqpChannelConfig implements ChannelConfig {
     this.autoCreate = autoCreate ?? true;
     this.deadLetterQueueFeature = deadLetterQueueFeature ?? true;
     this.avoidErrorsForNotExistedHandlers =
-      avoidErrorsForNotExistedHandlers ?? true;
+      avoidErrorsForNotExistedHandlers ?? false;
     this.middlewares = middlewares ?? [];
   }
 }
@@ -66,7 +66,7 @@ export class InMemoryChannelConfig implements ChannelConfig {
   }: InMemoryChannelConfig) {
     this.name = name;
     this.avoidErrorsForNotExistedHandlers =
-      avoidErrorsForNotExistedHandlers ?? true;
+      avoidErrorsForNotExistedHandlers ?? false;
     this.middlewares = middlewares ?? [];
   }
 }
