@@ -188,7 +188,7 @@ import { SendMessageHandler } from './handlers/send-message.handler';
         new AmqpChannelConfig({
           name: 'amqp-command',
           connectionUri: 'amqp://guest:guest@localhost:5672/',
-          exchangeName: 'my_app.exchange',
+          exchangeName: 'my_app_command.exchange',
           bindingKeys: ['my_app.command.#'],
           exchangeType: ExchangeType.TOPIC,
           middlewares: [],
@@ -198,9 +198,9 @@ import { SendMessageHandler } from './handlers/send-message.handler';
         new AmqpChannelConfig({
           name: 'amqp-event',
           connectionUri: 'amqp://guest:guest@localhost:5672/',
-          exchangeName: 'my_app.exchange',
-          bindingKeys: ['my_app.event.#'],
-          exchangeType: ExchangeType.TOPIC,
+           exchangeName: 'my_app_event.exchange',
+           bindingKeys: ['my_app_event.#'],
+           exchangeType: ExchangeType.TOPIC,
           queue: 'my_app.event',
           avoidErrorsForNotExistedHandlers: true, // We can avoid errors if we don't have handler yet for the event
           autoCreate: true,
@@ -324,7 +324,7 @@ import { SendMessageHandler } from './handlers/send-message.handler';
         new AmqpChannelConfig({
           name: 'amqp-command',
           connectionUri: 'amqp://guest:guest@localhost:5672/',
-          exchangeName: 'my_app.exchange',
+          exchangeName: 'my_app_command.exchange',
           bindingKeys: ['my_app.command.#'],
           exchangeType: ExchangeType.TOPIC,
           queue: 'my_app.command',

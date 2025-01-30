@@ -12,6 +12,7 @@ import { Middleware } from '../middleware/middleware';
 import { RoutingMessage } from '../message/routing-message';
 import { DefaultMessageOptions } from '../message/default-message-options';
 import { ConsumerDispatchedMessageError } from './consumer-dispatched-message-error';
+import { HandlerForMessageNotFoundException } from '../exception/handler-for-message-not-found.exception';
 
 export class DistributedConsumer {
   constructor(
@@ -75,6 +76,13 @@ export class DistributedConsumer {
             ).createWithOptions(new DefaultMessageOptions(middlewares)),
           );
         } catch (e) {
+          if (e instanceof HandlerForMessageNotFoundException) {
+            if (channel.config.avoidErrorsForNotExistedHandlers) {
+              this.logger.debug(e.message);
+              return;
+            }
+          }
+
           await consumer.onError(
             new ConsumerDispatchedMessageError(consumerMessage, e),
             channel,

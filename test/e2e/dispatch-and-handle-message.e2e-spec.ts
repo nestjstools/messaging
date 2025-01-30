@@ -4,9 +4,11 @@ import { TestModule } from '../support/app/test.module';
 import { IMessageBus, MessageResponse, RoutingMessage } from '../../src';
 import { TestMessage } from '../support/app/test.message';
 import { SpyDataService } from '../support/app/spy-data.service';
+import { Service } from '../../src/dependency-injection/service';
 
 describe('DispatchAndHandleMessage', () => {
   let app: INestApplication;
+  let defaultMessageBus: IMessageBus;
   let messageBus: IMessageBus;
   let middlewareMessageBus: IMessageBus;
   let spyDataService: SpyDataService;
@@ -18,6 +20,7 @@ describe('DispatchAndHandleMessage', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
+    defaultMessageBus = app.get(Service.DEFAULT_MESSAGE_BUS);
     messageBus = app.get('message.bus');
     middlewareMessageBus = app.get('middleware-message.bus');
     spyDataService = app.get(SpyDataService);
@@ -54,5 +57,11 @@ describe('DispatchAndHandleMessage', () => {
     expect(data).toHaveLength(2);
     expect(data[0]).toBe('MIDDLEWARE WORKS');
     expect(data[1]).toBe('xyz');
+  });
+
+  it('Dispatch message by DEFAULT MESSAGE BUS and do not show error when handler does not exists', async () => {
+    await defaultMessageBus.dispatch(
+      new RoutingMessage(new TestMessage('xyz'), 'message_for_not_existed_handler'),
+    );
   });
 });

@@ -78,15 +78,6 @@ export class ChannelConfig {
   enableConsumer?: boolean;
 }
 
-export interface Consumer {
-  name: string;
-}
-
-export enum ChannelType {
-  AMQP = 'AMQP',
-  IN_MEMORY = 'IN_MEMORY',
-}
-
 export enum ExchangeType {
   TOPIC = 'topic',
   FANOUT = 'fanout',

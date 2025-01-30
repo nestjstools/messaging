@@ -1,6 +1,5 @@
 import { Channel } from './channel';
 import { MessagingLogger } from '../logger/messaging-logger';
-import { ChannelType } from '../config';
 import { MessagingException } from '../exception/messaging.exception';
 
 export class ChannelRegistry {
@@ -30,14 +29,6 @@ export class ChannelRegistry {
     }
 
     return this.registry.get(name);
-  }
-
-  getAllByType(type: ChannelType): Channel[] {
-    return Array.from(this.registry.values()).filter((channel) => {
-      if (type === ChannelType.AMQP) {
-        return channel;
-      }
-    });
   }
 
   getALl(): Channel[] {
