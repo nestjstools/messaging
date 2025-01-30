@@ -77,7 +77,7 @@ export class DistributedConsumer {
           );
         } catch (e) {
           if (e instanceof HandlerForMessageNotFoundException) {
-            if (channel.config.avoidErrorsForNotExistedHandlers ?? false) {
+            if (channel.config.avoidErrorsForNotExistedHandlers) {
               this.logger.debug(e.message);
               return;
             }
