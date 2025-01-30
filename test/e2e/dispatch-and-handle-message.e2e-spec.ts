@@ -4,7 +4,7 @@ import { TestModule } from '../support/app/test.module';
 import { IMessageBus, MessageResponse, RoutingMessage } from '../../src';
 import { TestMessage } from '../support/app/test.message';
 import { SpyDataService } from '../support/app/spy-data.service';
-import { Service } from '../../lib/dependency-injection/service';
+import { Service } from '../../src/dependency-injection/service';
 
 describe('DispatchAndHandleMessage', () => {
   let app: INestApplication;
