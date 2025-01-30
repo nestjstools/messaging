@@ -1,5 +1,4 @@
 import { IMessageHandler } from './i-message.handler';
-import { DecoratorExtractor } from '../shared/decorator-extractor';
 import { HandlerForMessageNotFoundException } from '../exception/handler-for-message-not-found.exception';
 
 export class MessageHandlerRegistry {

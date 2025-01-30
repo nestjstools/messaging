@@ -9,7 +9,7 @@ import { UnsupportedChannelFactoryException } from '../../exception/unsupported-
 export class CompositeChannelFactory {
   constructor(private readonly discoveryService: DiscoveryService) {}
 
-  create(channelConfig: ChannelConfig): Channel {
+  create(channelConfig: ChannelConfig): Channel<any> {
     const factory = this.discoveryService
       .getProviders()
       .filter((provider) => {

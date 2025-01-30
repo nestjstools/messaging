@@ -1,15 +1,14 @@
 import { ConsumerMessageDispatcher } from './consumer-message-dispatcher';
-import { Channel } from '../channel/channel';
 import { ConsumerDispatchedMessageError } from './consumer-dispatched-message-error';
 
-export interface IMessagingConsumer {
+export interface IMessagingConsumer<T> {
   consume(
     dispatcher: ConsumerMessageDispatcher,
-    channel: Channel,
+    channel: T,
   ): Promise<void>;
 
   onError(
     errored: ConsumerDispatchedMessageError,
-    channel: Channel,
+    channel: T,
   ): Promise<void>;
 }

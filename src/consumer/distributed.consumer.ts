@@ -58,7 +58,7 @@ export class DistributedConsumer {
       }
 
       const mediator = new ConsumerMessageMediator();
-      const consumer: IMessagingConsumer = chanelConsumer[0].instance;
+      const consumer: IMessagingConsumer<any> = chanelConsumer[0].instance;
 
       await consumer.consume(mediator, channel);
 

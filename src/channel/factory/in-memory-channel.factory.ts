@@ -8,8 +8,8 @@ import { InvalidChannelConfigException } from '../../exception/invalid-channel-c
 
 @Injectable()
 @ChannelFactory(InMemoryChannelConfig)
-export class InMemoryChannelFactory implements IChannelFactory {
-  create(channelConfig: ChannelConfig): Channel {
+export class InMemoryChannelFactory implements IChannelFactory<InMemoryChannelConfig> {
+  create(channelConfig: ChannelConfig): Channel<InMemoryChannelConfig> {
     if (!(channelConfig instanceof InMemoryChannelConfig)) {
       throw new InvalidChannelConfigException(InMemoryChannelConfig.name);
     }

@@ -13,18 +13,31 @@ interface DefineBusOption {
   channels: string[];
 }
 
-export class AmqpChannelConfig implements ChannelConfig {
-  public readonly name: string;
+export class ChannelConfig {
+  public readonly avoidErrorsForNotExistedHandlers?: boolean;
+  public readonly middlewares?: object[];
+  public readonly enableConsumer?: boolean;
+
+  constructor(
+    public readonly name: string,
+    avoidErrorsForNotExistedHandlers?: boolean,
+    middlewares?: object[],
+    enableConsumer?: boolean,
+  ) {
+    this.avoidErrorsForNotExistedHandlers = avoidErrorsForNotExistedHandlers ?? false;
+    this.middlewares = middlewares ?? [];
+    this.enableConsumer = enableConsumer ?? true;
+  }
+}
+
+export class AmqpChannelConfig extends ChannelConfig {
   public readonly connectionUri: string;
   public readonly exchangeName: string;
   public readonly exchangeType: ExchangeType;
   public readonly queue: string;
   public readonly bindingKeys?: string[];
-  public readonly enableConsumer?: boolean;
   public readonly autoCreate?: boolean;
   public readonly deadLetterQueueFeature?: boolean;
-  public readonly avoidErrorsForNotExistedHandlers?: boolean;
-  public readonly middlewares?: object[];
 
   constructor({
     name,
@@ -39,43 +52,25 @@ export class AmqpChannelConfig implements ChannelConfig {
     avoidErrorsForNotExistedHandlers,
     middlewares,
   }: AmqpChannelConfig) {
-    this.name = name;
+    super(name, avoidErrorsForNotExistedHandlers, middlewares, enableConsumer)
     this.connectionUri = connectionUri;
     this.exchangeName = exchangeName;
     this.exchangeType = exchangeType;
     this.queue = queue;
     this.bindingKeys = bindingKeys;
-    this.enableConsumer = enableConsumer ?? true;
     this.autoCreate = autoCreate ?? true;
     this.deadLetterQueueFeature = deadLetterQueueFeature ?? true;
-    this.avoidErrorsForNotExistedHandlers =
-      avoidErrorsForNotExistedHandlers ?? false;
-    this.middlewares = middlewares ?? [];
   }
 }
 
-export class InMemoryChannelConfig implements ChannelConfig {
-  public readonly name: string;
-  public readonly avoidErrorsForNotExistedHandlers?: boolean;
-  public readonly middlewares?: object[];
-
+export class InMemoryChannelConfig extends ChannelConfig {
   constructor({
     name,
     avoidErrorsForNotExistedHandlers,
     middlewares,
   }: InMemoryChannelConfig) {
-    this.name = name;
-    this.avoidErrorsForNotExistedHandlers =
-      avoidErrorsForNotExistedHandlers ?? false;
-    this.middlewares = middlewares ?? [];
+    super(name, avoidErrorsForNotExistedHandlers, middlewares);
   }
-}
-
-export class ChannelConfig {
-  name: string;
-  avoidErrorsForNotExistedHandlers?: boolean;
-  middlewares?: object[];
-  enableConsumer?: boolean;
 }
 
 export enum ExchangeType {

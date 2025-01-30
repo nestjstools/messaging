@@ -1,6 +1,6 @@
-import { ChannelConfig } from '../config';
 import { Channel } from './channel';
+import { ChannelConfig } from '../config';
 
-export interface IChannelFactory {
-  create(channelConfig: ChannelConfig): Channel;
+export interface IChannelFactory<T extends ChannelConfig> {
+  create(channelConfig: T): Channel<T>;
 }
