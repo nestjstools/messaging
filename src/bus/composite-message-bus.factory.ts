@@ -14,7 +14,7 @@ export class CompositeMessageBusFactory {
     private readonly discoveryService: DiscoveryService,
   ) {}
 
-  create(channel: Channel): IMessageBus {
+  create(channel: Channel<any>): IMessageBus {
     if (
       channel instanceof InMemoryChannel &&
       'default.bus' === channel.config.name

@@ -441,12 +441,8 @@ A `ChannelFactory` is responsible for creating instances of your custom `Channel
 ```typescript
 @Injectable()
 @ChannelFactory(YourChannel)
-export class YourChannelFactory implements IChannelFactory {
-   create(channelConfig: ChannelConfig): Channel {
-      if (!(channelConfig instanceof YourChannelConfig)) {
-         throw new InvalidChannelConfigException(YourChannel.name);
-      }
-
+export class YourChannelFactory implements IChannelFactory<YourChannelConfig> {
+   create(channelConfig: YourChannelConfig): Channel {
       return new YourChannel(channelConfig);
    }
 }
@@ -456,7 +452,6 @@ export class YourChannelFactory implements IChannelFactory {
 The `MessageBus` handles the dispatching of messages in your system. Create a class implementing the `IMessageBus` interface to send messages to your custom service (e.g., RabbitMQ, Redis, etc.).
 
 ```typescript
-@Injectable()
 export class YourMessageBus implements IMessageBus {
   constructor(private readonly yourChannel: YourChannel) {}
 
@@ -472,12 +467,8 @@ The `MessageBusFactory` creates instances of your `MessageBus` and ensures it's 
 ```typescript
 @Injectable()
 @MessageBusFactory(YourChannel)
-export class YourMessageBusFactory implements IMessageBusFactory {
-  create(channel: Channel): IMessageBus {
-    if (!(channel instanceof YourChannel)) {
-       throw new InvalidChannelException(YourChannel.name);
-    }
-
+export class YourMessageBusFactory implements IMessageBusFactory<YourChannel> {
+  create(channel: YourChannel): IMessageBus {
     return new YourMessageBus(channel);  // Return a new instance of your message bus
   }
 }
@@ -489,14 +480,10 @@ A consumer receives and processes messages. Create a class that implements the `
 ```typescript
 @Injectable()
 @MessageConsumer(YourChannel)
-export class YourMessagingConsumer implements IMessagingConsumer {
-  async consume(dispatcher: ConsumerMessageDispatcher, channel: Channel): Promise<void> {
-    if (!(channel instanceof AmqpChannel)) {
-      throw new Error(`Only YourChannel is supported in ${YourMessagingConsumer.name}`);
-    }
-
+export class YourMessagingConsumer implements IMessagingConsumer<YourChannel> {
+  async consume(dispatcher: ConsumerMessageDispatcher, channel: YourChannel): Promise<void> {
     // Logic to consume a message...
-    dispatcher.dispatch(new ConsumerMessage(rabbitMqMessage.body, rabbitMqMessage.headers[RABBITMQ_HEADER_ROUTING_KEY] ?? rabbitMqMessage.routingKey));
+    //TODO dispatcher.dispatch(new ConsumerMessage(...));
 
     return Promise.resolve();
   }

@@ -118,7 +118,7 @@ export class MessagingModule implements OnApplicationBootstrap {
         },
         {
           provide: Service.CHANNEL_REGISTRY,
-          useFactory: (channels: Channel[], logger: MessagingLogger) => {
+          useFactory: (channels: Channel<any>[], logger: MessagingLogger) => {
             return new ChannelRegistry(channels, logger);
           },
           inject: [Service.CHANNELS, Service.LOGGER],

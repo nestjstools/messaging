@@ -1,8 +1,8 @@
 import { ChannelConfig } from '../config';
 
-export class Channel {
+export class Channel<T extends ChannelConfig> {
   constructor(
-    public readonly config: ChannelConfig,
+    public readonly config: T,
   ) {
   }
 }

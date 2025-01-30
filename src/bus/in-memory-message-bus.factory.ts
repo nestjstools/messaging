@@ -7,12 +7,10 @@ import { InMemoryChannel } from '../channel/in-memory.channel';
 import { MessageBusFactory } from '../dependency-injection/decorator';
 import { InMemoryMessageBus } from './in-memory-message.bus';
 import { IMessageBusFactory } from './i-message-bus.factory';
-import { Channel } from '../channel/channel';
-import { InvalidChannelException } from '../exception/invalid-channel.exception';
 
 @Injectable()
 @MessageBusFactory(InMemoryChannel)
-export class InMemoryMessageBusFactory implements IMessageBusFactory {
+export class InMemoryMessageBusFactory implements IMessageBusFactory<InMemoryChannel> {
   constructor(
     @Inject(Service.MESSAGE_HANDLERS_REGISTRY)
     private registry: MessageHandlerRegistry,
@@ -20,11 +18,7 @@ export class InMemoryMessageBusFactory implements IMessageBusFactory {
     private middlewareRegistry: MiddlewareRegistry,
   ) {}
 
-  create(channel: Channel): IMessageBus {
-    if (!(channel instanceof InMemoryChannel)) {
-      throw new InvalidChannelException(InMemoryChannel.name);
-    }
-
+  create(channel: InMemoryChannel): IMessageBus {
     return new InMemoryMessageBus(
       this.registry,
       this.middlewareRegistry,
