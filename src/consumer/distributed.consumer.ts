@@ -74,7 +74,7 @@ export class DistributedConsumer {
           const routingMessage = new RoutingMessage(
             consumerMessage.message,
             consumerMessage.routingKey,
-          ).createWithOptions(new DefaultMessageOptions(middlewares, channel.config?.avoidErrorsForNotExistedHandlers ?? false));
+          ).createWithOptions(new DefaultMessageOptions(middlewares, channel.config?.avoidErrorsForNotExistedHandlers ?? true));
 
           await this.messageBus.dispatch(routingMessage);
         } catch (e) {

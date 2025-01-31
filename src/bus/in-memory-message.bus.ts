@@ -28,7 +28,15 @@ export class InMemoryMessageBus implements IMessageBus {
         throw e;
       }
 
-      if (this.channel.config?.avoidErrorsForNotExistedHandlers ?? true) {
+      let avoidErrorsForNonExistedHandlers = true;
+
+      if (this.channel instanceof InMemoryChannel && 'default.bus' !== this.channel.config.name) {
+        avoidErrorsForNonExistedHandlers = this.channel.config.avoidErrorsForNotExistedHandlers ?? avoidErrorsForNonExistedHandlers;
+      } else {
+        avoidErrorsForNonExistedHandlers = message.messageOptions?.avoidErrorsWhenNotExistedHandler ?? avoidErrorsForNonExistedHandlers;
+      }
+
+      if (avoidErrorsForNonExistedHandlers) {
         return Promise.resolve();
       }
 
