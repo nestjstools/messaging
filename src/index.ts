@@ -23,3 +23,4 @@ export * from './channel/channel';
 export * from './middleware/middleware';
 export * from './exception/invalid-channel.exception';
 export * from './exception/invalid-channel-config.exception';
+export * from './middleware/middleware.context';

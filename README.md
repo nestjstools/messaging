@@ -295,11 +295,11 @@ import { RoutingMessage } from '@nestjstools/messaging/message/routing-message';
 @Injectable()
 @MessagingMiddleware('TestMiddleware-random-name')
 export class TestMiddleware implements Middleware {
-  // This method is called when a message passes through this middleware
-  async next(next: RoutingMessage): Promise<RoutingMessage> {
-    console.log('!!!! WORKS');  // Log or process the message here
-    return next;  // Pass the message to the next step in the pipeline
-  }
+   async process(message: RoutingMessage, context: MiddlewareContext): Promise<MiddlewareContext> {
+      console.log('!!!! WORKS');  // Log or process the message here
+
+      return await context.next().process(message, context); //TODO call `next()` method from `MiddlewareContext` to process next middleware
+   }
 }
 ```
 
@@ -494,7 +494,7 @@ export class YourMessagingConsumer implements IMessagingConsumer<YourChannel> {
     return Promise.resolve();
   }
 
-  onError(errored: ConsumerDispatchedMessageError, channel: Channel): Promise<void> {
+  onError(errored: ConsumerDispatchedMessageError, channel: YourChannel): Promise<void> {
     // Handle error if message processing fails
     return Promise.resolve();
   }
@@ -502,7 +502,7 @@ export class YourMessagingConsumer implements IMessagingConsumer<YourChannel> {
 ```
 
 ### 7. Add Custom `MessageOptions` to Your Bus (Optional)
-You can create custom message options for your message bus if additional configuration is required, such as custom middlewares or headers.
+You can create custom message options for your message.
 
 ```typescript
 export class YourMessageOptions implements MessageOptions {

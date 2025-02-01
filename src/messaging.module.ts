@@ -30,6 +30,7 @@ import {
 import { MiddlewareRegistry } from './middleware/middleware.registry';
 import { InMemoryMessageBusFactory } from './bus/in-memory-message-bus.factory';
 import { InMemoryChannel } from './channel/in-memory.channel';
+import { HandlerMiddleware } from './middleware/handler-middleware';
 
 @Module({})
 export class MessagingModule implements OnApplicationBootstrap {
@@ -131,6 +132,7 @@ export class MessagingModule implements OnApplicationBootstrap {
             options.logging ?? true,
           ),
         },
+        HandlerMiddleware,
         CompositeChannelFactory,
         CompositeMessageBusFactory,
         InMemoryMessageBusFactory,
