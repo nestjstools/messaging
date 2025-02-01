@@ -15,6 +15,12 @@ A NestJS library for managing asynchronous and synchronous messages with support
 
 ---
 
+## Example project based on RaabitMQ example
+
+Repository: https://github.com/nestjstools/messaging-rabbitmq-example
+
+---
+
 ## Installation
 
 ```bash
