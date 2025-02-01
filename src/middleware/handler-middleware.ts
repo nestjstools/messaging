@@ -4,6 +4,7 @@ import { MessageHandlerRegistry } from '../handler/message-handler.registry';
 import { Inject, Injectable } from '@nestjs/common';
 import { Service } from '../dependency-injection/service';
 import { MessagingMiddleware } from '../dependency-injection/decorator';
+import { MiddlewareContext } from './middleware.context';
 
 @Injectable()
 @MessagingMiddleware('HandlerMiddleware')
@@ -13,16 +14,12 @@ export class HandlerMiddleware implements Middleware {
     private handlerRegistry: MessageHandlerRegistry,
   ) {}
 
-  async next(next: RoutingMessage): Promise<RoutingMessage> {
-    const handlers = this.handlerRegistry.getByRoutingKey(next.messageRoutingKey);
+  async process(message: RoutingMessage, context: MiddlewareContext): Promise<any> {
+    const handlers = this.handlerRegistry.getByRoutingKey(message.messageRoutingKey);
     let response = null;
 
     for (const handler of handlers) {
-      response = await handler.handle(next.message);
-    }
-
-    if (response && handlers.length === 1) {
-      return response;
+      response = await handler.handle(message.message);
     }
 
     return Promise.resolve(response);

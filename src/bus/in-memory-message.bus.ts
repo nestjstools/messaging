@@ -3,8 +3,10 @@ import { MessageHandlerRegistry } from '../handler/message-handler.registry';
 import { RoutingMessage } from '../message/routing-message';
 import { MiddlewareRegistry } from '../middleware/middleware.registry';
 import { InMemoryChannel } from '../channel/in-memory.channel';
-import { DecoratorExtractor } from '../shared/decorator-extractor';
 import { HandlerMiddleware } from '../middleware/handler-middleware';
+import { MiddlewareContext } from '../middleware/middleware.context';
+import { DecoratorExtractor } from '../shared/decorator-extractor';
+import { Middleware } from '../middleware/middleware';
 
 export class InMemoryMessageBus implements IMessageBus {
   constructor(
@@ -39,14 +41,11 @@ export class InMemoryMessageBus implements IMessageBus {
       throw e;
     }
 
-    let response = null;
-
-    for (const middlewareClass of middlewares) {
-      const middleware = this.middlewareRegistry.getByName(
-        DecoratorExtractor.extractMessageMiddleware(middlewareClass),
-      );
-      response = await middleware.next(message);
-    }
+    const middlewareInstances: Middleware[] = middlewares.map(middleware => this.middlewareRegistry.getByName(
+      DecoratorExtractor.extractMessageMiddleware(middleware),
+    ));
+    const context = await MiddlewareContext.createFresh(middlewareInstances);
+    const response = await middlewareInstances[0].process(message, context);
 
     return Promise.resolve(response);
   }

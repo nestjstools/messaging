@@ -13,7 +13,7 @@ describe('InMemoryMessageBus', () => {
     middlewareRegistry = new MiddlewareRegistry();
 
     defaultMiddleware = {
-      next: jest.fn().mockImplementation(() => {
+      process: jest.fn().mockImplementation(() => {
         return { response: 'response from mocked handler' }
       }),
     } as unknown as Middleware;
@@ -60,7 +60,7 @@ describe('InMemoryMessageBus', () => {
       .toThrowError("There is no handlers for this routing key: [my_routing.key]");
   });
 
-  it('should run middleware at the end', async () => {
+  it('should run middlewares at the end', async () => {
     const handler = {
       handle: jest.fn(),
     } as unknown as IMessageHandler<any>
@@ -78,7 +78,7 @@ describe('InMemoryMessageBus', () => {
 
     const response = await subjectUnderTest.dispatch(new RoutingMessage({ title: 'hello' }, 'my_routing.key'));
 
-    expect(defaultMiddleware.next).toHaveBeenCalled();
+    expect(defaultMiddleware.process).toHaveBeenCalled();
     expect(response).toEqual({"response": "response from mocked handler"});
   });
 });

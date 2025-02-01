@@ -1,5 +1,5 @@
-import { MessagingMiddleware, Middleware, RoutingMessage } from '../../../src';
-import { Injectable, Logger } from '@nestjs/common';
+import { MessagingMiddleware, Middleware, MiddlewareContext, RoutingMessage } from '../../../src';
+import { Injectable } from '@nestjs/common';
 import { SpyDataService } from './spy-data.service';
 
 @Injectable()
@@ -7,8 +7,8 @@ import { SpyDataService } from './spy-data.service';
 export class SpyDataMiddleware implements Middleware {
   constructor(private readonly spyDataService: SpyDataService) {}
 
-  next(next: RoutingMessage): Promise<RoutingMessage> {
+  async process(message: RoutingMessage, context: MiddlewareContext): Promise<MiddlewareContext> {
     this.spyDataService.spy('MIDDLEWARE WORKS');
-    return Promise.resolve(undefined);
+    return context.next().process(message, context);
   }
 }

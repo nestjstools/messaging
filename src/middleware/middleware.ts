@@ -1,5 +1,6 @@
 import { RoutingMessage } from '../message/routing-message';
+import { MiddlewareContext } from './middleware.context';
 
 export interface Middleware {
-  next: (next: RoutingMessage) => Promise<RoutingMessage>;
+  process(message: RoutingMessage, context: MiddlewareContext): Promise<MiddlewareContext>;
 }
