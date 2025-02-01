@@ -25,11 +25,11 @@ export const registerHandlers = (
   });
 
   handlerInstances.forEach((handler) => {
-    logger.log(`Handler [${handler.name}] was registered`);
     registry.register(
       Reflect.getMetadata(MESSAGE_HANDLER_METADATA, handler.metatype),
       handler.instance,
     );
+    logger.log(`Handler [${handler.name}] was registered`);
   });
 };
 
@@ -55,10 +55,12 @@ export const registerMiddlewares = (
     });
 
   middlewareInstances.forEach((middleware) => {
-    logger.log(`Middleware [${middleware.name}] was registered`);
     registry.register(
       Reflect.getMetadata(MESSAGING_MIDDLEWARE_METADATA, middleware.metatype),
       middleware.instance,
     );
+    if (middleware.name !== 'HandlerMiddleware') {
+      logger.log(`Middleware [${middleware.name}] was registered`);
+    }
   });
 };

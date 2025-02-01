@@ -4,13 +4,13 @@ import { RoutingMessage } from '../message/routing-message';
 import { MiddlewareRegistry } from '../middleware/middleware.registry';
 import { InMemoryChannel } from '../channel/in-memory.channel';
 import { DecoratorExtractor } from '../shared/decorator-extractor';
-import { HandlerForMessageNotFoundException } from '../exception/handler-for-message-not-found.exception';
+import { HandlerMiddleware } from '../middleware/handler-middleware';
 
 export class InMemoryMessageBus implements IMessageBus {
   constructor(
     private registry: MessageHandlerRegistry,
     private middlewareRegistry: MiddlewareRegistry,
-    private channel?: InMemoryChannel,
+    private channel: InMemoryChannel,
   ) {}
 
   async dispatch(message: RoutingMessage): Promise<object | void> {
@@ -18,16 +18,12 @@ export class InMemoryMessageBus implements IMessageBus {
     middlewares.push(
       ...(this.channel.config?.middlewares ?? []),
       ...(message.messageOptions?.middlewares ?? []),
+      HandlerMiddleware,
     );
 
-    let handlers = [];
     try {
-      handlers = this.registry.getByRoutingKey(message.messageRoutingKey);
+      this.registry.getByRoutingKey(message.messageRoutingKey);
     } catch (e) {
-      if (!(e instanceof HandlerForMessageNotFoundException)) {
-        throw e;
-      }
-
       let avoidErrorsForNonExistedHandlers = true;
 
       if (this.channel instanceof InMemoryChannel && 'default.bus' !== this.channel.config.name) {
@@ -45,19 +41,13 @@ export class InMemoryMessageBus implements IMessageBus {
 
     let response = null;
 
-    for (const handler of handlers) {
-      for (const middlewareClass of middlewares) {
-        const middleware = this.middlewareRegistry.getByName(
-          DecoratorExtractor.extractMessageMiddleware(middlewareClass),
-        );
-        await middleware.next(message);
-      }
-
-      response = await handler.handle(message.message);
+    for (const middlewareClass of middlewares) {
+      const middleware = this.middlewareRegistry.getByName(
+        DecoratorExtractor.extractMessageMiddleware(middlewareClass),
+      );
+      response = await middleware.next(message);
     }
 
-    if (response && handlers.length === 1) {
-      return response;
-    }
+    return Promise.resolve(response);
   }
 }
