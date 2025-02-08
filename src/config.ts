@@ -1,4 +1,4 @@
-type DefineChannels = AmqpChannelConfig[] | InMemoryChannelConfig[];
+type DefineChannels = ChannelConfig[];
 
 export interface MessagingModuleOptions {
   messageHandlers?: object[]; //TODO Temporary unsupported
@@ -59,7 +59,7 @@ export class AmqpChannelConfig extends ChannelConfig {
     this.queue = queue;
     this.bindingKeys = bindingKeys;
     this.autoCreate = autoCreate ?? true;
-    this.deadLetterQueueFeature = deadLetterQueueFeature ?? true;
+    this.deadLetterQueueFeature = deadLetterQueueFeature ?? false;
   }
 }
 

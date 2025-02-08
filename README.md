@@ -280,7 +280,7 @@ Each **channel** in the messaging system has its own set of middlewares, and the
 
 To use middleware, you need to:
 
-1. **Define the middleware class** that implements the `Middleware` interface, which contains the `next` method that processes the message.
+1. **Define the middleware class** that implements the `Middleware` interface, which contains the `process` method that processes the message.
 2. **Attach the middleware to a specific channel** via the channel configuration.
 
 ### Example Middleware Code:
@@ -516,5 +516,4 @@ Classes with `Injectable()` decorator must be defined as providers in somewhere 
 
 ### Future features
 * INBOX & OUTBOX Pattern
-* Dead letter queue for RabbitMQ
 * Supports other adapters such like Redis
