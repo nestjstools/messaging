@@ -77,6 +77,7 @@ export class MessagingModule implements OnApplicationBootstrap {
     };
 
     return {
+      global: options.global ?? true,
       module: MessagingModule,
       imports: [DiscoveryModule],
       providers: [

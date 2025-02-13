@@ -6,6 +6,7 @@ export interface MessagingModuleOptions {
   channels?: DefineChannels;
   debug?: boolean;
   logging?: boolean;
+  global?: boolean;
 }
 
 interface DefineBusOption {
