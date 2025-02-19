@@ -9,10 +9,10 @@ import { MESSAGE_CONSUMER_METADATA } from '../dependency-injection/decorator';
 import { ConsumerMessageMediator } from './consumer-message-mediator';
 import { IMessagingConsumer } from './i-messaging-consumer';
 import { Middleware } from '../middleware/middleware';
-import { RoutingMessage } from '../message/routing-message';
 import { DefaultMessageOptions } from '../message/default-message-options';
 import { ConsumerDispatchedMessageError } from './consumer-dispatched-message-error';
-import { HandlerForMessageNotFoundException } from '../exception/handler-for-message-not-found.exception';
+import { SealedRoutingMessage } from '../message/sealed-routing-message';
+import { RoutingMessage } from '../message/routing-message';
 
 export class DistributedConsumer {
   constructor(
@@ -71,10 +71,10 @@ export class DistributedConsumer {
           const middlewares: Middleware[] = channel.config
             .middlewares as Middleware[];
 
-          const routingMessage = new RoutingMessage(
+          const routingMessage = new SealedRoutingMessage(
             consumerMessage.message,
             consumerMessage.routingKey,
-          ).createWithOptions(new DefaultMessageOptions(middlewares, channel.config?.avoidErrorsForNotExistedHandlers ?? true));
+          ).createWithOptions(new DefaultMessageOptions(middlewares, channel.config?.avoidErrorsForNotExistedHandlers ?? true, channel.config.normalizer));
 
           await this.messageBus.dispatch(routingMessage);
         } catch (e) {

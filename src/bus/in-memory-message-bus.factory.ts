@@ -7,6 +7,7 @@ import { InMemoryChannel } from '../channel/in-memory.channel';
 import { MessageBusFactory } from '../dependency-injection/decorator';
 import { InMemoryMessageBus } from './in-memory-message.bus';
 import { IMessageBusFactory } from './i-message-bus.factory';
+import { NormalizerRegistry } from '../normalizer/normalizer.registry';
 
 @Injectable()
 @MessageBusFactory(InMemoryChannel)
@@ -16,6 +17,8 @@ export class InMemoryMessageBusFactory implements IMessageBusFactory<InMemoryCha
     private registry: MessageHandlerRegistry,
     @Inject(Service.MIDDLEWARE_REGISTRY)
     private middlewareRegistry: MiddlewareRegistry,
+    @Inject(Service.MESSAGE_NORMALIZERS_REGISTRY)
+    private messageNormalizerRegistry: NormalizerRegistry,
   ) {}
 
   create(channel: InMemoryChannel): IMessageBus {
@@ -23,6 +26,7 @@ export class InMemoryMessageBusFactory implements IMessageBusFactory<InMemoryCha
       this.registry,
       this.middlewareRegistry,
       channel,
+      this.messageNormalizerRegistry,
     );
   }
 }

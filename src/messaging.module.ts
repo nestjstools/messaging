@@ -24,13 +24,17 @@ import { NestLogger } from './logger/nest-logger';
 import { InMemoryChannelFactory } from './channel/factory/in-memory-channel.factory';
 import { DistributedConsumer } from './consumer/distributed.consumer';
 import {
-  registerHandlers,
+  registerHandlers, registerMessageNormalizers,
   registerMiddlewares,
 } from './dependency-injection/register';
 import { MiddlewareRegistry } from './middleware/middleware.registry';
 import { InMemoryMessageBusFactory } from './bus/in-memory-message-bus.factory';
 import { InMemoryChannel } from './channel/in-memory.channel';
 import { HandlerMiddleware } from './middleware/handler-middleware';
+import { MessageBusCollection } from './bus/message-bus.collection';
+import { NormalizerRegistry } from './normalizer/normalizer.registry';
+import { MessageNormalizer } from './normalizer/message-normalizer';
+import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-message.normalizer';
 
 @Module({})
 export class MessagingModule implements OnApplicationBootstrap {
@@ -54,15 +58,16 @@ export class MessagingModule implements OnApplicationBootstrap {
           channelRegistry: ChannelRegistry,
           busFactory: CompositeMessageBusFactory,
           logger: MessagingLogger,
+          normalizerRegistry: NormalizerRegistry,
         ) => {
-          const messageBusCollection: IMessageBus[] = [];
+          const messageBusCollection = new MessageBusCollection();
 
           for (const channelName of bus.channels) {
             const channel = channelRegistry.getByName(channelName);
-            messageBusCollection.push(busFactory.create(channel));
+            messageBusCollection.add({ messageBus: busFactory.create(channel), channel: channel });
           }
 
-          const messageBus = new DistributedMessageBus(messageBusCollection);
+          const messageBus = new DistributedMessageBus(messageBusCollection, normalizerRegistry);
 
           logger.log(`MessageBus [${bus.name}] was created successfully`);
 
@@ -72,6 +77,7 @@ export class MessagingModule implements OnApplicationBootstrap {
           Service.CHANNEL_REGISTRY,
           CompositeMessageBusFactory,
           Service.LOGGER,
+          Service.MESSAGE_NORMALIZERS_REGISTRY,
         ],
       }));
     };
@@ -92,6 +98,7 @@ export class MessagingModule implements OnApplicationBootstrap {
           useFactory: (
             messageHandlerRegistry: MessageHandlerRegistry,
             middlewareRegistry: MiddlewareRegistry,
+            normalizerRegistry: NormalizerRegistry,
           ) => {
             return new InMemoryMessageBus(
               messageHandlerRegistry,
@@ -103,16 +110,22 @@ export class MessagingModule implements OnApplicationBootstrap {
                   avoidErrorsForNotExistedHandlers: true,
                 }),
               ),
+              normalizerRegistry,
             );
           },
           inject: [
             Service.MESSAGE_HANDLERS_REGISTRY,
             Service.MIDDLEWARE_REGISTRY,
+            Service.MESSAGE_NORMALIZERS_REGISTRY,
           ],
         },
         {
           provide: Service.MESSAGE_HANDLERS_REGISTRY,
           useClass: MessageHandlerRegistry,
+        },
+        {
+          provide: Service.MESSAGE_NORMALIZERS_REGISTRY,
+          useClass: NormalizerRegistry,
         },
         {
           provide: Service.MIDDLEWARE_REGISTRY,
@@ -139,11 +152,13 @@ export class MessagingModule implements OnApplicationBootstrap {
         InMemoryMessageBusFactory,
         InMemoryChannelFactory,
         DistributedConsumer,
+        ObjectForwardMessageNormalizer,
       ],
       exports: [
         Service.DEFAULT_MESSAGE_BUS,
         ...defineBuses(),
         DistributedConsumer,
+        ObjectForwardMessageNormalizer,
       ],
     };
   }
@@ -156,6 +171,7 @@ export class MessagingModule implements OnApplicationBootstrap {
   onApplicationBootstrap(): any {
     registerHandlers(this.moduleRef, this.discoveryService);
     registerMiddlewares(this.moduleRef, this.discoveryService);
+    registerMessageNormalizers(this.moduleRef, this.discoveryService);
 
     const consumer = this.moduleRef.get(DistributedConsumer);
     consumer.run();

@@ -4,9 +4,10 @@ import { MessagingLogger } from '../logger/messaging-logger';
 import { Service } from './service';
 import {
   MESSAGE_HANDLER_METADATA,
-  MESSAGING_MIDDLEWARE_METADATA,
+  MESSAGING_MIDDLEWARE_METADATA, MESSAGING_NORMALIZER_METADATA,
 } from './decorator';
 import { MiddlewareRegistry } from '../middleware/middleware.registry';
+import { NormalizerRegistry } from '../normalizer/normalizer.registry';
 
 export const registerHandlers = (
   moduleRef: ModuleRef,
@@ -61,6 +62,39 @@ export const registerMiddlewares = (
     );
     if (middleware.name !== 'HandlerMiddleware') {
       logger.log(`Middleware [${middleware.name}] was registered`);
+    }
+  });
+};
+
+
+export const registerMessageNormalizers = (
+  moduleRef: ModuleRef,
+  discoveryService: DiscoveryService,
+) => {
+  const registry: NormalizerRegistry = moduleRef.get(
+    Service.MESSAGE_NORMALIZERS_REGISTRY,
+  );
+  const logger: MessagingLogger = moduleRef.get(Service.LOGGER);
+  const messageNormalizerInstances = discoveryService
+    .getProviders()
+    .filter((messageNormalizer) => {
+      if (!messageNormalizer.metatype) {
+        return false;
+      }
+
+      return Reflect.hasMetadata(
+        MESSAGING_NORMALIZER_METADATA,
+        messageNormalizer.metatype,
+      );
+    });
+
+  messageNormalizerInstances.forEach((messageNormalizer) => {
+    registry.register(
+      Reflect.getMetadata(MESSAGING_NORMALIZER_METADATA, messageNormalizer.metatype),
+      messageNormalizer.instance,
+    );
+    if (messageNormalizer.name !== 'ObjectForwardMessageNormalizer') {
+      logger.log(`MessageNormalizer [${messageNormalizer.name}] was registered`);
     }
   });
 };

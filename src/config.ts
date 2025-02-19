@@ -1,3 +1,5 @@
+import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-message.normalizer';
+
 type DefineChannels = ChannelConfig[];
 
 export interface MessagingModuleOptions {
@@ -18,16 +20,19 @@ export class ChannelConfig {
   public readonly avoidErrorsForNotExistedHandlers?: boolean;
   public readonly middlewares?: object[];
   public readonly enableConsumer?: boolean;
+  public readonly normalizer?: object;
 
   constructor(
     public readonly name: string,
     avoidErrorsForNotExistedHandlers?: boolean,
     middlewares?: object[],
     enableConsumer?: boolean,
+    normalizer?: object,
   ) {
     this.avoidErrorsForNotExistedHandlers = avoidErrorsForNotExistedHandlers ?? false;
     this.middlewares = middlewares ?? [];
     this.enableConsumer = enableConsumer ?? true;
+    this.normalizer = normalizer ?? ObjectForwardMessageNormalizer;
   }
 }
 
@@ -52,8 +57,9 @@ export class AmqpChannelConfig extends ChannelConfig {
     deadLetterQueueFeature,
     avoidErrorsForNotExistedHandlers,
     middlewares,
+    normalizer,
   }: AmqpChannelConfig) {
-    super(name, avoidErrorsForNotExistedHandlers, middlewares, enableConsumer)
+    super(name, avoidErrorsForNotExistedHandlers, middlewares, enableConsumer, normalizer)
     this.connectionUri = connectionUri;
     this.exchangeName = exchangeName;
     this.exchangeType = exchangeType;
@@ -69,8 +75,10 @@ export class InMemoryChannelConfig extends ChannelConfig {
     name,
     avoidErrorsForNotExistedHandlers,
     middlewares,
+    enableConsumer,
+    normalizer,
   }: InMemoryChannelConfig) {
-    super(name, avoidErrorsForNotExistedHandlers, middlewares);
+    super(name, avoidErrorsForNotExistedHandlers, middlewares, enableConsumer, normalizer);
   }
 }
 

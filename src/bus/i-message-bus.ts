@@ -1,5 +1,5 @@
-import { RoutingMessage } from '../message/routing-message';
+import { Message } from '../message/message';
 
 export interface IMessageBus {
-  dispatch(message: RoutingMessage): Promise<object | void>;
+  dispatch(message: Message): Promise<object | void>;
 }

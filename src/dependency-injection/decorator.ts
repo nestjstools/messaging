@@ -5,6 +5,7 @@ export const CHANNEL_FACTORY_METADATA = 'CHANNEL_FACTORY_METADATA';
 export const MESSAGE_BUS_FACTORY_METADATA = 'MESSAGE_BUS_FACTORY_METADATA';
 export const MESSAGE_CONSUMER_METADATA = 'MESSAGE_CONSUMER_METADATA';
 export const MESSAGING_MIDDLEWARE_METADATA = 'MESSAGING_MIDDLEWARE_METADATA';
+export const MESSAGING_NORMALIZER_METADATA = 'MESSAGING_NORMALIZER_METADATA';
 
 export const MessageHandler = (routingKey: string): ClassDecorator => {
   return (target: Function) => {
@@ -39,6 +40,12 @@ export const MessageConsumer = (channel: any): ClassDecorator => {
 export const MessagingMiddleware = (name: string): ClassDecorator => {
   return (target: Function) => {
     Reflect.defineMetadata(MESSAGING_MIDDLEWARE_METADATA, name, target);
+  };
+};
+
+export const MessagingNormalizer = (name?: string): ClassDecorator => {
+  return (target: Function) => {
+    Reflect.defineMetadata(MESSAGING_NORMALIZER_METADATA, name ?? target.name, target);
   };
 };
 
