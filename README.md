@@ -1,6 +1,10 @@
+<p align="center">
+    <image src="nestjstools-logo.png" width="400">
+</p>
+
 # @nestjstools/messaging
 
-A NestJS library for managing asynchronous and synchronous messages with support for buses, handlers, channels, and consumers. This library simplifies building scalable and decoupled applications by facilitating robust message handling pipelines while ensuring flexibility and reliability.
+A NestJS library for managing asynchronous and synchronous messages (service bus) with support for buses, handlers, channels, and consumers. This library simplifies building scalable and decoupled applications by facilitating robust message handling pipelines while ensuring flexibility and reliability.
 
 ---
 
@@ -133,7 +137,7 @@ export class AppController {
     - Injects the particular message bus (identified by its name, `message.bus`) into the `AppController`.
 
 3. **Routing and Payload**:
-    - Wrap the payload (`SendMessage`) in a `RoutingMessage` to specify its route (`edm.command.execute`), which ensures the message is handled by the appropriate handler.
+    - Wrap the payload (`SendMessage`) in a `RoutingMessage` to specify its route (`your.message`), which ensures the message is handled by the appropriate handler.
     
 4. **HTTP Trigger**:
     - This implementation illustrates an entry point triggered via an HTTP request, showcasing how simple it is to connect the messaging system to a web interface.
@@ -269,6 +273,46 @@ Ensure your queue has defined binding keys, as messages will be routed to queues
     ```
 
 ---
+## Normalizers
+What is a Normalizer?
+A Normalizer is a component that transforms messages between different formats. It ensures that messages are correctly encoded when sent and properly decoded when received. This is particularly useful in messaging systems where messages need to be serialized and deserialized efficiently.
+
+You can use it to make it works with:
+* [protobuf](https://protobuf.dev/)
+* Custom JSONs
+* Base64
+* Any custom format
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { MessagingNormalizer, MessageNormalizer } from '@nestjstools/messaging';
+import { Buffer } from 'buffer';
+
+@Injectable()
+@MessagingNormalizer()
+export class Base64Normalizer implements MessageNormalizer {
+  denormalize(message: string | object, type: string): Promise<object> {
+    if (typeof message === 'object') {
+      throw new Error('Message must be a string!');
+    }
+    return Promise.resolve(JSON.parse(Buffer.from(message, 'base64').toString('utf-8')));
+  }
+
+  normalize(message: object, type: string): Promise<string> {
+    const jsonString = JSON.stringify(message);
+    return Promise.resolve(Buffer.from(jsonString, 'utf-8').toString('base64'));
+  }
+}
+
+```
+### How It Works
+#### Normalization (normalize)
+* Converts a JSON object to a Base64 string before sending.
+#### Denormalization (denormalize)
+* Decodes the Base64 string back into a JSON object after receiving.
+
+You can define a **Normalizer** per Channel
+___
 
 ## <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M160-40v-240h100v-80H160v-240h100v-80H160v-240h280v240H340v80h100v80h120v-80h280v240H560v-80H440v80H340v80h100v240H160Zm80-80h120v-80H240v80Zm0-320h120v-80H240v80Zm400 0h120v-80H640v80ZM240-760h120v-80H240v80Zm60-40Zm0 320Zm400 0ZM300-160Z"/></svg> Middlewares
 
@@ -399,6 +443,7 @@ Here’s a table with the documentation for the `MessagingModule.forRoot` config
 | **`name`**                             | Name of the in-memory channel (e.g., `'my-channel'`).    |                   |
 | **`middlewares`**                      | List of middlewares to apply to the channel.             | `[]`              |
 | **`avoidErrorsForNotExistedHandlers`** | Avoid errors if no handler is available for the message. | `false`           |
+| **`normalizer`**                       | Set your custom normalizer for messages                  |                   |
 
 #### 2. **AmqpChannelConfig**
 
@@ -413,6 +458,7 @@ Here’s a table with the documentation for the `MessagingModule.forRoot` config
 | **`autoCreate`**                       | Automatically creates the exchange, queue, and bindings if they don’t exist.     | `true`            |
 | **`enableConsumer`**                   | Enables or disables the consumer for this channel.                               | `true`            |
 | **`avoidErrorsForNotExistedHandlers`** | Avoid errors if no handler is available for the message.                         | `false`           |
+| **`normalizer`**                       | Set your custom normalizer for messages                                          |                   |
 
 This table provides a structured overview of the **`MessagingModule.forRoot`** configuration, with details about each property within **buses** and **channels** and their corresponding default values.
 

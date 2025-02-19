@@ -3,7 +3,8 @@ import { Middleware } from '../middleware/middleware';
 
 export class DefaultMessageOptions implements MessageOptions {
   constructor(
-    public readonly middlewares: Middleware[],
-    public readonly avoidErrorsWhenNotExistedHandler: boolean,
+    public readonly middlewares: Middleware[] = [],
+    public readonly avoidErrorsWhenNotExistedHandler: boolean = false,
+    public readonly normalizer?: object,
   ) {}
 }

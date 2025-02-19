@@ -4,7 +4,7 @@ import {
   ConsumerMessageMediator, DefaultMessageOptions,
   IMessageBus,
   IMessagingConsumer,
-  InMemoryChannelConfig, RoutingMessage,
+  InMemoryChannelConfig,
 } from '../../../src';
 import { ChannelRegistry } from '../../../src/channel/channel.registry';
 import { Logger } from '@nestjs/common';
@@ -13,6 +13,8 @@ import { TestChannel } from '../../support/test.channel';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
 import { SpyLogger } from '../../support/logger/spy.logger';
 import { of } from 'rxjs';
+import { SealedRoutingMessage } from '../../../src/message/sealed-routing-message';
+import { ObjectForwardMessageNormalizer } from '../../../src/normalizer/object-forward-message.normalizer';
 
 describe('DistributedConsumer', () => {
   let subjectUnderTest: DistributedConsumer;
@@ -55,10 +57,10 @@ describe('DistributedConsumer', () => {
     await subjectUnderTest.run();
 
     expect(messageBus.dispatch).toHaveBeenCalledWith(
-      new RoutingMessage(
+      new SealedRoutingMessage(
         { status: 'ok' },
         'routing_key'
-      ).createWithOptions(new DefaultMessageOptions([], false))
+      ).createWithOptions(new DefaultMessageOptions([], false, ObjectForwardMessageNormalizer))
     );
 
     expect(logger.getLogs()).toEqual([
@@ -102,10 +104,10 @@ describe('DistributedConsumer', () => {
     await subjectUnderTest.run();
 
     expect(messageBus.dispatch).toHaveBeenCalledWith(
-      new RoutingMessage(
+      new SealedRoutingMessage(
         { status: 'ok' },
         'routing_key'
-      ).createWithOptions(new DefaultMessageOptions([], true))
+      ).createWithOptions(new DefaultMessageOptions([], true, ObjectForwardMessageNormalizer))
     );
   });
 });

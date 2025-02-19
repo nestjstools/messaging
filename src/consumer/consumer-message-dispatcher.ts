@@ -1,3 +1,3 @@
 export interface ConsumerMessageDispatcher {
-  dispatch(message: object): void;
+  dispatch(message: object|string): void;
 }
