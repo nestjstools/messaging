@@ -7,7 +7,7 @@ import { MessagingMiddleware } from '../dependency-injection/decorator';
 import { MiddlewareContext } from './middleware.context';
 
 @Injectable()
-@MessagingMiddleware('HandlerMiddleware')
+@MessagingMiddleware()
 export class HandlerMiddleware implements Middleware {
   constructor(
     @Inject(Service.MESSAGE_HANDLERS_REGISTRY)

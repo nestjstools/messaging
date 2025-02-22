@@ -37,9 +37,9 @@ export const MessageConsumer = (channel: any): ClassDecorator => {
   };
 };
 
-export const MessagingMiddleware = (name: string): ClassDecorator => {
+export const MessagingMiddleware = (name?: string): ClassDecorator => {
   return (target: Function) => {
-    Reflect.defineMetadata(MESSAGING_MIDDLEWARE_METADATA, name, target);
+    Reflect.defineMetadata(MESSAGING_MIDDLEWARE_METADATA, name ?? target.name, target);
   };
 };
 

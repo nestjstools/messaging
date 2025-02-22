@@ -14,7 +14,6 @@ import { CompositeChannelFactory } from './channel/factory/composite-channel.fac
 import { ChannelRegistry } from './channel/channel.registry';
 import { CompositeMessageBusFactory } from './bus/composite-message-bus.factory';
 import { MessagingLogger } from './logger/messaging-logger';
-import { IMessageBus } from './bus/i-message-bus';
 import { DistributedMessageBus } from './bus/distributed-message.bus';
 import { DiscoveryModule, DiscoveryService, ModuleRef } from '@nestjs/core';
 import { InMemoryMessageBus } from './bus/in-memory-message.bus';
@@ -33,7 +32,6 @@ import { InMemoryChannel } from './channel/in-memory.channel';
 import { HandlerMiddleware } from './middleware/handler-middleware';
 import { MessageBusCollection } from './bus/message-bus.collection';
 import { NormalizerRegistry } from './normalizer/normalizer.registry';
-import { MessageNormalizer } from './normalizer/message-normalizer';
 import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-message.normalizer';
 
 @Module({})

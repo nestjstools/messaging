@@ -337,7 +337,7 @@ import { Middleware } from '@nestjstools/messaging/middleware/middleware';
 import { RoutingMessage } from '@nestjstools/messaging/message/routing-message';
 
 @Injectable()
-@MessagingMiddleware('TestMiddleware-random-name')
+@MessagingMiddleware()
 export class TestMiddleware implements Middleware {
    async process(message: RoutingMessage, context: MiddlewareContext): Promise<MiddlewareContext> {
       console.log('!!!! WORKS');  // Log or process the message here

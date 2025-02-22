@@ -8,6 +8,7 @@ import {
 } from './decorator';
 import { MiddlewareRegistry } from '../middleware/middleware.registry';
 import { NormalizerRegistry } from '../normalizer/normalizer.registry';
+import { DEFAULT_MIDDLEWARE, DEFAULT_NORMALIZER } from '../const';
 
 export const registerHandlers = (
   moduleRef: ModuleRef,
@@ -60,12 +61,11 @@ export const registerMiddlewares = (
       Reflect.getMetadata(MESSAGING_MIDDLEWARE_METADATA, middleware.metatype),
       middleware.instance,
     );
-    if (middleware.name !== 'HandlerMiddleware') {
+    if (middleware.name !== DEFAULT_MIDDLEWARE) {
       logger.log(`Middleware [${middleware.name}] was registered`);
     }
   });
 };
-
 
 export const registerMessageNormalizers = (
   moduleRef: ModuleRef,
@@ -93,7 +93,7 @@ export const registerMessageNormalizers = (
       Reflect.getMetadata(MESSAGING_NORMALIZER_METADATA, messageNormalizer.metatype),
       messageNormalizer.instance,
     );
-    if (messageNormalizer.name !== 'ObjectForwardMessageNormalizer') {
+    if (messageNormalizer.name !== DEFAULT_NORMALIZER) {
       logger.log(`MessageNormalizer [${messageNormalizer.name}] was registered`);
     }
   });
