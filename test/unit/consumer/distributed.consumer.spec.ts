@@ -67,7 +67,7 @@ describe('DistributedConsumer', () => {
       { type: 'LOG', content: 'Channel [ds] was registered' },
       {
         type: 'DEBUG',
-        content: 'Message handled [{"status":"ok"}] with routing key: [routing_key]'
+        content: '[ds] Message handled [{"status":"ok"}] with routing key: [routing_key]'
       },
       {
         type: 'LOG',

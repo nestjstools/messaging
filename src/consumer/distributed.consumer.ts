@@ -12,7 +12,6 @@ import { Middleware } from '../middleware/middleware';
 import { DefaultMessageOptions } from '../message/default-message-options';
 import { ConsumerDispatchedMessageError } from './consumer-dispatched-message-error';
 import { SealedRoutingMessage } from '../message/sealed-routing-message';
-import { RoutingMessage } from '../message/routing-message';
 
 export class DistributedConsumer {
   constructor(
@@ -65,7 +64,7 @@ export class DistributedConsumer {
       mediator.listen().subscribe(async (consumerMessage) => {
         try {
           this.logger.debug(
-            `Message handled [${JSON.stringify(consumerMessage.message)}] with routing key: [${consumerMessage.routingKey}]`,
+            `[${channel.config.name}] Message handled [${JSON.stringify(consumerMessage.message)}] with routing key: [${consumerMessage.routingKey}]`,
           );
 
           const middlewares: Middleware[] = channel.config
