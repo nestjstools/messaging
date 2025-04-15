@@ -540,7 +540,7 @@ export class YourMessagingConsumer implements IMessagingConsumer<YourChannel> {
     return Promise.resolve();
   }
 
-  onError(errored: ConsumerDispatchedMessageError, channel: YourChannel): Promise<void> {
+  async onError(errored: ConsumerDispatchedMessageError, channel: YourChannel): Promise<void> {
     // Handle error if message processing fails
     return Promise.resolve();
   }
