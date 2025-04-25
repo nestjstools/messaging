@@ -88,10 +88,6 @@ export class MessagingModule implements OnApplicationBootstrap {
         ...defineBuses(),
         registerChannels(),
         {
-          provide: Service.MESSAGE_HANDLERS,
-          useValue: options.messageHandlers,
-        },
-        {
           provide: Service.DEFAULT_MESSAGE_BUS,
           useFactory: (
             messageHandlerRegistry: MessageHandlerRegistry,
