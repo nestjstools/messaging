@@ -3,7 +3,6 @@ import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-mess
 type DefineChannels = ChannelConfig[];
 
 export interface MessagingModuleOptions {
-  messageHandlers?: object[]; //TODO Temporary unsupported
   buses?: DefineBusOption[];
   channels?: DefineChannels;
   debug?: boolean;
