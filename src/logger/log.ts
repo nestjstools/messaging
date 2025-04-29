@@ -10,7 +10,7 @@ export class Log {
 
   toObject(): object {
     return {
-      errorMessage: this.content,
+      logMessage: this.content,
       metadata: this.metadata ?? [],
     }
   }
