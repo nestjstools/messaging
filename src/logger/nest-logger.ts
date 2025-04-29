@@ -1,5 +1,6 @@
 import { Injectable, LoggerService } from '@nestjs/common';
 import { MessagingLogger } from './messaging-logger';
+import { Log } from './log';
 
 @Injectable()
 export class NestLogger implements MessagingLogger {
@@ -11,23 +12,27 @@ export class NestLogger implements MessagingLogger {
     private readonly logEnabled: boolean,
   ) {}
 
-  error(message: string): void {
-    this.logger.error(message, NestLogger.MODULE_NAME);
+  error(message: string|Log): void {
+    this.logger.error(this.makeLog(message), NestLogger.MODULE_NAME);
   }
 
-  log(message: string): void {
+  log(message: string|Log): void {
     if (!this.logEnabled) {
       return;
     }
 
-    this.logger.log(message, NestLogger.MODULE_NAME);
+    this.logger.log(this.makeLog(message), NestLogger.MODULE_NAME);
   }
 
-  debug(message: string): void {
+  debug(message: string|Log): void {
     if (!this.debugEnabled) {
       return;
     }
 
-    this.logger.debug(message, NestLogger.MODULE_NAME);
+    this.logger.debug(this.makeLog(message), NestLogger.MODULE_NAME);
+  }
+
+  private makeLog(message: string|Log): object|string {
+    return message instanceof Log ? message.toObject() : message
   }
 }
