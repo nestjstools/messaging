@@ -12,6 +12,7 @@ import { Middleware } from '../middleware/middleware';
 import { DefaultMessageOptions } from '../message/default-message-options';
 import { ConsumerDispatchedMessageError } from './consumer-dispatched-message-error';
 import { SealedRoutingMessage } from '../message/sealed-routing-message';
+import { Log } from '../logger/log';
 
 export class DistributedConsumer {
   constructor(
@@ -21,7 +22,8 @@ export class DistributedConsumer {
     private readonly channelRegistry: ChannelRegistry,
     @Inject(Service.LOGGER) private readonly logger: MessagingLogger,
     private readonly discoveryService: DiscoveryService,
-  ) {}
+  ) {
+  }
 
   async run(): Promise<void> {
     for (const channel of this.channelRegistry.getALl()) {
@@ -63,8 +65,12 @@ export class DistributedConsumer {
 
       mediator.listen().subscribe(async (consumerMessage) => {
         try {
-          this.logger.debug(
-            `[${channel.config.name}] Message handled [${JSON.stringify(consumerMessage.message)}] with routing key: [${consumerMessage.routingKey}]`,
+           this.logger.debug(Log.create(
+              `[${channel.config.name}] Message handled with routing key: [${consumerMessage.routingKey}]`,
+              {
+                message: JSON.stringify(consumerMessage.message),
+              },
+            ),
           );
 
           const middlewares: Middleware[] = channel.config
@@ -81,7 +87,11 @@ export class DistributedConsumer {
             new ConsumerDispatchedMessageError(consumerMessage, e),
             channel,
           );
-          this.logger.error(`Some error occurred in handler: [${e}]`);
+          this.logger.error(Log.create(`Some error occurred in Handler`, {
+            error: e.message,
+            exception: e,
+            message: JSON.stringify(consumerMessage.message),
+          }));
         }
       });
 
