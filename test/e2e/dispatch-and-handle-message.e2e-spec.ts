@@ -31,12 +31,13 @@ describe('DispatchAndHandleMessage', () => {
     await app.close();
   });
 
-  it('will dispatch message to void handler and check if everything is correct via spy service', async () => {
+  it('will dispatch message to void handler and void second handler and check if everything is correct via spy service', async () => {
     await messageBus.dispatch(
-      new RoutingMessage(new TestMessage('xyz'), 'message.void', new DefaultMessageOptions([], true, ObjectForwardMessageNormalizer, true)),
+      new RoutingMessage(new TestMessage('xyz'), 'message.void', new DefaultMessageOptions([], true, ObjectForwardMessageNormalizer)),
     );
 
     expect(spyDataService.getFirst()).toBe('xyz');
+    expect(spyDataService.getAllData()[1]).toBe('xyz2');
   });
 
   it('will dispatch message to returned handler and expected returned result', async () => {
@@ -55,7 +56,7 @@ describe('DispatchAndHandleMessage', () => {
     );
     const data: string[] = spyDataService.getAllData();
 
-    expect(data).toHaveLength(2);
+    expect(data).toHaveLength(3);
     expect(data[0]).toBe('MIDDLEWARE WORKS');
     expect(data[1]).toBe('xyz');
   });

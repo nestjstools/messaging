@@ -21,6 +21,8 @@ export class VoidSecondHandler implements IMessageHandler<TestMessage> {
   constructor(private readonly testService: TestService) {}
 
   handle(message: TestMessage): Promise<object | void> {
+    this.testService.markAsDone(`${message.name}2`);
+
     return Promise.resolve();
   }
 }

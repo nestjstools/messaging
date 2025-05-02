@@ -83,7 +83,6 @@ export class DistributedConsumer {
             middlewares,
             channel.config?.avoidErrorsForNotExistedHandlers ?? true,
             channel.config.normalizer,
-            channel.config.enableParallelHandling,
           ));
 
           await this.messageBus.dispatch(routingMessage);
@@ -92,11 +91,6 @@ export class DistributedConsumer {
             new ConsumerDispatchedMessageError(consumerMessage, e),
             channel,
           );
-          this.logger.error(Log.create(`Some error occurred in Handler`, {
-            error: e.message,
-            exception: e,
-            message: JSON.stringify(consumerMessage.message),
-          }));
         }
       });
 

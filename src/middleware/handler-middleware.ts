@@ -8,6 +8,7 @@ import { MiddlewareContext } from './middleware.context';
 import { IMessageHandler } from '../handler/i-message.handler';
 import { Log } from '../logger/log';
 import { MessagingLogger } from '../logger/messaging-logger';
+import { HandlerError, HandlersException } from '../exception/handlers.exception';
 
 @Injectable()
 @MessagingMiddleware()
@@ -22,25 +23,16 @@ export class HandlerMiddleware implements Middleware {
   async process(message: RoutingMessage, context: MiddlewareContext): Promise<any> {
     const handlers = this.handlerRegistry.getByRoutingKey(message.messageRoutingKey);
 
-    const response = message.messageOptions?.enableParallelHandling ?? false
-      ? await this.handleParallel(message, handlers)
-      : await this.handleSequentially(message, handlers);
-
-    return Promise.resolve(response);
-  }
-
-  private async handleSequentially(message: RoutingMessage, handlers: IMessageHandler<any>[]): Promise<any> {
-    let response = null;
-
-    for (const handler of handlers) {
-      this.logHandlerMessage(handler.constructor.name, message.messageRoutingKey, message.message);
-      response = await handler.handle(message.message);
-    }
-
-    return response;
+    return Promise.resolve(await this.handleParallel(message, handlers));
   }
 
   private async handleParallel(message: RoutingMessage, handlers: IMessageHandler<any>[]): Promise<any> {
+    const errors: HandlerError[] = [];
+
+    if (1 === handlers.length) {
+      return Promise.resolve(await handlers[0].handle(message.message));
+    }
+
     const results = await Promise.allSettled(
       handlers.map(handler => {
         try {
@@ -60,7 +52,12 @@ export class HandlerMiddleware implements Middleware {
           exception,
           message: JSON.stringify(message.message),
         }));
+        errors.push(new HandlerError(result.reason.handler, exception));
       }
+    }
+
+    if (errors.length > 0) {
+      throw new HandlersException(errors);
     }
 
     return Promise.resolve(null);
