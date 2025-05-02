@@ -79,7 +79,12 @@ export class DistributedConsumer {
           const routingMessage = new SealedRoutingMessage(
             consumerMessage.message,
             consumerMessage.routingKey,
-          ).createWithOptions(new DefaultMessageOptions(middlewares, channel.config?.avoidErrorsForNotExistedHandlers ?? true, channel.config.normalizer));
+          ).createWithOptions(new DefaultMessageOptions(
+            middlewares,
+            channel.config?.avoidErrorsForNotExistedHandlers ?? true,
+            channel.config.normalizer,
+            channel.config.enableParallelHandling,
+          ));
 
           await this.messageBus.dispatch(routingMessage);
         } catch (e) {

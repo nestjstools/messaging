@@ -16,6 +16,16 @@ export class VoidHandler implements IMessageHandler<TestMessage> {
 }
 
 @Injectable()
+@MessageHandler('message.void')
+export class VoidSecondHandler implements IMessageHandler<TestMessage> {
+  constructor(private readonly testService: TestService) {}
+
+  handle(message: TestMessage): Promise<object | void> {
+    return Promise.resolve();
+  }
+}
+
+@Injectable()
 @MessageHandler('message.returned')
 export class ReturnedHandler implements IMessageHandler<TestMessage> {
   handle(message: TestMessage): Promise<object | void> {

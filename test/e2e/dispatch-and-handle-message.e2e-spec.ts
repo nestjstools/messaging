@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { TestModule } from '../support/app/test.module';
-import { IMessageBus, MessageResponse, RoutingMessage } from '../../src';
+import { DefaultMessageOptions, IMessageBus, MessageResponse, RoutingMessage } from '../../src';
 import { TestMessage } from '../support/app/test.message';
 import { SpyDataService } from '../support/app/spy-data.service';
 import { Service } from '../../src/dependency-injection/service';
+import { ObjectForwardMessageNormalizer } from '../../src/normalizer/object-forward-message.normalizer';
 
 describe('DispatchAndHandleMessage', () => {
   let app: INestApplication;
@@ -32,7 +33,7 @@ describe('DispatchAndHandleMessage', () => {
 
   it('will dispatch message to void handler and check if everything is correct via spy service', async () => {
     await messageBus.dispatch(
-      new RoutingMessage(new TestMessage('xyz'), 'message.void'),
+      new RoutingMessage(new TestMessage('xyz'), 'message.void', new DefaultMessageOptions([], true, ObjectForwardMessageNormalizer, true)),
     );
 
     expect(spyDataService.getFirst()).toBe('xyz');

@@ -1,4 +1,5 @@
 import { ChannelConfig } from '../config';
+import { SetMetadata } from '@nestjs/common';
 
 export const MESSAGE_HANDLER_METADATA = 'MESSAGE_HANDLER_METADATA';
 export const CHANNEL_FACTORY_METADATA = 'CHANNEL_FACTORY_METADATA';
@@ -6,6 +7,8 @@ export const MESSAGE_BUS_FACTORY_METADATA = 'MESSAGE_BUS_FACTORY_METADATA';
 export const MESSAGE_CONSUMER_METADATA = 'MESSAGE_CONSUMER_METADATA';
 export const MESSAGING_MIDDLEWARE_METADATA = 'MESSAGING_MIDDLEWARE_METADATA';
 export const MESSAGING_NORMALIZER_METADATA = 'MESSAGING_NORMALIZER_METADATA';
+
+export const MessagingMiddlewareRegistry = () => SetMetadata(MESSAGING_MIDDLEWARE_METADATA, true);
 
 export const MessageHandler = (routingKey: string): ClassDecorator => {
   return (target: Function) => {

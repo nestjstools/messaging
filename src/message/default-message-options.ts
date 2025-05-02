@@ -6,5 +6,6 @@ export class DefaultMessageOptions implements MessageOptions {
     public readonly middlewares: Middleware[] = [],
     public readonly avoidErrorsWhenNotExistedHandler: boolean = false,
     public readonly normalizer?: object,
+    public readonly enableParallelHandling: boolean = false,
   ) {}
 }

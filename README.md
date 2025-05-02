@@ -438,12 +438,13 @@ Here’s a table with the documentation for the `MessagingModule.forRoot` config
 
 #### 1. **InMemoryChannelConfig**
 
-| **Property**                           | **Description**                                          | **Default Value** |
-|----------------------------------------|----------------------------------------------------------|-------------------|
-| **`name`**                             | Name of the in-memory channel (e.g., `'my-channel'`).    |                   |
-| **`middlewares`**                      | List of middlewares to apply to the channel.             | `[]`              |
-| **`avoidErrorsForNotExistedHandlers`** | Avoid errors if no handler is available for the message. | `false`           |
-| **`normalizer`**                       | Set your custom normalizer for messages                  |                   |
+| **Property**                           | **Description**                                                                                                                                                                                             | **Default Value** |
+|----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
+| **`name`**                             | Name of the in-memory channel (e.g., `'my-channel'`).                                                                                                                                                       |                   |
+| **`middlewares`**                      | List of middlewares to apply to the channel.                                                                                                                                                                | `[]`              |
+| **`avoidErrorsForNotExistedHandlers`** | Avoid errors if no handler is available for the message.                                                                                                                                                    | `false`           |
+| **`normalizer`**                       | Set your custom normalizer for messages                                                                                                                                                                     |                   |
+| **`enableParallelHandling`**           | When `true`, message handlers are executed in parallel instead of sequentially. This can improve performance when handlers are independent. Note: return values from handlers are ignored in parallel mode. | `false`           |
 
 #### 2. **AmqpChannelConfig**
 

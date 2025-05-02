@@ -7,4 +7,5 @@ export enum Service {
   CHANNEL_REGISTRY = 'messenger_CHANNEL_REGISTRY',
   CHANNELS = 'messenger_CHANNELS',
   LOGGER = 'messenger_LOGGER',
+  OPTIONS = 'messenger_OPTIONS',
 }

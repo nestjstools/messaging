@@ -4,7 +4,7 @@ import { MessagingLogger } from '../logger/messaging-logger';
 import { Service } from './service';
 import {
   MESSAGE_HANDLER_METADATA,
-  MESSAGING_MIDDLEWARE_METADATA, MESSAGING_NORMALIZER_METADATA,
+  MESSAGING_MIDDLEWARE_METADATA, MESSAGING_NORMALIZER_METADATA, MessagingMiddleware, MessagingMiddlewareRegistry,
 } from './decorator';
 import { MiddlewareRegistry } from '../middleware/middleware.registry';
 import { NormalizerRegistry } from '../normalizer/normalizer.registry';

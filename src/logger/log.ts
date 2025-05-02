@@ -5,7 +5,7 @@ export class Log {
   ) {}
 
   static create(content: string, metadata?: Metadata): Log {
-    return new Log(content, metadata);
+    return new Log(content, metadata ?? {});
   }
 
   toObject(): object {

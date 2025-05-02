@@ -1,14 +1,5 @@
-import {
-  DynamicModule,
-  Logger as NestCommonLogger,
-  Module,
-  OnApplicationBootstrap,
-} from '@nestjs/common';
-import {
-  ChannelConfig,
-  InMemoryChannelConfig,
-  MessagingModuleOptions,
-} from './config';
+import { DynamicModule, Logger as NestCommonLogger, Module, OnApplicationBootstrap } from '@nestjs/common';
+import { ChannelConfig, InMemoryChannelConfig, MessagingModuleOptions } from './config';
 import { Service } from './dependency-injection/service';
 import { CompositeChannelFactory } from './channel/factory/composite-channel.factory';
 import { ChannelRegistry } from './channel/channel.registry';
@@ -22,10 +13,7 @@ import { Channel } from './channel/channel';
 import { NestLogger } from './logger/nest-logger';
 import { InMemoryChannelFactory } from './channel/factory/in-memory-channel.factory';
 import { DistributedConsumer } from './consumer/distributed.consumer';
-import {
-  registerHandlers, registerMessageNormalizers,
-  registerMiddlewares,
-} from './dependency-injection/register';
+import { registerHandlers, registerMessageNormalizers, registerMiddlewares } from './dependency-injection/register';
 import { MiddlewareRegistry } from './middleware/middleware.registry';
 import { InMemoryMessageBusFactory } from './bus/in-memory-message-bus.factory';
 import { InMemoryChannel } from './channel/in-memory.channel';
@@ -131,6 +119,10 @@ export class MessagingModule implements OnApplicationBootstrap {
             return new ChannelRegistry(channels, logger);
           },
           inject: [Service.CHANNELS, Service.LOGGER],
+        },
+        {
+          provide: Service.OPTIONS,
+          useValue: options,
         },
         {
           provide: Service.LOGGER,
