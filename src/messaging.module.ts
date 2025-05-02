@@ -121,10 +121,6 @@ export class MessagingModule implements OnApplicationBootstrap {
           inject: [Service.CHANNELS, Service.LOGGER],
         },
         {
-          provide: Service.OPTIONS,
-          useValue: options,
-        },
-        {
           provide: Service.LOGGER,
           useValue: new NestLogger(
             new NestCommonLogger(),
