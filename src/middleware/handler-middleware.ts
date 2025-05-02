@@ -30,7 +30,9 @@ export class HandlerMiddleware implements Middleware {
     const errors: HandlerError[] = [];
 
     if (1 === handlers.length) {
-      return Promise.resolve(await handlers[0].handle(message.message));
+      const handler = handlers[0];
+      this.logHandlerMessage(handler.constructor.name, message.messageRoutingKey, message.message);
+      return Promise.resolve(await handler.handle(message.message));
     }
 
     const results = await Promise.allSettled(

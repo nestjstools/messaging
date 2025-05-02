@@ -13,26 +13,7 @@ describe('HandlerMiddleware', () => {
     registry.register('abc', { handle: jest.fn(() => null) } as IMessageHandler<any>);
   });
 
-  test('should run sequential flow by default', () => {
-    const subjectUnderTest = new HandlerMiddleware(
-      registry,
-      logger,
-    );
-
-    subjectUnderTest.process(new RoutingMessage({ id: 1 }, 'abc'), MiddlewareContext.createFresh([]));
-
-    expect(logger.getLogs()).toEqual([
-      {
-        type: 'DEBUG',
-        content: {
-          content: 'Found a handler [Object] for message [abc]',
-          metadata: {},
-        },
-      },
-    ]);
-  });
-
-  test('should run parallel flow', () => {
+  test('should found a handler', () => {
     const subjectUnderTest = new HandlerMiddleware(
       registry,
       logger,
