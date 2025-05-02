@@ -31,14 +31,14 @@ export class HandlerMiddleware implements Middleware {
 
     if (1 === handlers.length) {
       const handler = handlers[0];
-      this.logHandlerMessage(handler.constructor.name, message.messageRoutingKey, message.message);
+      this.logHandlerMessage(handler.constructor.name, message.messageRoutingKey);
       return Promise.resolve(await handler.handle(message.message));
     }
 
     const results = await Promise.allSettled(
       handlers.map(handler => {
         try {
-          this.logHandlerMessage(handler.constructor.name, message.messageRoutingKey, message.message);
+          this.logHandlerMessage(handler.constructor.name, message.messageRoutingKey);
           return handler.handle(message.message);
         } catch (err) {
           return Promise.reject({handler: handler.constructor.name, error: err});
@@ -65,7 +65,7 @@ export class HandlerMiddleware implements Middleware {
     return Promise.resolve(null);
   }
 
-  private logHandlerMessage(handler: string, messageRoutingKey: string, message: object): void {
+  private logHandlerMessage(handler: string, messageRoutingKey: string): void {
     this.logger.debug(Log.create(`Found a handler [${handler}] for message [${messageRoutingKey}]`));
   }
 }
