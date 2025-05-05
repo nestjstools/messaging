@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { TestModule } from '../support/app/test.module';
-import { IMessageBus, MessageResponse, RoutingMessage } from '../../src';
+import { DefaultMessageOptions, IMessageBus, MessageResponse, RoutingMessage } from '../../src';
 import { TestMessage } from '../support/app/test.message';
 import { SpyDataService } from '../support/app/spy-data.service';
 import { Service } from '../../src/dependency-injection/service';
+import { ObjectForwardMessageNormalizer } from '../../src/normalizer/object-forward-message.normalizer';
 
 describe('DispatchAndHandleMessage', () => {
   let app: INestApplication;
@@ -30,12 +31,13 @@ describe('DispatchAndHandleMessage', () => {
     await app.close();
   });
 
-  it('will dispatch message to void handler and check if everything is correct via spy service', async () => {
+  it('will dispatch message to void handler and void second handler and check if everything is correct via spy service', async () => {
     await messageBus.dispatch(
-      new RoutingMessage(new TestMessage('xyz'), 'message.void'),
+      new RoutingMessage(new TestMessage('xyz'), 'message.void', new DefaultMessageOptions([], true, ObjectForwardMessageNormalizer)),
     );
 
     expect(spyDataService.getFirst()).toBe('xyz');
+    expect(spyDataService.getAllData()[1]).toBe('xyz2');
   });
 
   it('will dispatch message to returned handler and expected returned result', async () => {
@@ -54,7 +56,7 @@ describe('DispatchAndHandleMessage', () => {
     );
     const data: string[] = spyDataService.getAllData();
 
-    expect(data).toHaveLength(2);
+    expect(data).toHaveLength(3);
     expect(data[0]).toBe('MIDDLEWARE WORKS');
     expect(data[1]).toBe('xyz');
   });

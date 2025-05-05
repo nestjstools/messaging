@@ -1,4 +1,5 @@
 import { NestLogger } from '../../../src/logger/nest-logger';
+import { Logger } from '@nestjs/common';
 
 export class SpyLogger extends NestLogger {
   private logsCollection: Log[] = [];
@@ -20,6 +21,10 @@ export class SpyLogger extends NestLogger {
 
   getLogs(): Log[] {
     return this.logsCollection;
+  }
+
+  static create(debugEnabled: boolean = false, logEnabled: boolean = false): SpyLogger {
+    return new SpyLogger(new Logger(), debugEnabled, logEnabled);
   }
 }
 

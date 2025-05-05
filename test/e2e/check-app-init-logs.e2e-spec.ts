@@ -44,6 +44,7 @@ describe('CheckAppInitLogs', () => {
       },
       { type: 'LOG', content: 'Handler [ReturnedHandler] was registered' },
       { type: 'LOG', content: 'Handler [VoidHandler] was registered' },
+      { type: 'LOG', content: 'Handler [VoidSecondHandler] was registered' },
       {
         type: 'LOG',
         content: 'Middleware [SpyDataMiddleware] was registered',

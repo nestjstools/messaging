@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { InMemoryChannelConfig, MessagingModule } from '../../../src';
-import { ReturnedHandler, VoidHandler } from './test.handler';
+import { ReturnedHandler, VoidHandler, VoidSecondHandler } from './test.handler';
 import { SpyDataService } from './spy-data.service';
 import { TestService } from './test.service';
 import { SpyDataMiddleware } from './spy-data-middleware.service';
@@ -22,7 +22,6 @@ import { SpyDataMiddleware } from './spy-data-middleware.service';
         new InMemoryChannelConfig({
           avoidErrorsForNotExistedHandlers: false,
           name: 'simple',
-          middlewares: [],
         }),
         new InMemoryChannelConfig({
           avoidErrorsForNotExistedHandlers: false,
@@ -36,6 +35,7 @@ import { SpyDataMiddleware } from './spy-data-middleware.service';
     SpyDataMiddleware,
     ReturnedHandler,
     VoidHandler,
+    VoidSecondHandler,
     SpyDataService,
     TestService,
   ],

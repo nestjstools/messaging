@@ -16,6 +16,7 @@ A NestJS library for managing asynchronous and synchronous messages (service bus
 - **Middleware Support**: Add custom middleware for message transformation such like validation, logging - do whatever you want.
 - **Debug Mode**: Enable enhanced logging and debugging capabilities for development.
 - **Extensibility**: Creating new channels is straightforward, allowing developers to expand and integrate with external systems or protocols effortlessly.
+- **Concurrent Handler Execution**: Messages dispatched to multiple handlers are processed concurrently, improving performance and responsiveness across your system.
 
 ---
 
@@ -438,12 +439,12 @@ Here’s a table with the documentation for the `MessagingModule.forRoot` config
 
 #### 1. **InMemoryChannelConfig**
 
-| **Property**                           | **Description**                                          | **Default Value** |
-|----------------------------------------|----------------------------------------------------------|-------------------|
-| **`name`**                             | Name of the in-memory channel (e.g., `'my-channel'`).    |                   |
-| **`middlewares`**                      | List of middlewares to apply to the channel.             | `[]`              |
-| **`avoidErrorsForNotExistedHandlers`** | Avoid errors if no handler is available for the message. | `false`           |
-| **`normalizer`**                       | Set your custom normalizer for messages                  |                   |
+| **Property**                           | **Description**                                                                                                                                                                                             | **Default Value** |
+|----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
+| **`name`**                             | Name of the in-memory channel (e.g., `'my-channel'`).                                                                                                                                                       |                   |
+| **`middlewares`**                      | List of middlewares to apply to the channel.                                                                                                                                                                | `[]`              |
+| **`avoidErrorsForNotExistedHandlers`** | Avoid errors if no handler is available for the message.                                                                                                                                                    | `false`           |
+| **`normalizer`**                       | Set your custom normalizer for messages                                                                                                                                                                     |                   |
 
 #### 2. **AmqpChannelConfig**
 

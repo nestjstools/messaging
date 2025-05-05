@@ -79,7 +79,11 @@ export class DistributedConsumer {
           const routingMessage = new SealedRoutingMessage(
             consumerMessage.message,
             consumerMessage.routingKey,
-          ).createWithOptions(new DefaultMessageOptions(middlewares, channel.config?.avoidErrorsForNotExistedHandlers ?? true, channel.config.normalizer));
+          ).createWithOptions(new DefaultMessageOptions(
+            middlewares,
+            channel.config?.avoidErrorsForNotExistedHandlers ?? true,
+            channel.config.normalizer,
+          ));
 
           await this.messageBus.dispatch(routingMessage);
         } catch (e) {
@@ -87,11 +91,6 @@ export class DistributedConsumer {
             new ConsumerDispatchedMessageError(consumerMessage, e),
             channel,
           );
-          this.logger.error(Log.create(`Some error occurred in Handler`, {
-            error: e.message,
-            exception: e,
-            message: JSON.stringify(consumerMessage.message),
-          }));
         }
       });
 
