@@ -43,6 +43,7 @@ describe('CheckAppInitLogs', () => {
         content: 'MessageBus [middleware-message.bus] was created successfully',
       },
       { type: 'LOG', content: 'Handler [ReturnedHandler] was registered' },
+      { type: 'LOG', content: 'Handler [ThrowableHandler] was registered' },
       { type: 'LOG', content: 'Handler [VoidHandler] was registered' },
       { type: 'LOG', content: 'Handler [VoidSecondHandler] was registered' },
       {
