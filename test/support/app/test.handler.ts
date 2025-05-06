@@ -28,6 +28,18 @@ export class VoidSecondHandler implements IMessageHandler<TestMessage> {
 }
 
 @Injectable()
+@MessageHandler('message.throwable')
+export class ThrowableHandler implements IMessageHandler<TestMessage> {
+  constructor(private readonly testService: TestService) {}
+
+  handle(message: TestMessage): Promise<object | void> {
+    throw new Error('Expected error');
+
+    return Promise.resolve();
+  }
+}
+
+@Injectable()
 @MessageHandler('message.returned')
 export class ReturnedHandler implements IMessageHandler<TestMessage> {
   handle(message: TestMessage): Promise<object | void> {
