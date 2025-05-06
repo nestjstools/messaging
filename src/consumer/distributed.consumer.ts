@@ -13,6 +13,7 @@ import { DefaultMessageOptions } from '../message/default-message-options';
 import { ConsumerDispatchedMessageError } from './consumer-dispatched-message-error';
 import { SealedRoutingMessage } from '../message/sealed-routing-message';
 import { Log } from '../logger/log';
+import { HandlersException } from '../exception/handlers.exception';
 
 export class DistributedConsumer {
   constructor(
@@ -91,6 +92,14 @@ export class DistributedConsumer {
             new ConsumerDispatchedMessageError(consumerMessage, e),
             channel,
           );
+
+          if (!(e instanceof HandlersException)) {
+            this.logger.error(Log.create(`Some error occurred in channel [${channel.config.name}]`, {
+              error: e,
+              message: JSON.stringify(consumerMessage.message),
+              routingKey: consumerMessage.routingKey
+            }))
+          }
         }
       });
 

@@ -1,11 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import { TestModule } from '../support/app/test.module';
 import { DefaultMessageOptions, IMessageBus, MessageResponse, RoutingMessage } from '../../src';
 import { TestMessage } from '../support/app/test.message';
 import { SpyDataService } from '../support/app/spy-data.service';
 import { Service } from '../../src/dependency-injection/service';
 import { ObjectForwardMessageNormalizer } from '../../src/normalizer/object-forward-message.normalizer';
+import { HandlersException } from '../../src/exception/handlers.exception';
 
 describe('DispatchAndHandleMessage', () => {
   let app: INestApplication;
@@ -18,6 +19,7 @@ describe('DispatchAndHandleMessage', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [TestModule],
     }).compile();
+    Logger.overrideLogger(false);
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -38,6 +40,16 @@ describe('DispatchAndHandleMessage', () => {
 
     expect(spyDataService.getFirst()).toBe('xyz');
     expect(spyDataService.getAllData()[1]).toBe('xyz2');
+  });
+
+  it('will dispatch message to throwable handler', async () => {
+    try {
+      await messageBus.dispatch(
+        new RoutingMessage(new TestMessage('xyz'), 'message.throwable', new DefaultMessageOptions([], true, ObjectForwardMessageNormalizer)),
+      );
+    } catch (e) {
+      expect(e).toBeInstanceOf(HandlersException);
+    }
   });
 
   it('will dispatch message to returned handler and expected returned result', async () => {
