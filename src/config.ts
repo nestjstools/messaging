@@ -10,7 +10,7 @@ export interface MessagingModuleOptions {
   global?: boolean;
 }
 
-interface DefineBusOption {
+export interface DefineBusOption {
   name: string;
   channels: string[];
 }
