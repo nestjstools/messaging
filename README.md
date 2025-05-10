@@ -43,9 +43,9 @@ yarn add @nestjstools/messaging
 ### Basic Usage (In-memory)
 
 ```typescript
-import { MessagingModule } from '@nestjstools/messaging';
-import { InMemoryChannelConfig } from '@nestjstools/messaging/channels';
+import { MessagingModule, InMemoryChannelConfig } from '@nestjstools/messaging';
 import { SendMessageHandler } from './handlers/send-message.handler';
+
 
 @Module({
   imports: [
@@ -86,10 +86,9 @@ export class SendMessage {
 #### Define your message handler
 ```typescript
 import { SendMessage } from './send-message';
-import { MessageResponse } from '@nestjstools/messaging/message';
-import { MessageHandler } from '@nestjstools/messaging/decorators';
-import { IMessageHandler } from '@nestjstools/messaging/interfaces';
+import { MessageResponse, MessageHandler, IMessageHandler } from '@nestjstools/messaging';
 import { Injectable } from '@nestjs/common';
+
 
 @Injectable()
 @MessageHandler('your.message')
@@ -107,10 +106,9 @@ Messages can be dispatched from anywhere in your application—whether from serv
 
 ```typescript
 import { Controller, Get } from '@nestjs/common';
-import { MessageBus } from '@nestjstools/messaging/dependency-injection';
-import { IMessageBus } from '@nestjstools/messaging/bus';
-import { RoutingMessage } from '@nestjstools/messaging/message';
+import { MessageBus, IMessageBus, RoutingMessage } from '@nestjstools/messaging';
 import { SendMessage } from './test/send-message';
+
 
 @Controller()
 export class AppController {
@@ -170,9 +168,9 @@ yarn add @nestjstools/messaging-rabbitmq-extension
 ```
 
 ```typescript
-import { MessagingModule } from '@nestjstools/messaging';
-import { InMemoryChannelConfig, AmqpChannelConfig, ExchangeType } from '@nestjstools/messaging/channels';
+import { MessagingModule, InMemoryChannelConfig, AmqpChannelConfig, ExchangeType } from '@nestjstools/messaging';
 import { SendMessageHandler } from './handlers/send-message.handler';
+
 
 @Module({
   imports: [
@@ -334,8 +332,7 @@ Here's an example middleware class that logs a message when the middleware is ap
 
 ```typescript
 import { Injectable } from '@nestjs/common';
-import { Middleware } from '@nestjstools/messaging/middleware/middleware';
-import { RoutingMessage } from '@nestjstools/messaging/message/routing-message';
+import { Middleware, RoutingMessage } from '@nestjstools/messaging';
 
 @Injectable()
 @MessagingMiddleware()
@@ -353,8 +350,7 @@ export class TestMiddleware implements Middleware {
 Now that we've defined the middleware, it needs to be attached to a specific channel in the `MessagingModule` configuration. Here's how you would configure the middleware for a channel:
 
 ```typescript
-import { MessagingModule } from '@nestjstools/messaging';
-import { AmqpChannelConfig, InMemoryChannelConfig } from '@nestjstools/messaging/channels';
+import { MessagingModule, AmqpChannelConfig, InMemoryChannelConfig } from '@nestjstools/messaging';
 import { TestMiddleware } from './middlewares/test.middleware';
 import { SendMessageHandler } from './handlers/send-message.handler';
 
