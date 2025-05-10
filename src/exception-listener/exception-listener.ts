@@ -1,3 +1,5 @@
+import { ExceptionContext } from './exception-context';
+
 export interface ExceptionListener {
-  onException(exception: Error, message: object, routingKey: string, channelName: string): Promise<void>;
+  onException(context: ExceptionContext): Promise<void>;
 }

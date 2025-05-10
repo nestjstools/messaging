@@ -52,7 +52,7 @@ export const MessagingNormalizer = (name?: string): ClassDecorator => {
 
 export const MessagingExceptionListener = (): ClassDecorator => {
   return (target: Function) => {
-    Reflect.defineMetadata(MESSAGING_EXCEPTION_LISTENER_METADATA, null, target);
+    Reflect.defineMetadata(MESSAGING_EXCEPTION_LISTENER_METADATA, target.name, target);
   };
 };
 
