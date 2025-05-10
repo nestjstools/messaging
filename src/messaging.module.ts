@@ -13,7 +13,12 @@ import { Channel } from './channel/channel';
 import { NestLogger } from './logger/nest-logger';
 import { InMemoryChannelFactory } from './channel/factory/in-memory-channel.factory';
 import { DistributedConsumer } from './consumer/distributed.consumer';
-import { registerHandlers, registerMessageNormalizers, registerMiddlewares } from './dependency-injection/register';
+import {
+  registerExceptionListener,
+  registerHandlers,
+  registerMessageNormalizers,
+  registerMiddlewares,
+} from './dependency-injection/register';
 import { MiddlewareRegistry } from './middleware/middleware.registry';
 import { InMemoryMessageBusFactory } from './bus/in-memory-message-bus.factory';
 import { InMemoryChannel } from './channel/in-memory.channel';
@@ -21,6 +26,8 @@ import { HandlerMiddleware } from './middleware/handler-middleware';
 import { MessageBusCollection } from './bus/message-bus.collection';
 import { NormalizerRegistry } from './normalizer/normalizer.registry';
 import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-message.normalizer';
+import { ExceptionListenerRegistry } from './exception-listener/exception-listener.registry';
+import { ExceptionListenerHandler } from './exception-listener/exception-listener-handler';
 
 @Module({})
 export class MessagingModule implements OnApplicationBootstrap {
@@ -106,12 +113,20 @@ export class MessagingModule implements OnApplicationBootstrap {
           useClass: MessageHandlerRegistry,
         },
         {
+          provide: Service.EXCEPTION_LISTENER_REGISTRY,
+          useClass: ExceptionListenerRegistry,
+        },
+        {
           provide: Service.MESSAGE_NORMALIZERS_REGISTRY,
           useClass: NormalizerRegistry,
         },
         {
           provide: Service.MIDDLEWARE_REGISTRY,
           useClass: MiddlewareRegistry,
+        },
+        {
+          provide: Service.EXCEPTION_LISTENER_HANDLER,
+          useClass: ExceptionListenerHandler,
         },
         {
           provide: Service.CHANNEL_REGISTRY,
@@ -154,6 +169,7 @@ export class MessagingModule implements OnApplicationBootstrap {
     registerHandlers(this.moduleRef, this.discoveryService);
     registerMiddlewares(this.moduleRef, this.discoveryService);
     registerMessageNormalizers(this.moduleRef, this.discoveryService);
+    registerExceptionListener(this.moduleRef, this.discoveryService);
 
     const consumer = this.moduleRef.get(DistributedConsumer);
     consumer.run();

@@ -3,7 +3,7 @@ import { MessageHandlerRegistry } from '../handler/message-handler.registry';
 import { MessagingLogger } from '../logger/messaging-logger';
 import { Service } from './service';
 import {
-  MESSAGE_HANDLER_METADATA,
+  MESSAGE_HANDLER_METADATA, MESSAGING_EXCEPTION_LISTENER_METADATA,
   MESSAGING_MIDDLEWARE_METADATA, MESSAGING_NORMALIZER_METADATA,
 } from './decorator';
 import { MiddlewareRegistry } from '../middleware/middleware.registry';
@@ -95,6 +95,38 @@ export const registerMessageNormalizers = (
     );
     if (messageNormalizer.name !== DEFAULT_NORMALIZER) {
       logger.log(`MessageNormalizer [${messageNormalizer.name}] was registered`);
+    }
+  });
+};
+
+export const registerExceptionListener = (
+  moduleRef: ModuleRef,
+  discoveryService: DiscoveryService,
+) => {
+  const registry: NormalizerRegistry = moduleRef.get(
+    Service.EXCEPTION_LISTENER_REGISTRY,
+  );
+  const logger: MessagingLogger = moduleRef.get(Service.LOGGER);
+  const messageExceptionListenerInstances = discoveryService
+    .getProviders()
+    .filter((messageExceptionListener) => {
+      if (!messageExceptionListener.metatype) {
+        return false;
+      }
+
+      return Reflect.hasMetadata(
+        MESSAGING_EXCEPTION_LISTENER_METADATA,
+        messageExceptionListener.metatype,
+      );
+    });
+
+  messageExceptionListenerInstances.forEach((messageExceptionListener) => {
+    registry.register(
+      Reflect.getMetadata(MESSAGING_EXCEPTION_LISTENER_METADATA, messageExceptionListener.metatype),
+      messageExceptionListener.instance,
+    );
+    if (messageExceptionListener.name !== DEFAULT_NORMALIZER) {
+      logger.log(`ExceptionListener [${messageExceptionListener.name}] was registered`);
     }
   });
 };
