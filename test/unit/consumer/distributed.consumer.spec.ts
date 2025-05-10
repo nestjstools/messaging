@@ -15,15 +15,19 @@ import { SpyLogger } from '../../support/logger/spy.logger';
 import { of } from 'rxjs';
 import { SealedRoutingMessage } from '../../../src/message/sealed-routing-message';
 import { ObjectForwardMessageNormalizer } from '../../../src/normalizer/object-forward-message.normalizer';
+import { ExceptionListenerHandler } from '../../../src/exception-listener/exception-listener-handler';
+import { ExceptionListenerRegistry } from '../../../src/exception-listener/exception-listener.registry';
 
 describe('DistributedConsumer', () => {
   let subjectUnderTest: DistributedConsumer;
   let messageBus: IMessageBus;
   let logger: SpyLogger;
+  let exceptionListenerHandler: ExceptionListenerHandler;
   let discoveryService: DiscoveryService;
 
   beforeEach(async () => {
     logger = new SpyLogger(new Logger(), false, false);
+    exceptionListenerHandler = new ExceptionListenerHandler(new ExceptionListenerRegistry());
 
     Reflect.hasMetadata = jest.fn().mockReturnValue(true);
     Reflect.getMetadata = jest.fn().mockReturnValue(TestChannel);
@@ -52,7 +56,7 @@ describe('DistributedConsumer', () => {
       getProviders: jest.fn().mockReturnValue([instanceWrapper]),
     } as unknown as DiscoveryService;
 
-    subjectUnderTest = new DistributedConsumer(messageBus, channelRegistry, logger, discoveryService);
+    subjectUnderTest = new DistributedConsumer(messageBus, channelRegistry, exceptionListenerHandler, logger, discoveryService);
 
     await subjectUnderTest.run();
 
@@ -104,7 +108,7 @@ describe('DistributedConsumer', () => {
       getProviders: jest.fn().mockReturnValue([instanceWrapper]),
     } as unknown as DiscoveryService;
 
-    subjectUnderTest = new DistributedConsumer(messageBus, channelRegistry, logger, discoveryService);
+    subjectUnderTest = new DistributedConsumer(messageBus, channelRegistry, exceptionListenerHandler, logger, discoveryService);
 
     await subjectUnderTest.run();
 

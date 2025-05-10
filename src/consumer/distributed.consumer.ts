@@ -14,6 +14,8 @@ import { ConsumerDispatchedMessageError } from './consumer-dispatched-message-er
 import { SealedRoutingMessage } from '../message/sealed-routing-message';
 import { Log } from '../logger/log';
 import { HandlersException } from '../exception/handlers.exception';
+import { ExceptionListenerHandler } from '../exception-listener/exception-listener-handler';
+import { ExceptionContext } from '../exception-listener/exception-context';
 
 export class DistributedConsumer {
   constructor(
@@ -21,6 +23,8 @@ export class DistributedConsumer {
     private readonly messageBus: IMessageBus,
     @Inject(Service.CHANNEL_REGISTRY)
     private readonly channelRegistry: ChannelRegistry,
+    @Inject(Service.EXCEPTION_LISTENER_HANDLER)
+    private readonly exceptionListenerHandler: ExceptionListenerHandler,
     @Inject(Service.LOGGER) private readonly logger: MessagingLogger,
     private readonly discoveryService: DiscoveryService,
   ) {
@@ -66,7 +70,7 @@ export class DistributedConsumer {
 
       mediator.listen().subscribe(async (consumerMessage) => {
         try {
-           this.logger.debug(Log.create(
+          this.logger.debug(Log.create(
               `[${channel.config.name}] Message handled with routing key: [${consumerMessage.routingKey}]`,
               {
                 message: JSON.stringify(consumerMessage.message),
@@ -97,9 +101,11 @@ export class DistributedConsumer {
             this.logger.error(Log.create(`Some error occurred in channel [${channel.config.name}]`, {
               error: e,
               message: JSON.stringify(consumerMessage.message),
-              routingKey: consumerMessage.routingKey
-            }))
+              routingKey: consumerMessage.routingKey,
+            }));
           }
+
+          await this.exceptionListenerHandler.handleError(new ExceptionContext(e, channel.config.name, consumerMessage.message, consumerMessage.routingKey));
         }
       });
 

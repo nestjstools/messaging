@@ -313,7 +313,7 @@ export class Base64Normalizer implements MessageNormalizer {
 You can define a **Normalizer** per Channel
 ___
 
-## <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M160-40v-240h100v-80H160v-240h100v-80H160v-240h280v240H340v80h100v80h120v-80h280v240H560v-80H440v80H340v80h100v240H160Zm80-80h120v-80H240v80Zm0-320h120v-80H240v80Zm400 0h120v-80H640v80ZM240-760h120v-80H240v80Zm60-40Zm0 320Zm400 0ZM300-160Z"/></svg> Middlewares
+## ⤵️ Middlewares
 
 A **middleware** in the context of the `MessagingModule` is a function that processes messages as they pass through the message pipeline. The middleware can intercept, modify, or log messages before they are handled by the respective **message handler**. This is particularly useful for logging, authentication, validation, or any other pre-processing step before the actual business logic is applied.
 
@@ -406,6 +406,28 @@ export class AppModule {}
 - **Custom Logic**: You can apply custom transformations, logging, or other types of business logic to messages as they move through the pipeline.
 
 ---
+
+## 🔰 ExceptionListener
+
+The **ExceptionListener** provides a centralized way to handle exceptions thrown during asynchronous message processing from any **channel** in your **messaging system**.
+
+By decorating a class with `@MessagingExceptionListener()` and implementing the `ExceptionListener` interface, you can intercept and respond to any unhandled exception occurring during message handling — whether it's logging, reporting, retries, or custom recovery logic.
+
+Example Use Case:
+You can log the error, send a notification, or trigger fallback logic whenever a message handler throws an exception.
+
+### Example ExceptionListener Code:
+```typescript
+import { Injectable } from '@nestjs/common';
+import { ExceptionListener, MessagingExceptionListener, ExceptionContext } from '@nestjstools/messaging';
+
+@MessagingExceptionListener()
+export class CustomExceptionListener implements ExceptionListener {
+   onException(context: ExceptionContext): Promise<void> {
+      console.log(`Here I can handle exception If I want and do some action`);
+   }
+}
+```
 
 ## Configuration options
 Here’s a table with the documentation for the `MessagingModule.forRoot` configuration you requested, breaking it into **buses**, **channels** (with descriptions of both channels), and their respective properties, descriptions, and default values:
