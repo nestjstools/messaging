@@ -3,12 +3,13 @@ import { Middleware } from './middleware';
 import { MessageHandlerRegistry } from '../handler/message-handler.registry';
 import { Inject, Injectable } from '@nestjs/common';
 import { Service } from '../dependency-injection/service';
-import { MessagingMiddleware } from '../dependency-injection/decorator';
+import { MESSAGING_MESSAGE_METADATA, MessagingMiddleware } from '../dependency-injection/decorator';
 import { MiddlewareContext } from './middleware.context';
 import { IMessageHandler } from '../handler/i-message.handler';
 import { Log } from '../logger/log';
 import { MessagingLogger } from '../logger/messaging-logger';
 import { HandlerError, HandlersException } from '../exception/handlers.exception';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 @MessagingMiddleware()
@@ -33,7 +34,8 @@ export class HandlerMiddleware implements Middleware {
       const handler = handlers[0];
       this.logHandlerMessage(handler.constructor.name, message.messageRoutingKey);
       try {
-        const result = await handler.handle(message.message);
+        const metadata = Reflect.getMetadata(MESSAGING_MESSAGE_METADATA, handler, 'handle');
+        const result = await handler.handle(plainToInstance(metadata, message.message));
         return Promise.resolve(result);
       } catch (error) {
         const exception = new HandlersException([new HandlerError(handler.constructor.name, error)]);
