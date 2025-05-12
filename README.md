@@ -94,8 +94,8 @@ import { Injectable } from '@nestjs/common';
 @MessageHandler('your.message')
 export class SendMessageHandler implements IMessageHandler<SendMessage> {
    // If you want to receive the message as a properly typed instance (not just a raw object),
-   // use the `@MessageBody()` decorator on the parameter:
-   // async handle(@MessageBody() message: SendMessage): Promise<MessageResponse | void> {
+   // use the `@DenormalizeMessage()` decorator on the parameter:
+   // async handle(@DenormalizeMessage() message: SendMessage): Promise<MessageResponse | void> {
 
   async handle(message: SendMessage): Promise<MessageResponse | void> {
     console.log(message.content);

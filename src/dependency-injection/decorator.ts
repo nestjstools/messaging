@@ -57,7 +57,7 @@ export const MessagingExceptionListener = (): ClassDecorator => {
   };
 };
 
-export function MessageBody(): ParameterDecorator {
+export function DenormalizeMessage(): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
     const paramTypes = Reflect.getMetadata('design:paramtypes', target, propertyKey);
     const type = paramTypes[parameterIndex];
