@@ -9,6 +9,7 @@ import { IMessageHandler } from '../handler/i-message.handler';
 import { Log } from '../logger/log';
 import { MessagingLogger } from '../logger/messaging-logger';
 import { HandlerError, HandlersException } from '../exception/handlers.exception';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 @MessagingMiddleware()
@@ -33,7 +34,7 @@ export class HandlerMiddleware implements Middleware {
       const handler = handlers[0];
       this.logHandlerMessage(handler.constructor.name, message.messageRoutingKey);
       try {
-        const result = await handler.handle(message.message);
+        const result = await handler.handle(this.convertToInstance(handler, message.message));
         return Promise.resolve(result);
       } catch (error) {
         const exception = new HandlersException([new HandlerError(handler.constructor.name, error)]);
@@ -46,7 +47,7 @@ export class HandlerMiddleware implements Middleware {
       handlers.map(handler => {
         try {
           this.logHandlerMessage(handler.constructor.name, message.messageRoutingKey);
-          return handler.handle(message.message);
+          return handler.handle(this.convertToInstance(handler, message.message));
         } catch (err) {
           return Promise.reject({handler: handler.constructor.name, error: err});
         }
@@ -66,6 +67,16 @@ export class HandlerMiddleware implements Middleware {
     }
 
     return Promise.resolve(null);
+  }
+
+  private convertToInstance(handler: object, message: object): object {
+    const instance = Reflect.getMetadata('design:paramtypes', handler, 'handle');
+
+    if (!instance) {
+      return message;
+    }
+
+    return plainToInstance(instance[0], message);
   }
 
   private logHandlerMessage(handler: string, messageRoutingKey: string): void {

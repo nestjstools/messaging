@@ -46,6 +46,9 @@
     "test:e2e": "node_modules/.bin/jest --config ./test/jest-e2e.json",
     "test:unit": "node_modules/.bin/jest --config ./test/jest-unit.json"
   },
+  "dependencies": {
+    "class-transformer": "^0.5.1"
+  },
   "peerDependencies": {
     "@nestjs/common": "^10.x||^11.x",
     "@nestjs/core": "^10.x||^11.x",
