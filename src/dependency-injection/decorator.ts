@@ -57,9 +57,11 @@ export const MessagingExceptionListener = (): ClassDecorator => {
   };
 };
 
-export function MessageBody(messageInstance: object): ParameterDecorator {
-  return (target: Object, propertyKey: string | symbol) => {
-    Reflect.defineMetadata(MESSAGING_MESSAGE_METADATA, messageInstance, target, propertyKey);
+export function MessageBody(): ParameterDecorator {
+  return (target, propertyKey, parameterIndex) => {
+    const paramTypes = Reflect.getMetadata('design:paramtypes', target, propertyKey);
+    const type = paramTypes[parameterIndex];
+    Reflect.defineMetadata('message:type', type, target, propertyKey);
   };
 }
 
