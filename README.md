@@ -93,6 +93,10 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 @MessageHandler('your.message')
 export class SendMessageHandler implements IMessageHandler<SendMessage> {
+   // If you want to receive the message as a properly typed instance (not just a raw object),
+   // use the `@MessageBody()` decorator on the parameter:
+   // async handle(@MessageBody() message: SendMessage): Promise<MessageResponse | void> {
+
   async handle(message: SendMessage): Promise<MessageResponse | void> {
     console.log(message.content);
     // Example handling logic
@@ -440,7 +444,7 @@ Here’s a table with the documentation for the `MessagingModule.forRoot` config
 | **`buses`**    | Array of message buses that define routing and processing of messages. | `[]` (empty array by default) |
 | **`channels`** | Array of channel configurations used by the message buses.             | `[]` (empty array by default) |
 | **`debug`**    | Enables or disables debug mode for logging additional messages.        | `false`                       |
-| **`logging`**  | Enables or disables logging for bus activity (e.g., message dispatch). | `false`                       |
+| **`logging`**  | Enables or disables logging for bus activity (e.g., message dispatch). | `true`                        |
 
 ---
 
