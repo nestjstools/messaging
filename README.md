@@ -587,5 +587,7 @@ Classes with `Injectable()` decorator must be defined as providers in somewhere 
 * INBOX & OUTBOX Pattern
 
 ### Links
-* Redis channel adapter https://www.npmjs.com/package/@nestjstools/messaging-redis-extension
-* RabbitMQ channel adapter https://www.npmjs.com/package/@nestjstools/messaging-rabbitmq-extension
+- [Redis channel adapter](https://www.npmjs.com/package/@nestjstools/messaging-redis-extension)
+- [RabbitMQ channel adapter](https://www.npmjs.com/package/@nestjstools/messaging-rabbitmq-extension)
+- [Amazon SQS channel adapter](https://www.npmjs.com/package/@nestjstools/messaging-amazon-sqs-extension)
+- [Google PubSub channel Adapter](https://www.npmjs.com/package/@nestjstools/messaging-google-pubsub-extension)
