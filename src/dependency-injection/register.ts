@@ -6,9 +6,8 @@ import {
   MESSAGE_HANDLER_METADATA, MESSAGING_EXCEPTION_LISTENER_METADATA,
   MESSAGING_MIDDLEWARE_METADATA, MESSAGING_NORMALIZER_METADATA,
 } from './decorator';
-import { MiddlewareRegistry } from '../middleware/middleware.registry';
-import { NormalizerRegistry } from '../normalizer/normalizer.registry';
 import { DEFAULT_MIDDLEWARE, DEFAULT_NORMALIZER } from '../const';
+import { Registry } from '../shared/registry';
 
 export const registerHandlers = (
   moduleRef: ModuleRef,
@@ -39,75 +38,36 @@ export const registerMiddlewares = (
   moduleRef: ModuleRef,
   discoveryService: DiscoveryService,
 ) => {
-  const registry: MiddlewareRegistry = moduleRef.get(
-    Service.MIDDLEWARE_REGISTRY,
-  );
-  const logger: MessagingLogger = moduleRef.get(Service.LOGGER);
-  const middlewareInstances = discoveryService
-    .getProviders()
-    .filter((middleware) => {
-      if (!middleware.metatype) {
-        return false;
-      }
-
-      return Reflect.hasMetadata(
-        MESSAGING_MIDDLEWARE_METADATA,
-        middleware.metatype,
-      );
-    });
-
-  middlewareInstances.forEach((middleware) => {
-    registry.register(
-      Reflect.getMetadata(MESSAGING_MIDDLEWARE_METADATA, middleware.metatype),
-      middleware.instance,
-    );
-    if (middleware.name !== DEFAULT_MIDDLEWARE) {
-      logger.log(`Middleware [${middleware.name}] was registered`);
-    }
-  });
+  register(moduleRef, discoveryService, Service.MIDDLEWARE_REGISTRY, MESSAGING_MIDDLEWARE_METADATA, 'Middleware');
 };
 
 export const registerMessageNormalizers = (
   moduleRef: ModuleRef,
   discoveryService: DiscoveryService,
 ) => {
-  const registry: NormalizerRegistry = moduleRef.get(
-    Service.MESSAGE_NORMALIZERS_REGISTRY,
-  );
-  const logger: MessagingLogger = moduleRef.get(Service.LOGGER);
-  const messageNormalizerInstances = discoveryService
-    .getProviders()
-    .filter((messageNormalizer) => {
-      if (!messageNormalizer.metatype) {
-        return false;
-      }
-
-      return Reflect.hasMetadata(
-        MESSAGING_NORMALIZER_METADATA,
-        messageNormalizer.metatype,
-      );
-    });
-
-  messageNormalizerInstances.forEach((messageNormalizer) => {
-    registry.register(
-      Reflect.getMetadata(MESSAGING_NORMALIZER_METADATA, messageNormalizer.metatype),
-      messageNormalizer.instance,
-    );
-    if (messageNormalizer.name !== DEFAULT_NORMALIZER) {
-      logger.log(`MessageNormalizer [${messageNormalizer.name}] was registered`);
-    }
-  });
+  register(moduleRef, discoveryService, Service.MESSAGE_NORMALIZERS_REGISTRY, MESSAGING_NORMALIZER_METADATA, 'MessageNormalizer');
 };
 
 export const registerExceptionListener = (
   moduleRef: ModuleRef,
   discoveryService: DiscoveryService,
 ) => {
-  const registry: NormalizerRegistry = moduleRef.get(
-    Service.EXCEPTION_LISTENER_REGISTRY,
+  register(moduleRef, discoveryService, Service.EXCEPTION_LISTENER_REGISTRY, MESSAGING_EXCEPTION_LISTENER_METADATA, 'ExceptionListener');
+};
+
+const register = (
+  moduleRef: ModuleRef,
+  discoveryService: DiscoveryService,
+  registryProvider: string,
+  decoratorMetadata: string,
+  name: string,
+) => {
+  const exceptions = [DEFAULT_NORMALIZER, DEFAULT_MIDDLEWARE];
+  const registry: Registry<any> = moduleRef.get(
+    registryProvider,
   );
   const logger: MessagingLogger = moduleRef.get(Service.LOGGER);
-  const messageExceptionListenerInstances = discoveryService
+  const instances = discoveryService
     .getProviders()
     .filter((messageExceptionListener) => {
       if (!messageExceptionListener.metatype) {
@@ -115,18 +75,18 @@ export const registerExceptionListener = (
       }
 
       return Reflect.hasMetadata(
-        MESSAGING_EXCEPTION_LISTENER_METADATA,
+        decoratorMetadata,
         messageExceptionListener.metatype,
       );
     });
 
-  messageExceptionListenerInstances.forEach((messageExceptionListener) => {
+  instances.forEach((messageExceptionListener) => {
     registry.register(
-      Reflect.getMetadata(MESSAGING_EXCEPTION_LISTENER_METADATA, messageExceptionListener.metatype),
+      Reflect.getMetadata(decoratorMetadata, messageExceptionListener.metatype),
       messageExceptionListener.instance,
     );
-    if (messageExceptionListener.name !== DEFAULT_NORMALIZER) {
-      logger.log(`ExceptionListener [${messageExceptionListener.name}] was registered`);
+    if (!exceptions.includes(messageExceptionListener.name)) {
+      logger.log(`${name} [${messageExceptionListener.name}] was registered`);
     }
   });
-};
+}

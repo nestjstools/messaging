@@ -1,17 +1,4 @@
 import { ExceptionListener } from './exception-listener';
+import { BaseRegistry } from '../shared/base-registry';
 
-export class ExceptionListenerRegistry {
-  private registry: Map<string, ExceptionListener> = new Map();
-
-  register(name: string, middleware: ExceptionListener): void {
-    if (this.registry.has(name)) {
-      return;
-    }
-
-    this.registry.set(name, middleware);
-  }
-
-  getAll(): ExceptionListener[] {
-    return Array.from(this.registry.values());
-  }
-}
+export class ExceptionListenerRegistry extends BaseRegistry<ExceptionListener> {}
