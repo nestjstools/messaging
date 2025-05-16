@@ -1,3 +1,5 @@
+import { ConsumerMessage } from './consumer-message';
+
 export interface ConsumerMessageDispatcher {
-  dispatch(message: object|string): void;
+  dispatch(message: ConsumerMessage): void;
 }
