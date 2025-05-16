@@ -32,11 +32,14 @@ import { ExceptionListenerHandler } from './exception-listener/exception-listene
 @Module({})
 export class MessagingModule implements OnApplicationBootstrap {
   static forRoot(options: MessagingModuleOptions): DynamicModule {
+    const buses = options.buses ?? [];
+    const channels = options.channels ?? [];
+
     const registerChannels = (): any => {
       return {
         provide: Service.CHANNELS,
         useFactory: (compositeChannelFactory: CompositeChannelFactory) => {
-          return options.channels.map((channelConfig: ChannelConfig) =>
+          return channels.map((channelConfig: ChannelConfig) =>
             compositeChannelFactory.create(channelConfig),
           );
         },
@@ -44,8 +47,8 @@ export class MessagingModule implements OnApplicationBootstrap {
       };
     };
 
-    const defineBuses = (): any[] => {
-      return options.buses.map((bus) => ({
+    const registerBuses = (): any[] => {
+      return buses.map((bus) => ({
         provide: `${bus.name}`,
         useFactory: (
           channelRegistry: ChannelRegistry,
@@ -80,7 +83,7 @@ export class MessagingModule implements OnApplicationBootstrap {
       module: MessagingModule,
       imports: [DiscoveryModule],
       providers: [
-        ...defineBuses(),
+        ...registerBuses(),
         registerChannels(),
         {
           provide: Service.DEFAULT_MESSAGE_BUS,
@@ -153,7 +156,7 @@ export class MessagingModule implements OnApplicationBootstrap {
       ],
       exports: [
         Service.DEFAULT_MESSAGE_BUS,
-        ...defineBuses(),
+        ...registerBuses(),
         DistributedConsumer,
         ObjectForwardMessageNormalizer,
       ],
