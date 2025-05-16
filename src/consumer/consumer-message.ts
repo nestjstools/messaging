@@ -2,10 +2,9 @@ export class ConsumerMessage {
   constructor(
     public readonly message: object|string,
     public readonly routingKey: string,
-    public readonly metadata: any[] = [],
+    public readonly metadata: {} = {},
   ) {
     this.message = message;
     this.routingKey = routingKey;
-    this.metadata = metadata ?? [];
   }
 }
