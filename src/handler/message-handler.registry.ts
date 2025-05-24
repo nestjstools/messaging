@@ -4,7 +4,13 @@ import { HandlerForMessageNotFoundException } from '../exception/handler-for-mes
 export class MessageHandlerRegistry {
   private registry: Map<string, IMessageHandler<any>[]> = new Map();
 
-  register(name: string, handler: IMessageHandler<any>): void {
+  register(names: string[], handler: IMessageHandler<any>): void {
+    names.forEach((name) => {
+      this.registerSingle(name, handler);
+    });
+  }
+
+  private registerSingle(name: string, handler: IMessageHandler<any>): void {
     if (this.registry.has(name)) {
       const bucket = this.registry.get(name) as Array<IMessageHandler<any>>;
 

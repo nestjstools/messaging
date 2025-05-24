@@ -89,7 +89,7 @@ import { SendMessage } from './send-message';
 import { MessageResponse, MessageHandler, IMessageHandler } from '@nestjstools/messaging';
 import { Injectable } from '@nestjs/common';
 
-
+// You can define multiple routing messages on the same handler: @MessageHandler('your.message', 'your.message2')
 @Injectable()
 @MessageHandler('your.message')
 export class SendMessageHandler implements IMessageHandler<SendMessage> {

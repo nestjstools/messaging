@@ -9,7 +9,7 @@ export const MESSAGING_NORMALIZER_METADATA = 'MESSAGING_NORMALIZER_METADATA';
 export const MESSAGING_EXCEPTION_LISTENER_METADATA = 'MESSAGING_EXCEPTION_LISTENER_METADATA';
 export const MESSAGING_MESSAGE_METADATA = 'MESSAGING_MESSAGE_METADATA';
 
-export const MessageHandler = (routingKey: string): ClassDecorator => {
+export const MessageHandler = (...routingKey: string[]): ClassDecorator => {
   return (target: Function) => {
     Reflect.defineMetadata(MESSAGE_HANDLER_METADATA, routingKey, target);
   };
