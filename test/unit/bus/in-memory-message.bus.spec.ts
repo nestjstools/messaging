@@ -71,7 +71,7 @@ describe('InMemoryMessageBus', () => {
       handle: jest.fn(),
     } as unknown as IMessageHandler<any>
 
-    handlerRegistry.register('my_routing.key', handler)
+    handlerRegistry.register(['my_routing.key'], handler)
 
     const subjectUnderTest = new InMemoryMessageBus(
       handlerRegistry,

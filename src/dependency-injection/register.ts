@@ -8,6 +8,9 @@ import {
 } from './decorator';
 import { DEFAULT_MIDDLEWARE, DEFAULT_NORMALIZER } from '../const';
 import { Registry } from '../shared/registry';
+import { MiddlewareRegistry } from '../middleware/middleware.registry';
+import { ExceptionListenerRegistry } from '../exception-listener/exception-listener.registry';
+import { NormalizerRegistry } from '../normalizer/normalizer.registry';
 
 export const registerHandlers = (
   moduleRef: ModuleRef,
@@ -38,24 +41,24 @@ export const registerMiddlewares = (
   moduleRef: ModuleRef,
   discoveryService: DiscoveryService,
 ) => {
-  register(moduleRef, discoveryService, Service.MIDDLEWARE_REGISTRY, MESSAGING_MIDDLEWARE_METADATA, 'Middleware');
+  register<MiddlewareRegistry>(moduleRef, discoveryService, Service.MIDDLEWARE_REGISTRY, MESSAGING_MIDDLEWARE_METADATA, 'Middleware');
 };
 
 export const registerMessageNormalizers = (
   moduleRef: ModuleRef,
   discoveryService: DiscoveryService,
 ) => {
-  register(moduleRef, discoveryService, Service.MESSAGE_NORMALIZERS_REGISTRY, MESSAGING_NORMALIZER_METADATA, 'MessageNormalizer');
+  register<NormalizerRegistry>(moduleRef, discoveryService, Service.MESSAGE_NORMALIZERS_REGISTRY, MESSAGING_NORMALIZER_METADATA, 'MessageNormalizer');
 };
 
 export const registerExceptionListener = (
   moduleRef: ModuleRef,
   discoveryService: DiscoveryService,
 ) => {
-  register(moduleRef, discoveryService, Service.EXCEPTION_LISTENER_REGISTRY, MESSAGING_EXCEPTION_LISTENER_METADATA, 'ExceptionListener');
+  register<ExceptionListenerRegistry>(moduleRef, discoveryService, Service.EXCEPTION_LISTENER_REGISTRY, MESSAGING_EXCEPTION_LISTENER_METADATA, 'ExceptionListener');
 };
 
-const register = (
+const register = <T extends Registry<object>>(
   moduleRef: ModuleRef,
   discoveryService: DiscoveryService,
   registryProvider: string,
@@ -63,7 +66,7 @@ const register = (
   name: string,
 ) => {
   const exceptions = [DEFAULT_NORMALIZER, DEFAULT_MIDDLEWARE];
-  const registry: Registry<any> = moduleRef.get(
+  const registry: Registry<T> = moduleRef.get(
     registryProvider,
   );
   const logger: MessagingLogger = moduleRef.get(Service.LOGGER);

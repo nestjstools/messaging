@@ -10,7 +10,7 @@ describe('HandlerMiddleware', () => {
   beforeEach(() => {
     logger = SpyLogger.create();
     registry = new MessageHandlerRegistry();
-    registry.register('abc', { handle: jest.fn(() => null) } as IMessageHandler<any>);
+    registry.register(['abc'], { handle: jest.fn(() => null) } as IMessageHandler<any>);
   });
 
   test('should found a handler', () => {
