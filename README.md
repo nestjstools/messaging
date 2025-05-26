@@ -20,6 +20,12 @@ A NestJS library for managing asynchronous and synchronous messages (service bus
 
 ---
 
+## Documentation
+
+https://nestjstools.gitbook.io/nestjstools-messaging-docs
+
+---
+
 ## Example project based on RaabitMQ example
 
 Repository: https://github.com/nestjstools/messaging-rabbitmq-example
