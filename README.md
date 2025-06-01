@@ -18,6 +18,13 @@ A NestJS library for managing asynchronous and synchronous messages (service bus
 - **Extensibility**: Creating new channels is straightforward, allowing developers to expand and integrate with external systems or protocols effortlessly.
 - **Concurrent Handler Execution**: Messages dispatched to multiple handlers are processed concurrently, improving performance and responsiveness across your system.
 
+## Channels
+- [Redis channel adapter](https://www.npmjs.com/package/@nestjstools/messaging-redis-extension)
+- [RabbitMQ channel adapter](https://www.npmjs.com/package/@nestjstools/messaging-rabbitmq-extension)
+- [Amazon SQS channel adapter](https://www.npmjs.com/package/@nestjstools/messaging-amazon-sqs-extension)
+- [Google PubSub channel Adapter](https://www.npmjs.com/package/@nestjstools/messaging-google-pubsub-extension)
+- [Nats channel Adapter](https://www.npmjs.com/package/@nestjstools/messaging-nats-extension)
+
 ---
 
 ## Documentation
@@ -591,9 +598,3 @@ Classes with `Injectable()` decorator must be defined as providers in somewhere 
 
 ### Future features
 * INBOX & OUTBOX Pattern
-
-### Links
-- [Redis channel adapter](https://www.npmjs.com/package/@nestjstools/messaging-redis-extension)
-- [RabbitMQ channel adapter](https://www.npmjs.com/package/@nestjstools/messaging-rabbitmq-extension)
-- [Amazon SQS channel adapter](https://www.npmjs.com/package/@nestjstools/messaging-amazon-sqs-extension)
-- [Google PubSub channel Adapter](https://www.npmjs.com/package/@nestjstools/messaging-google-pubsub-extension)
