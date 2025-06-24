@@ -110,7 +110,7 @@ export class SendMessageHandler implements IMessageHandler<SendMessage> {
    // use the `@DenormalizeMessage()` decorator on the parameter:
    // async handle(@DenormalizeMessage() message: SendMessage): Promise<MessageResponse | void> {
 
-  async handle(message: SendMessage): Promise<MessageResponse | void> {
+  async handle(message: SendMessage): Promise<object | void> {
     console.log(message.content);
     // Example handling logic
   }
@@ -144,7 +144,7 @@ export class AppController {
 }
 ```
 
-### Explanation:
+### Flow:
 
 1. **Flexible Dispatching**:
     - You can call the `dispatch` method from any layer (e.g., controller, service, or scheduled job). This example uses an HTTP `GET` endpoint for demonstration.
