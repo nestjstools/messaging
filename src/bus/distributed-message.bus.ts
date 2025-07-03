@@ -10,7 +10,7 @@ import { NormalizerRegistry } from '../normalizer/normalizer.registry';
 export class DistributedMessageBus implements IMessageBus {
   constructor(private messageBusCollection: MessageBusCollection, private normalizerRegistry: NormalizerRegistry) {}
 
-  async dispatch(message: RoutingMessage): Promise<MessageResponse | void> {
+  async dispatch(message: RoutingMessage): Promise<MessageResponse> {
     if (!(message instanceof RoutingMessage)) {
       throw new Error(`Message must be instance of ${RoutingMessage.name}`);
     }

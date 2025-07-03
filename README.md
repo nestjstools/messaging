@@ -159,7 +159,7 @@ export class AppController {
     - This implementation illustrates an entry point triggered via an HTTP request, showcasing how simple it is to connect the messaging system to a web interface.
 
 ### ⚠️ Warning!
-🚨 Important Notice: You can return responses from handlers, but currently, it only works with the `InMemoryChannel`. This behavior may not function as expected if multiple handlers are processing a single message.
+🚨 Important Notice: You can **return responses from handlers**, but currently, it only works with the `InMemoryChannel`. This behavior may not function as expected if multiple handlers are processing a single message.
 
 🛠️ Please ensure you're using a compatible setup when working with multiple handlers, as this could result in unexpected behavior.
 
@@ -453,6 +453,3 @@ export class YourMessageOptions implements MessageOptions {
 Classes with `Injectable()` decorator must be defined as providers in somewhere in application.
 
 ---
-
-### Future features
-* INBOX & OUTBOX Pattern

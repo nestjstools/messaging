@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging",
-  "version": "2.17.1",
+  "version": "2.18.0",
   "description": "Simplifies asynchronous and synchronous message handling with support for buses, handlers, channels, and consumers. Build scalable, decoupled applications with ease and reliability.",
   "author": "Sebastian Iwanczyszyn",
   "license": "MIT",
@@ -21,13 +21,15 @@
     "package.json"
   ],
   "keywords": [
-    "nestjs-tools",
+    "nestjstools",
     "nestjs",
     "distributed",
     "messaging",
     "nestjs-messaging",
     "message-bus",
     "service-bus",
+    "nestjs-service-bus",
+    "nestjs-message-bus",
     "microservices"
   ],
   "scripts": {
@@ -52,7 +54,7 @@
   "peerDependencies": {
     "@nestjs/common": "^10.x||^11.x",
     "@nestjs/core": "^10.x||^11.x",
-    "reflect-metadata": "^0.2.0",
+    "reflect-metadata": "^0.2.x",
     "rxjs": "^7.x"
   },
   "devDependencies": {

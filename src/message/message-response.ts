@@ -9,6 +9,10 @@ export class MessageResponse {
     return this.responses[0];
   }
 
+  isEmpty(): boolean {
+    return 0 === this.responses.length;
+  }
+
   getAll(): object[] {
     return this.responses;
   }
