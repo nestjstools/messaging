@@ -1,5 +1,18 @@
-import { DynamicModule, Logger as NestCommonLogger, Module, OnApplicationBootstrap } from '@nestjs/common';
-import { ChannelConfig, InMemoryChannelConfig, MessagingModuleOptions } from './config';
+import {
+  DynamicModule,
+  FactoryProvider,
+  Logger as NestCommonLogger,
+  Module,
+  OnApplicationBootstrap,
+  Provider,
+} from '@nestjs/common';
+import {
+  ChannelConfig,
+  DefineChannels,
+  InMemoryChannelConfig,
+  MessagingModuleAsyncOptions,
+  MessagingModuleOptions, MandatoryMessagingModuleOptions,
+} from './config';
 import { Service } from './dependency-injection/service';
 import { CompositeChannelFactory } from './channel/factory/composite-channel.factory';
 import { ChannelRegistry } from './channel/channel.registry';
@@ -31,12 +44,11 @@ import { ExceptionListenerHandler } from './exception-listener/exception-listene
 
 @Module({})
 export class MessagingModule implements OnApplicationBootstrap {
+
   static forRoot(options: MessagingModuleOptions): DynamicModule {
-    const buses = options.buses ?? [];
     const channels = options.channels ?? [];
 
-    const registerChannels = (): any => {
-      return {
+    const registerChannels: FactoryProvider = {
         provide: Service.CHANNELS,
         useFactory: (compositeChannelFactory: CompositeChannelFactory) => {
           return channels.map((channelConfig: ChannelConfig) =>
@@ -44,10 +56,38 @@ export class MessagingModule implements OnApplicationBootstrap {
           );
         },
         inject: [CompositeChannelFactory],
-      };
     };
 
-    const registerBuses = (): any[] => {
+    return MessagingModule.createDynamicModule(options, [registerChannels]);
+  }
+
+  static forRootAsync(options: MessagingModuleAsyncOptions): DynamicModule {
+    const registerAsyncConfig: FactoryProvider = {
+      provide: Service.MESSAGING_MODULE_ASYNC_CHANNEL_OPTIONS,
+      useFactory: options.useChannelFactory,
+      inject: options.inject ?? [],
+    };
+
+    const registerChannels: FactoryProvider = {
+      provide: Service.CHANNELS,
+      useFactory: (
+        compositeChannelFactory: CompositeChannelFactory,
+        channels: DefineChannels,
+      ) => {
+        return (channels ?? []).map((channelConfig: ChannelConfig) =>
+          compositeChannelFactory.create(channelConfig),
+        );
+      },
+      inject: [CompositeChannelFactory, Service.MESSAGING_MODULE_ASYNC_CHANNEL_OPTIONS],
+    };
+
+    return MessagingModule.createDynamicModule(options, [registerAsyncConfig, registerChannels], options.imports ?? []);
+  }
+
+  private static createDynamicModule(options: MandatoryMessagingModuleOptions, providers: Provider[] = [], imports: any = []): DynamicModule {
+    const buses = options.buses ?? [];
+
+    const registerBuses = (): FactoryProvider[] => {
       return buses.map((bus) => ({
         provide: `${bus.name}`,
         useFactory: (
@@ -78,39 +118,43 @@ export class MessagingModule implements OnApplicationBootstrap {
       }));
     };
 
+    const defaultMessageBus = (): Provider => {
+      return {
+        provide: Service.DEFAULT_MESSAGE_BUS,
+        useFactory: (
+          messageHandlerRegistry: MessageHandlerRegistry,
+          middlewareRegistry: MiddlewareRegistry,
+          normalizerRegistry: NormalizerRegistry,
+        ) => {
+          return new InMemoryMessageBus(
+            messageHandlerRegistry,
+            middlewareRegistry,
+            new InMemoryChannel(
+              new InMemoryChannelConfig({
+                name: 'default.bus',
+                middlewares: [],
+                avoidErrorsForNotExistedHandlers: true,
+              }),
+            ),
+            normalizerRegistry,
+          );
+        },
+        inject: [
+          Service.MESSAGE_HANDLERS_REGISTRY,
+          Service.MIDDLEWARE_REGISTRY,
+          Service.MESSAGE_NORMALIZERS_REGISTRY,
+        ],
+      };
+    };
+
     return {
       global: options.global ?? true,
       module: MessagingModule,
-      imports: [DiscoveryModule],
+      imports: [DiscoveryModule, ...imports ],
       providers: [
+        ...providers,
+        defaultMessageBus(),
         ...registerBuses(),
-        registerChannels(),
-        {
-          provide: Service.DEFAULT_MESSAGE_BUS,
-          useFactory: (
-            messageHandlerRegistry: MessageHandlerRegistry,
-            middlewareRegistry: MiddlewareRegistry,
-            normalizerRegistry: NormalizerRegistry,
-          ) => {
-            return new InMemoryMessageBus(
-              messageHandlerRegistry,
-              middlewareRegistry,
-              new InMemoryChannel(
-                new InMemoryChannelConfig({
-                  name: 'default.bus',
-                  middlewares: [],
-                  avoidErrorsForNotExistedHandlers: true,
-                }),
-              ),
-              normalizerRegistry,
-            );
-          },
-          inject: [
-            Service.MESSAGE_HANDLERS_REGISTRY,
-            Service.MIDDLEWARE_REGISTRY,
-            Service.MESSAGE_NORMALIZERS_REGISTRY,
-          ],
-        },
         {
           provide: Service.MESSAGE_HANDLERS_REGISTRY,
           useClass: MessageHandlerRegistry,
@@ -156,7 +200,7 @@ export class MessagingModule implements OnApplicationBootstrap {
       ],
       exports: [
         Service.DEFAULT_MESSAGE_BUS,
-        ...registerBuses(),
+        ...registerBuses().map(bus => bus.provide),
         DistributedConsumer,
         ObjectForwardMessageNormalizer,
       ],
