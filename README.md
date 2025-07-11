@@ -24,6 +24,7 @@ A NestJS library for managing asynchronous and synchronous messages (service bus
 - [Amazon SQS channel adapter](https://www.npmjs.com/package/@nestjstools/messaging-amazon-sqs-extension)
 - [Google PubSub channel Adapter](https://www.npmjs.com/package/@nestjstools/messaging-google-pubsub-extension)
 - [Nats channel Adapter](https://www.npmjs.com/package/@nestjstools/messaging-nats-extension)
+- [Azure Service Bus](https://www.npmjs.com/package/@nestjstools/messaging-azure-service-bus-extension)
 
 ---
 
