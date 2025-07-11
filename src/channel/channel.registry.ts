@@ -31,7 +31,7 @@ export class ChannelRegistry {
     return this.registry.get(name);
   }
 
-  getALl(): Channel<any>[] {
+  getAll(): Channel<any>[] {
     return Array.from(this.registry.values());
   }
 }

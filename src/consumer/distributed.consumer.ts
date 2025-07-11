@@ -31,7 +31,7 @@ export class DistributedConsumer {
   }
 
   async run(): Promise<void> {
-    for (const channel of this.channelRegistry.getALl()) {
+    for (const channel of this.channelRegistry.getAll()) {
       if (
         channel instanceof InMemoryChannel ||
         false === channel.config.enableConsumer

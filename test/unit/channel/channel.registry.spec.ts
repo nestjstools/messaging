@@ -22,7 +22,7 @@ describe('ChannelRegistry', () => {
 
   test('should not register the same channel twice', () => {
     registry.register(mockChannel);
-    expect(registry.getALl().length).toBe(1);
+    expect(registry.getAll().length).toBe(1);
   });
 
   test('should throw an exception if no channel is found by name', () => {
@@ -32,6 +32,6 @@ describe('ChannelRegistry', () => {
   test('should retrieve all registered channels', () => {
     const anotherMockChannel = { config: { name: 'anotherChannel' } } as unknown as Channel<any>;
     registry.register(anotherMockChannel);
-    expect(registry.getALl()).toEqual([mockChannel, anotherMockChannel]);
+    expect(registry.getAll()).toEqual([mockChannel, anotherMockChannel]);
   });
 });
