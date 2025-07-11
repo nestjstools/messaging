@@ -1,24 +1,57 @@
 import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-message.normalizer';
+import { Type } from '@nestjs/common';
+import { DynamicModule } from '@nestjs/common/interfaces/modules/dynamic-module.interface';
+import { ForwardReference } from '@nestjs/common/interfaces/modules/forward-reference.interface';
 
-type DefineChannels = ChannelConfig[];
+export type DefineChannels = ChannelConfig[];
 
-export interface MessagingModuleOptions {
-  buses?: DefineBusOption[];
+export interface MessagingModuleOptions extends MandatoryMessagingModuleOptions {
   channels?: DefineChannels;
-  debug?: boolean;
-  logging?: boolean;
-  global?: boolean;
 }
 
+/**
+ * @description
+ * Configuration for a messaging bus.
+ * Each bus is identified by a unique name and is associated with one or more channels.
+ * Define buses if you want to enable sending messages over specific channels.
+ */
 export interface DefineBusOption {
+  /**
+   * @description
+   * Unique name of your bus
+   */
   name: string;
+  /**
+   * @description
+   * List of channel names the message will be sent through.
+   */
   channels: string[];
 }
 
 export class ChannelConfig {
+  /**
+   * @description
+   * If true, suppresses errors when no handler is found for a message on this channel.
+   * Useful for optional or loosely coupled message handling.
+   */
   public readonly avoidErrorsForNotExistedHandlers?: boolean;
+  /**
+   * @description
+   * An array of middleware objects to be applied to messages passing through this channel.
+   * Middleware can be used for logging, transformation, validation, etc.
+   */
   public readonly middlewares?: object[];
+  /**
+   * @description
+   * Enables or disables the consumer (listener) for this channel.
+   * If set to false, the channel will not actively consume messages.
+   */
   public readonly enableConsumer?: boolean;
+  /**
+   * @description
+   * Optional message normalizer to process or transform messages before they are handled & before send.
+   * Can be used to enforce consistent message structure.
+   */
   public readonly normalizer?: object;
 
   constructor(
@@ -85,4 +118,28 @@ export enum ExchangeType {
   TOPIC = 'topic',
   FANOUT = 'fanout',
   DIRECT = 'direct',
+}
+
+/**
+ * @description
+ * Allows asynchronous configuration of messaging channels, similar to NestJS's `useFactory` pattern.
+ * Use this to define your channels dynamically, possibly depending on other injected services.
+ * Note: Buses and other options must be configured in sync way.
+ */
+export interface MessagingModuleAsyncOptions extends MandatoryMessagingModuleOptions {
+  inject?: Array<Type | string | symbol>;
+  useChannelFactory: (...args) => Promise<DefineChannels> | DefineChannels;
+  imports?: Array<Type | DynamicModule | Promise<DynamicModule> | ForwardReference>;
+}
+
+/**
+ * @description
+ * Base configuration options for the MessagingModule.
+ * These options control core behaviors such as debugging, logging, buses and global registration.
+ */
+export interface MandatoryMessagingModuleOptions {
+  buses?: DefineBusOption[];
+  debug?: boolean;
+  logging?: boolean;
+  global?: boolean;
 }
