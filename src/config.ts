@@ -10,16 +10,19 @@ export interface MessagingModuleOptions extends MandatoryMessagingModuleOptions 
 }
 
 /**
+ * @description
  * Configuration for a messaging bus.
  * Each bus is identified by a unique name and is associated with one or more channels.
  * Define buses if you want to enable sending messages over specific channels.
  */
 export interface DefineBusOption {
   /**
+   * @description
    * Unique name of your bus
    */
   name: string;
   /**
+   * @description
    * List of channel names the message will be sent through.
    */
   channels: string[];
@@ -27,21 +30,25 @@ export interface DefineBusOption {
 
 export class ChannelConfig {
   /**
+   * @description
    * If true, suppresses errors when no handler is found for a message on this channel.
    * Useful for optional or loosely coupled message handling.
    */
   public readonly avoidErrorsForNotExistedHandlers?: boolean;
   /**
+   * @description
    * An array of middleware objects to be applied to messages passing through this channel.
    * Middleware can be used for logging, transformation, validation, etc.
    */
   public readonly middlewares?: object[];
   /**
+   * @description
    * Enables or disables the consumer (listener) for this channel.
    * If set to false, the channel will not actively consume messages.
    */
   public readonly enableConsumer?: boolean;
   /**
+   * @description
    * Optional message normalizer to process or transform messages before they are handled & before send.
    * Can be used to enforce consistent message structure.
    */
