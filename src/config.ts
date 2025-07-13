@@ -68,6 +68,10 @@ export class ChannelConfig {
   }
 }
 
+/**
+ * @deprecated
+ * Will be removed in version 3.x - use RmqChannelConfig from @nestjstools/messaging-rabbitmq-extension version 2.11+
+ */
 export class AmqpChannelConfig extends ChannelConfig {
   public readonly connectionUri: string;
   public readonly exchangeName: string;
