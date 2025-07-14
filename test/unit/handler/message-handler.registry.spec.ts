@@ -23,6 +23,8 @@ describe('MessageHandlerRegistry', () => {
   });
 
   test('should throw an exception if no handler is found for a routing key', () => {
-    expect(() => registry.getByRoutingKey('unknownEvent')).toThrow(HandlerForMessageNotFoundException);
+    expect(() => registry.getByRoutingKey('unknownEvent')).toThrow(
+      HandlerForMessageNotFoundException,
+    );
   });
 });

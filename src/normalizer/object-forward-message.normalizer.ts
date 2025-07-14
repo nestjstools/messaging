@@ -7,7 +7,7 @@ export class ObjectForwardMessageNormalizer implements MessageNormalizer {
     return message;
   }
 
-  async denormalize(message: string|object, type: string): Promise<object> {
+  async denormalize(message: string | object, type: string): Promise<object> {
     if (typeof message !== 'object') {
       throw new Error('Unable to denormalize object');
     }

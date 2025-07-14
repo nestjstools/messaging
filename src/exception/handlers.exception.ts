@@ -11,7 +11,7 @@ export class HandlerError {
 
   constructor(
     public readonly handler: string,
-    public readonly error: Error
+    public readonly error: Error,
   ) {
     this.handler = handler;
     this.error = error;

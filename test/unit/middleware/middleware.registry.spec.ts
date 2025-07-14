@@ -23,11 +23,15 @@ describe('MiddlewareRegistry', () => {
   });
 
   test('should throw an exception if no middleware is found for a given name', () => {
-    expect(() => registry.getByName('unknownMiddleware')).toThrow(MessagingException);
+    expect(() => registry.getByName('unknownMiddleware')).toThrow(
+      MessagingException,
+    );
   });
 
   test('should retrieve all registered middleware', () => {
-    const anotherMockMiddleware = { execute: jest.fn() } as unknown as Middleware;
+    const anotherMockMiddleware = {
+      execute: jest.fn(),
+    } as unknown as Middleware;
     registry.register('middleware1', mockMiddleware);
     registry.register('middleware2', anotherMockMiddleware);
     expect(registry.getAll()).toEqual([mockMiddleware, anotherMockMiddleware]);

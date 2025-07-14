@@ -34,7 +34,8 @@
   ],
   "scripts": {
     "build": "node_modules/.bin/nest build",
-    "format": "node_modules/.bin/prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "prettier:fix": "node_modules/.bin/prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "prettier": "node_modules/.bin/prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "node_modules/.bin/nest start",
     "start:dev": "node_modules/.bin/nest start --watch",
     "start:debug": "node_modules/.bin/nest start --debug --watch",

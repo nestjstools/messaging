@@ -11,7 +11,8 @@ import {
   DefineChannels,
   InMemoryChannelConfig,
   MessagingModuleAsyncOptions,
-  MessagingModuleOptions, MandatoryMessagingModuleOptions,
+  MessagingModuleOptions,
+  MandatoryMessagingModuleOptions,
 } from './config';
 import { Service } from './dependency-injection/service';
 import { CompositeChannelFactory } from './channel/factory/composite-channel.factory';
@@ -44,18 +45,17 @@ import { ExceptionListenerHandler } from './exception-listener/exception-listene
 
 @Module({})
 export class MessagingModule implements OnApplicationBootstrap {
-
   static forRoot(options: MessagingModuleOptions): DynamicModule {
     const channels = options.channels ?? [];
 
     const registerChannels: FactoryProvider = {
-        provide: Service.CHANNELS,
-        useFactory: (compositeChannelFactory: CompositeChannelFactory) => {
-          return channels.map((channelConfig: ChannelConfig) =>
-            compositeChannelFactory.create(channelConfig),
-          );
-        },
-        inject: [CompositeChannelFactory],
+      provide: Service.CHANNELS,
+      useFactory: (compositeChannelFactory: CompositeChannelFactory) => {
+        return channels.map((channelConfig: ChannelConfig) =>
+          compositeChannelFactory.create(channelConfig),
+        );
+      },
+      inject: [CompositeChannelFactory],
     };
 
     return MessagingModule.createDynamicModule(options, [registerChannels]);
@@ -78,13 +78,24 @@ export class MessagingModule implements OnApplicationBootstrap {
           compositeChannelFactory.create(channelConfig),
         );
       },
-      inject: [CompositeChannelFactory, Service.MESSAGING_MODULE_ASYNC_CHANNEL_OPTIONS],
+      inject: [
+        CompositeChannelFactory,
+        Service.MESSAGING_MODULE_ASYNC_CHANNEL_OPTIONS,
+      ],
     };
 
-    return MessagingModule.createDynamicModule(options, [registerAsyncConfig, registerChannels], options.imports ?? []);
+    return MessagingModule.createDynamicModule(
+      options,
+      [registerAsyncConfig, registerChannels],
+      options.imports ?? [],
+    );
   }
 
-  private static createDynamicModule(options: MandatoryMessagingModuleOptions, providers: Provider[] = [], imports: any = []): DynamicModule {
+  private static createDynamicModule(
+    options: MandatoryMessagingModuleOptions,
+    providers: Provider[] = [],
+    imports: any = [],
+  ): DynamicModule {
     const buses = options.buses ?? [];
 
     const registerBuses = (): FactoryProvider[] => {
@@ -100,10 +111,16 @@ export class MessagingModule implements OnApplicationBootstrap {
 
           for (const channelName of bus.channels) {
             const channel = channelRegistry.getByName(channelName);
-            messageBusCollection.add({ messageBus: busFactory.create(channel), channel: channel });
+            messageBusCollection.add({
+              messageBus: busFactory.create(channel),
+              channel: channel,
+            });
           }
 
-          const messageBus = new DistributedMessageBus(messageBusCollection, normalizerRegistry);
+          const messageBus = new DistributedMessageBus(
+            messageBusCollection,
+            normalizerRegistry,
+          );
 
           logger.log(`MessageBus [${bus.name}] was created successfully`);
 
@@ -150,7 +167,7 @@ export class MessagingModule implements OnApplicationBootstrap {
     return {
       global: options.global ?? true,
       module: MessagingModule,
-      imports: [DiscoveryModule, ...imports ],
+      imports: [DiscoveryModule, ...imports],
       providers: [
         ...providers,
         defaultMessageBus(),
@@ -200,7 +217,7 @@ export class MessagingModule implements OnApplicationBootstrap {
       ],
       exports: [
         Service.DEFAULT_MESSAGE_BUS,
-        ...registerBuses().map(bus => bus.provide),
+        ...registerBuses().map((bus) => bus.provide),
         DistributedConsumer,
         ObjectForwardMessageNormalizer,
       ],

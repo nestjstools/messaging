@@ -11,13 +11,17 @@ describe('ChannelRegistry', () => {
 
   beforeEach(() => {
     mockLogger = { log: jest.fn() } as unknown as Logger;
-    mockChannel = { config: { name: 'testChannel' } } as unknown as Channel<any>;
+    mockChannel = {
+      config: { name: 'testChannel' },
+    } as unknown as Channel<any>;
     registry = new ChannelRegistry([mockChannel], mockLogger);
   });
 
   test('should register a channel on instantiation', () => {
     expect(registry.getByName('testChannel')).toBe(mockChannel);
-    expect(mockLogger.log).toHaveBeenCalledWith('Channel [testChannel] was registered');
+    expect(mockLogger.log).toHaveBeenCalledWith(
+      'Channel [testChannel] was registered',
+    );
   });
 
   test('should not register the same channel twice', () => {
@@ -26,11 +30,15 @@ describe('ChannelRegistry', () => {
   });
 
   test('should throw an exception if no channel is found by name', () => {
-    expect(() => registry.getByName('unknownChannel')).toThrow(MessagingException);
+    expect(() => registry.getByName('unknownChannel')).toThrow(
+      MessagingException,
+    );
   });
 
   test('should retrieve all registered channels', () => {
-    const anotherMockChannel = { config: { name: 'anotherChannel' } } as unknown as Channel<any>;
+    const anotherMockChannel = {
+      config: { name: 'anotherChannel' },
+    } as unknown as Channel<any>;
     registry.register(anotherMockChannel);
     expect(registry.getAll()).toEqual([mockChannel, anotherMockChannel]);
   });

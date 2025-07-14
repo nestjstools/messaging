@@ -27,8 +27,7 @@ export class DistributedConsumer {
     private readonly exceptionListenerHandler: ExceptionListenerHandler,
     @Inject(Service.LOGGER) private readonly logger: MessagingLogger,
     private readonly discoveryService: DiscoveryService,
-  ) {
-  }
+  ) {}
 
   async run(): Promise<void> {
     for (const channel of this.channelRegistry.getAll()) {
@@ -70,7 +69,8 @@ export class DistributedConsumer {
 
       mediator.listen().subscribe(async (consumerMessage) => {
         try {
-          this.logger.debug(Log.create(
+          this.logger.debug(
+            Log.create(
               `[${channel.config.name}] Message handled with routing key: [${consumerMessage.routingKey}]`,
               {
                 message: JSON.stringify(consumerMessage.message),
@@ -84,11 +84,13 @@ export class DistributedConsumer {
           const routingMessage = new SealedRoutingMessage(
             consumerMessage.message,
             consumerMessage.routingKey,
-          ).createWithOptions(new DefaultMessageOptions(
-            middlewares,
-            channel.config?.avoidErrorsForNotExistedHandlers ?? true,
-            channel.config.normalizer,
-          ));
+          ).createWithOptions(
+            new DefaultMessageOptions(
+              middlewares,
+              channel.config?.avoidErrorsForNotExistedHandlers ?? true,
+              channel.config.normalizer,
+            ),
+          );
 
           await this.messageBus.dispatch(routingMessage);
         } catch (e) {
@@ -98,14 +100,26 @@ export class DistributedConsumer {
           );
 
           if (!(e instanceof HandlersException)) {
-            this.logger.error(Log.create(`Some error occurred in channel [${channel.config.name}]`, {
-              error: e,
-              message: JSON.stringify(consumerMessage.message),
-              routingKey: consumerMessage.routingKey,
-            }));
+            this.logger.error(
+              Log.create(
+                `Some error occurred in channel [${channel.config.name}]`,
+                {
+                  error: e,
+                  message: JSON.stringify(consumerMessage.message),
+                  routingKey: consumerMessage.routingKey,
+                },
+              ),
+            );
           }
 
-          await this.exceptionListenerHandler.handleError(new ExceptionContext(e, channel.config.name, consumerMessage.message, consumerMessage.routingKey));
+          await this.exceptionListenerHandler.handleError(
+            new ExceptionContext(
+              e,
+              channel.config.name,
+              consumerMessage.message,
+              consumerMessage.routingKey,
+            ),
+          );
         }
       });
 

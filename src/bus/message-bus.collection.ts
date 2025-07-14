@@ -2,8 +2,7 @@ import { IMessageBus } from './i-message-bus';
 import { Channel } from '../channel/channel';
 
 export class MessageBusCollection {
-  constructor(private collection: Collection[] = []) {
-  }
+  constructor(private collection: Collection[] = []) {}
 
   add(collection: Collection) {
     this.collection.push(collection);
