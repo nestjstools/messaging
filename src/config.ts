@@ -5,7 +5,8 @@ import { ForwardReference } from '@nestjs/common/interfaces/modules/forward-refe
 
 export type DefineChannels = ChannelConfig[];
 
-export interface MessagingModuleOptions extends MandatoryMessagingModuleOptions {
+export interface MessagingModuleOptions
+  extends MandatoryMessagingModuleOptions {
   channels?: DefineChannels;
 }
 
@@ -61,7 +62,8 @@ export class ChannelConfig {
     enableConsumer?: boolean,
     normalizer?: object,
   ) {
-    this.avoidErrorsForNotExistedHandlers = avoidErrorsForNotExistedHandlers ?? false;
+    this.avoidErrorsForNotExistedHandlers =
+      avoidErrorsForNotExistedHandlers ?? false;
     this.middlewares = middlewares ?? [];
     this.enableConsumer = enableConsumer ?? true;
     this.normalizer = normalizer ?? ObjectForwardMessageNormalizer;
@@ -94,7 +96,13 @@ export class AmqpChannelConfig extends ChannelConfig {
     middlewares,
     normalizer,
   }: AmqpChannelConfig) {
-    super(name, avoidErrorsForNotExistedHandlers, middlewares, enableConsumer, normalizer)
+    super(
+      name,
+      avoidErrorsForNotExistedHandlers,
+      middlewares,
+      enableConsumer,
+      normalizer,
+    );
     this.connectionUri = connectionUri;
     this.exchangeName = exchangeName;
     this.exchangeType = exchangeType;
@@ -113,7 +121,13 @@ export class InMemoryChannelConfig extends ChannelConfig {
     enableConsumer,
     normalizer,
   }: InMemoryChannelConfig) {
-    super(name, avoidErrorsForNotExistedHandlers, middlewares, enableConsumer, normalizer);
+    super(
+      name,
+      avoidErrorsForNotExistedHandlers,
+      middlewares,
+      enableConsumer,
+      normalizer,
+    );
   }
 }
 
@@ -129,10 +143,13 @@ export enum ExchangeType {
  * Use this to define your channels dynamically, possibly depending on other injected services.
  * Note: Buses and other options must be configured in sync way.
  */
-export interface MessagingModuleAsyncOptions extends MandatoryMessagingModuleOptions {
+export interface MessagingModuleAsyncOptions
+  extends MandatoryMessagingModuleOptions {
   inject?: Array<Type | string | symbol>;
   useChannelFactory: (...args) => Promise<DefineChannels> | DefineChannels;
-  imports?: Array<Type | DynamicModule | Promise<DynamicModule> | ForwardReference>;
+  imports?: Array<
+    Type | DynamicModule | Promise<DynamicModule> | ForwardReference
+  >;
 }
 
 /**

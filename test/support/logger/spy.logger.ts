@@ -23,7 +23,10 @@ export class SpyLogger extends NestLogger {
     return this.logsCollection;
   }
 
-  static create(debugEnabled: boolean = false, logEnabled: boolean = false): SpyLogger {
+  static create(
+    debugEnabled: boolean = false,
+    logEnabled: boolean = false,
+  ): SpyLogger {
     return new SpyLogger(new Logger(), debugEnabled, logEnabled);
   }
 }

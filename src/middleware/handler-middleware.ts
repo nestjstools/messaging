@@ -8,7 +8,10 @@ import { MiddlewareContext } from './middleware.context';
 import { IMessageHandler } from '../handler/i-message.handler';
 import { Log } from '../logger/log';
 import { MessagingLogger } from '../logger/messaging-logger';
-import { HandlerError, HandlersException } from '../exception/handlers.exception';
+import {
+  HandlerError,
+  HandlersException,
+} from '../exception/handlers.exception';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
@@ -21,37 +24,64 @@ export class HandlerMiddleware implements Middleware {
     private logger: MessagingLogger,
   ) {}
 
-  async process(message: RoutingMessage, context: MiddlewareContext): Promise<any> {
-    const handlers = this.handlerRegistry.getByRoutingKey(message.messageRoutingKey);
+  async process(
+    message: RoutingMessage,
+    context: MiddlewareContext,
+  ): Promise<any> {
+    const handlers = this.handlerRegistry.getByRoutingKey(
+      message.messageRoutingKey,
+    );
 
     return this.handleParallel(message, handlers);
   }
 
-  private async handleParallel(message: RoutingMessage, handlers: IMessageHandler<any>[]): Promise<any> {
+  private async handleParallel(
+    message: RoutingMessage,
+    handlers: IMessageHandler<any>[],
+  ): Promise<any> {
     const errors: HandlerError[] = [];
 
     if (1 === handlers.length) {
       const handler = handlers[0];
-      this.logHandlerMessage(handler.constructor.name, message.messageRoutingKey);
+      this.logHandlerMessage(
+        handler.constructor.name,
+        message.messageRoutingKey,
+      );
       try {
-        const result = await handler.handle(this.convertToInstance(handler, message.message));
+        const result = await handler.handle(
+          this.convertToInstance(handler, message.message),
+        );
         return Promise.resolve(result);
       } catch (error) {
-        const exception = new HandlersException([new HandlerError(handler.constructor.name, error)]);
-        this.logHandlerErrorMessage(handler.constructor.name, message, exception);
+        const exception = new HandlersException([
+          new HandlerError(handler.constructor.name, error),
+        ]);
+        this.logHandlerErrorMessage(
+          handler.constructor.name,
+          message,
+          exception,
+        );
         return Promise.reject(exception);
       }
     }
 
     const results = await Promise.allSettled(
-      handlers.map(handler => {
+      handlers.map((handler) => {
         try {
-          this.logHandlerMessage(handler.constructor.name, message.messageRoutingKey);
-          return handler.handle(this.convertToInstance(handler, message.message));
+          this.logHandlerMessage(
+            handler.constructor.name,
+            message.messageRoutingKey,
+          );
+          return handler.handle(
+            this.convertToInstance(handler, message.message),
+          );
         } catch (err) {
-          return Promise.reject({handler: handler.constructor.name, error: err});
+          return Promise.reject({
+            handler: handler.constructor.name,
+            error: err,
+          });
         }
-      })
+      }),
     );
 
     for (const result of results) {
@@ -70,7 +100,11 @@ export class HandlerMiddleware implements Middleware {
   }
 
   private convertToInstance(handler: object, message: object): object {
-    const instance = Reflect.getMetadata('design:paramtypes', handler, 'handle');
+    const instance = Reflect.getMetadata(
+      'design:paramtypes',
+      handler,
+      'handle',
+    );
 
     if (!instance) {
       return message;
@@ -80,14 +114,24 @@ export class HandlerMiddleware implements Middleware {
   }
 
   private logHandlerMessage(handler: string, messageRoutingKey: string): void {
-    this.logger.debug(Log.create(`Found a handler [${handler}] for message [${messageRoutingKey}]`));
+    this.logger.debug(
+      Log.create(
+        `Found a handler [${handler}] for message [${messageRoutingKey}]`,
+      ),
+    );
   }
 
-  private logHandlerErrorMessage(handler: string, message: RoutingMessage, exception: Error): void {
-    this.logger.error(Log.create(`Some error occurred in Handler [${handler}]`, {
-      error: exception.message,
-      exception,
-      message: JSON.stringify(message.message),
-    }));
+  private logHandlerErrorMessage(
+    handler: string,
+    message: RoutingMessage,
+    exception: Error,
+  ): void {
+    this.logger.error(
+      Log.create(`Some error occurred in Handler [${handler}]`, {
+        error: exception.message,
+        exception,
+        message: JSON.stringify(message.message),
+      }),
+    );
   }
 }

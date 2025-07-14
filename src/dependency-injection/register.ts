@@ -3,8 +3,10 @@ import { MessageHandlerRegistry } from '../handler/message-handler.registry';
 import { MessagingLogger } from '../logger/messaging-logger';
 import { Service } from './service';
 import {
-  MESSAGE_HANDLER_METADATA, MESSAGING_EXCEPTION_LISTENER_METADATA,
-  MESSAGING_MIDDLEWARE_METADATA, MESSAGING_NORMALIZER_METADATA,
+  MESSAGE_HANDLER_METADATA,
+  MESSAGING_EXCEPTION_LISTENER_METADATA,
+  MESSAGING_MIDDLEWARE_METADATA,
+  MESSAGING_NORMALIZER_METADATA,
 } from './decorator';
 import { DEFAULT_MIDDLEWARE, DEFAULT_NORMALIZER } from '../const';
 import { Registry } from '../shared/registry';
@@ -41,21 +43,39 @@ export const registerMiddlewares = (
   moduleRef: ModuleRef,
   discoveryService: DiscoveryService,
 ) => {
-  register<MiddlewareRegistry>(moduleRef, discoveryService, Service.MIDDLEWARE_REGISTRY, MESSAGING_MIDDLEWARE_METADATA, 'Middleware');
+  register<MiddlewareRegistry>(
+    moduleRef,
+    discoveryService,
+    Service.MIDDLEWARE_REGISTRY,
+    MESSAGING_MIDDLEWARE_METADATA,
+    'Middleware',
+  );
 };
 
 export const registerMessageNormalizers = (
   moduleRef: ModuleRef,
   discoveryService: DiscoveryService,
 ) => {
-  register<NormalizerRegistry>(moduleRef, discoveryService, Service.MESSAGE_NORMALIZERS_REGISTRY, MESSAGING_NORMALIZER_METADATA, 'MessageNormalizer');
+  register<NormalizerRegistry>(
+    moduleRef,
+    discoveryService,
+    Service.MESSAGE_NORMALIZERS_REGISTRY,
+    MESSAGING_NORMALIZER_METADATA,
+    'MessageNormalizer',
+  );
 };
 
 export const registerExceptionListener = (
   moduleRef: ModuleRef,
   discoveryService: DiscoveryService,
 ) => {
-  register<ExceptionListenerRegistry>(moduleRef, discoveryService, Service.EXCEPTION_LISTENER_REGISTRY, MESSAGING_EXCEPTION_LISTENER_METADATA, 'ExceptionListener');
+  register<ExceptionListenerRegistry>(
+    moduleRef,
+    discoveryService,
+    Service.EXCEPTION_LISTENER_REGISTRY,
+    MESSAGING_EXCEPTION_LISTENER_METADATA,
+    'ExceptionListener',
+  );
 };
 
 const register = <T extends Registry<object>>(
@@ -66,9 +86,7 @@ const register = <T extends Registry<object>>(
   name: string,
 ) => {
   const exceptions = [DEFAULT_NORMALIZER, DEFAULT_MIDDLEWARE];
-  const registry: Registry<T> = moduleRef.get(
-    registryProvider,
-  );
+  const registry: Registry<T> = moduleRef.get(registryProvider);
   const logger: MessagingLogger = moduleRef.get(Service.LOGGER);
   const instances = discoveryService
     .getProviders()
@@ -92,4 +110,4 @@ const register = <T extends Registry<object>>(
       logger.log(`${name} [${messageExceptionListener.name}] was registered`);
     }
   });
-}
+};

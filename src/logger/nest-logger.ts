@@ -12,11 +12,11 @@ export class NestLogger implements MessagingLogger {
     private readonly logEnabled: boolean,
   ) {}
 
-  error(message: string|Log): void {
+  error(message: string | Log): void {
     this.logger.error(this.makeLog(message), NestLogger.MODULE_NAME);
   }
 
-  log(message: string|Log): void {
+  log(message: string | Log): void {
     if (!this.logEnabled) {
       return;
     }
@@ -24,7 +24,7 @@ export class NestLogger implements MessagingLogger {
     this.logger.log(this.makeLog(message), NestLogger.MODULE_NAME);
   }
 
-  debug(message: string|Log): void {
+  debug(message: string | Log): void {
     if (!this.debugEnabled) {
       return;
     }
@@ -32,7 +32,7 @@ export class NestLogger implements MessagingLogger {
     this.logger.debug(this.makeLog(message), NestLogger.MODULE_NAME);
   }
 
-  private makeLog(message: string|Log): object|string {
-    return message instanceof Log ? message.toObject() : message
+  private makeLog(message: string | Log): object | string {
+    return message instanceof Log ? message.toObject() : message;
   }
 }

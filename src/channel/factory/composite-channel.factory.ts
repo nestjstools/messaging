@@ -26,7 +26,9 @@ export class CompositeChannelFactory {
       );
 
     if (factory.length !== 1) {
-      throw new UnsupportedChannelFactoryException(channelConfig.constructor.name);
+      throw new UnsupportedChannelFactoryException(
+        channelConfig.constructor.name,
+      );
     }
 
     return factory[0].instance.create(channelConfig);

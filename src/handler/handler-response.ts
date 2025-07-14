@@ -1,4 +1,3 @@
 export class HandlerResponse {
-  constructor(public readonly response: any[]) {
-  }
+  constructor(public readonly response: any[]) {}
 }

@@ -1,7 +1,8 @@
 import { DistributedConsumer } from '../../../src/consumer/distributed.consumer';
 import {
   ConsumerMessage,
-  ConsumerMessageMediator, DefaultMessageOptions,
+  ConsumerMessageMediator,
+  DefaultMessageOptions,
   IMessageBus,
   IMessagingConsumer,
   InMemoryChannelConfig,
@@ -27,7 +28,9 @@ describe('DistributedConsumer', () => {
 
   beforeEach(async () => {
     logger = new SpyLogger(new Logger(), false, false);
-    exceptionListenerHandler = new ExceptionListenerHandler(new ExceptionListenerRegistry());
+    exceptionListenerHandler = new ExceptionListenerHandler(
+      new ExceptionListenerRegistry(),
+    );
 
     Reflect.hasMetadata = jest.fn().mockReturnValue(true);
     Reflect.getMetadata = jest.fn().mockReturnValue(TestChannel);
@@ -40,31 +43,50 @@ describe('DistributedConsumer', () => {
 
     const channelRegistry = new ChannelRegistry(
       [new TestChannel(new InMemoryChannelConfig({ name: 'ds' }))],
-      logger
+      logger,
     );
 
     const consumer = {
-      consume: jest.fn().mockImplementation(async (mediator: ConsumerMessageMediator, channel) => {
-        jest.spyOn(mediator, 'listen').mockReturnValue(of(new ConsumerMessage({ status: 'ok' }, 'routing_key')));
-      }),
+      consume: jest
+        .fn()
+        .mockImplementation(
+          async (mediator: ConsumerMessageMediator, channel) => {
+            jest
+              .spyOn(mediator, 'listen')
+              .mockReturnValue(
+                of(new ConsumerMessage({ status: 'ok' }, 'routing_key')),
+              );
+          },
+        ),
       onError: jest.fn(),
     } as unknown as IMessagingConsumer<any>;
 
-    const instanceWrapper = { instance: consumer, metatype: 'MESSAGE_CONSUMER_METADATA' } as unknown as InstanceWrapper;
+    const instanceWrapper = {
+      instance: consumer,
+      metatype: 'MESSAGE_CONSUMER_METADATA',
+    } as unknown as InstanceWrapper;
 
     discoveryService = {
       getProviders: jest.fn().mockReturnValue([instanceWrapper]),
     } as unknown as DiscoveryService;
 
-    subjectUnderTest = new DistributedConsumer(messageBus, channelRegistry, exceptionListenerHandler, logger, discoveryService);
+    subjectUnderTest = new DistributedConsumer(
+      messageBus,
+      channelRegistry,
+      exceptionListenerHandler,
+      logger,
+      discoveryService,
+    );
 
     await subjectUnderTest.run();
 
     expect(messageBus.dispatch).toHaveBeenCalledWith(
       new SealedRoutingMessage(
         { status: 'ok' },
-        'routing_key'
-      ).createWithOptions(new DefaultMessageOptions([], false, ObjectForwardMessageNormalizer))
+        'routing_key',
+      ).createWithOptions(
+        new DefaultMessageOptions([], false, ObjectForwardMessageNormalizer),
+      ),
     );
 
     expect(logger.getLogs()).toEqual([
@@ -74,14 +96,14 @@ describe('DistributedConsumer', () => {
         content: {
           content: '[ds] Message handled with routing key: [routing_key]',
           metadata: {
-            message: "{\"status\":\"ok\"}"
+            message: '{"status":"ok"}',
           },
-        }
+        },
       },
       {
         type: 'LOG',
-        content: 'Consumer for channel [ds] is ready to handle messages'
-      }
+        content: 'Consumer for channel [ds] is ready to handle messages',
+      },
     ]);
   });
 
@@ -91,32 +113,58 @@ describe('DistributedConsumer', () => {
     } as unknown as IMessageBus;
 
     const consumer = {
-      consume: jest.fn().mockImplementation(async (mediator: ConsumerMessageMediator, channel) => {
-        jest.spyOn(mediator, 'listen').mockReturnValue(of(new ConsumerMessage({ status: 'ok' }, 'routing_key')));
-      }),
+      consume: jest
+        .fn()
+        .mockImplementation(
+          async (mediator: ConsumerMessageMediator, channel) => {
+            jest
+              .spyOn(mediator, 'listen')
+              .mockReturnValue(
+                of(new ConsumerMessage({ status: 'ok' }, 'routing_key')),
+              );
+          },
+        ),
       onError: jest.fn(),
     } as unknown as IMessagingConsumer<any>;
 
     const channelRegistry = new ChannelRegistry(
-      [new TestChannel(new InMemoryChannelConfig({ name: 'ds',avoidErrorsForNotExistedHandlers: true }))],
-      logger
+      [
+        new TestChannel(
+          new InMemoryChannelConfig({
+            name: 'ds',
+            avoidErrorsForNotExistedHandlers: true,
+          }),
+        ),
+      ],
+      logger,
     );
 
-    const instanceWrapper = { instance: consumer, metatype: 'MESSAGE_CONSUMER_METADATA' } as unknown as InstanceWrapper;
+    const instanceWrapper = {
+      instance: consumer,
+      metatype: 'MESSAGE_CONSUMER_METADATA',
+    } as unknown as InstanceWrapper;
 
     discoveryService = {
       getProviders: jest.fn().mockReturnValue([instanceWrapper]),
     } as unknown as DiscoveryService;
 
-    subjectUnderTest = new DistributedConsumer(messageBus, channelRegistry, exceptionListenerHandler, logger, discoveryService);
+    subjectUnderTest = new DistributedConsumer(
+      messageBus,
+      channelRegistry,
+      exceptionListenerHandler,
+      logger,
+      discoveryService,
+    );
 
     await subjectUnderTest.run();
 
     expect(messageBus.dispatch).toHaveBeenCalledWith(
       new SealedRoutingMessage(
         { status: 'ok' },
-        'routing_key'
-      ).createWithOptions(new DefaultMessageOptions([], true, ObjectForwardMessageNormalizer))
+        'routing_key',
+      ).createWithOptions(
+        new DefaultMessageOptions([], true, ObjectForwardMessageNormalizer),
+      ),
     );
   });
 });

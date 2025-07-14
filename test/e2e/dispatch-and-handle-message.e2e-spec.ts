@@ -1,7 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, Logger } from '@nestjs/common';
 import { TestModule } from '../support/app/test.module';
-import { DefaultMessageOptions, IMessageBus, MessageResponse, RoutingMessage } from '../../src';
+import {
+  DefaultMessageOptions,
+  IMessageBus,
+  MessageResponse,
+  RoutingMessage,
+} from '../../src';
 import { TestMessage } from '../support/app/test.message';
 import { SpyDataService } from '../support/app/spy-data.service';
 import { Service } from '../../src/dependency-injection/service';
@@ -35,7 +40,11 @@ describe('DispatchAndHandleMessage', () => {
 
   it('will dispatch message to void handler and void second handler and check if everything is correct via spy service', async () => {
     await messageBus.dispatch(
-      new RoutingMessage(new TestMessage('xyz'), 'message.void', new DefaultMessageOptions([], true, ObjectForwardMessageNormalizer)),
+      new RoutingMessage(
+        new TestMessage('xyz'),
+        'message.void',
+        new DefaultMessageOptions([], true, ObjectForwardMessageNormalizer),
+      ),
     );
 
     expect(spyDataService.getFirst()).toBe('xyz');
@@ -45,7 +54,11 @@ describe('DispatchAndHandleMessage', () => {
   it('will dispatch message to throwable handler', async () => {
     try {
       await messageBus.dispatch(
-        new RoutingMessage(new TestMessage('xyz'), 'message.throwable', new DefaultMessageOptions([], true, ObjectForwardMessageNormalizer)),
+        new RoutingMessage(
+          new TestMessage('xyz'),
+          'message.throwable',
+          new DefaultMessageOptions([], true, ObjectForwardMessageNormalizer),
+        ),
       );
     } catch (e) {
       expect(e).toBeInstanceOf(HandlersException);
@@ -75,7 +88,10 @@ describe('DispatchAndHandleMessage', () => {
 
   it('Dispatch message by DEFAULT MESSAGE BUS and do not show error when handler does not exists', async () => {
     await defaultMessageBus.dispatch(
-      new RoutingMessage(new TestMessage('xyz'), 'message_for_not_existed_handler'),
+      new RoutingMessage(
+        new TestMessage('xyz'),
+        'message_for_not_existed_handler',
+      ),
     );
   });
 });

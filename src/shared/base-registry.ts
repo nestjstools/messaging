@@ -14,7 +14,9 @@ export abstract class BaseRegistry<T extends object> implements Registry<T> {
 
   getByName(name: string): T {
     if (!this.registry.has(name)) {
-      throw new MessagingException(`There is no element in registry with name: ${name}`);
+      throw new MessagingException(
+        `There is no element in registry with name: ${name}`,
+      );
     }
 
     return this.registry.get(name);

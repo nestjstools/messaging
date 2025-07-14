@@ -35,10 +35,17 @@ export class InMemoryMessageBus implements IMessageBus {
     } catch (e) {
       let avoidErrorsForNonExistedHandlers = true;
 
-      if (this.channel instanceof InMemoryChannel && 'default.bus' !== this.channel.config.name) {
-        avoidErrorsForNonExistedHandlers = this.channel.config.avoidErrorsForNotExistedHandlers ?? avoidErrorsForNonExistedHandlers;
+      if (
+        this.channel instanceof InMemoryChannel &&
+        'default.bus' !== this.channel.config.name
+      ) {
+        avoidErrorsForNonExistedHandlers =
+          this.channel.config.avoidErrorsForNotExistedHandlers ??
+          avoidErrorsForNonExistedHandlers;
       } else {
-        avoidErrorsForNonExistedHandlers = message.messageOptions?.avoidErrorsWhenNotExistedHandler ?? avoidErrorsForNonExistedHandlers;
+        avoidErrorsForNonExistedHandlers =
+          message.messageOptions?.avoidErrorsWhenNotExistedHandler ??
+          avoidErrorsForNonExistedHandlers;
       }
 
       if (avoidErrorsForNonExistedHandlers) {
@@ -48,22 +55,32 @@ export class InMemoryMessageBus implements IMessageBus {
       throw e;
     }
 
-    const middlewareInstances: Middleware[] = middlewares.map(middleware => this.middlewareRegistry.getByName(
-      DecoratorExtractor.extractMessageMiddleware(middleware),
-    ));
+    const middlewareInstances: Middleware[] = middlewares.map((middleware) =>
+      this.middlewareRegistry.getByName(
+        DecoratorExtractor.extractMessageMiddleware(middleware),
+      ),
+    );
     const context = MiddlewareContext.createFresh(middlewareInstances);
 
-    let messageToDispatch = message instanceof RoutingMessage ? message.message : {};
+    let messageToDispatch =
+      message instanceof RoutingMessage ? message.message : {};
 
     if (message instanceof SealedRoutingMessage) {
-      let normalizerDefinition: object = (message.messageOptions instanceof DefaultMessageOptions
-        ? message.messageOptions.normalizer
-        : ObjectForwardMessageNormalizer) as object;
+      let normalizerDefinition: object = (
+        message.messageOptions instanceof DefaultMessageOptions
+          ? message.messageOptions.normalizer
+          : ObjectForwardMessageNormalizer
+      ) as object;
 
-      messageToDispatch = await this.normalizerRegistry.getByName(normalizerDefinition['name']).denormalize(message.message, message.messageRoutingKey);
+      messageToDispatch = await this.normalizerRegistry
+        .getByName(normalizerDefinition['name'])
+        .denormalize(message.message, message.messageRoutingKey);
     }
 
-    const response = await middlewareInstances[0].process(MessageFactory.creteRoutingFromMessage(messageToDispatch, message), context);
+    const response = await middlewareInstances[0].process(
+      MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
+      context,
+    );
 
     return Promise.resolve(response);
   }

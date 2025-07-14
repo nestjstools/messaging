@@ -8,7 +8,10 @@ import { NormalizerRegistry } from '../normalizer/normalizer.registry';
 
 @Injectable()
 export class DistributedMessageBus implements IMessageBus {
-  constructor(private messageBusCollection: MessageBusCollection, private normalizerRegistry: NormalizerRegistry) {}
+  constructor(
+    private messageBusCollection: MessageBusCollection,
+    private normalizerRegistry: NormalizerRegistry,
+  ) {}
 
   async dispatch(message: RoutingMessage): Promise<MessageResponse> {
     if (!(message instanceof RoutingMessage)) {
@@ -17,8 +20,12 @@ export class DistributedMessageBus implements IMessageBus {
 
     const response = [];
     for (const collection of this.messageBusCollection.getAll()) {
-      const normalizedMessage = await this.normalizerRegistry.getByName(collection.channel.config.normalizer.name).normalize(message.message, message.messageRoutingKey);
-      const handlerResponse = await collection.messageBus.dispatch(MessageFactory.creteSealedFromMessage(normalizedMessage, message));
+      const normalizedMessage = await this.normalizerRegistry
+        .getByName(collection.channel.config.normalizer.name)
+        .normalize(message.message, message.messageRoutingKey);
+      const handlerResponse = await collection.messageBus.dispatch(
+        MessageFactory.creteSealedFromMessage(normalizedMessage, message),
+      );
       if (handlerResponse) {
         response.push(handlerResponse);
       }

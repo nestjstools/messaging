@@ -17,10 +17,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 23
-          cache: 'npm'
 
       - name: Install dependencies
-        run: npm i --dev
+        run: yarn
+
+      - name: Run Prettier
+        env:
+          NODE_ENV: test
+        run: npm run prettier
 
       - name: Run Tests
         env:

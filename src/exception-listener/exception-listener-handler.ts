@@ -7,11 +7,12 @@ import { ExceptionContext } from './exception-context';
 export class ExceptionListenerHandler {
   constructor(
     @Inject(Service.EXCEPTION_LISTENER_REGISTRY)
-    private readonly exceptionListenerRegistry: ExceptionListenerRegistry
-  ) {
-  }
+    private readonly exceptionListenerRegistry: ExceptionListenerRegistry,
+  ) {}
 
   async handleError(context: ExceptionContext): Promise<void> {
-    await this.exceptionListenerRegistry.getAll().forEach(exceptionListener => exceptionListener.onException(context));
+    await this.exceptionListenerRegistry
+      .getAll()
+      .forEach((exceptionListener) => exceptionListener.onException(context));
   }
 }
