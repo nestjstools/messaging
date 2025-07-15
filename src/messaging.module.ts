@@ -3,7 +3,7 @@ import {
   FactoryProvider,
   Logger as NestCommonLogger,
   Module,
-  OnApplicationBootstrap,
+  OnApplicationBootstrap, OnApplicationShutdown, OnModuleDestroy,
   Provider,
 } from '@nestjs/common';
 import {
@@ -44,7 +44,7 @@ import { ExceptionListenerRegistry } from './exception-listener/exception-listen
 import { ExceptionListenerHandler } from './exception-listener/exception-listener-handler';
 
 @Module({})
-export class MessagingModule implements OnApplicationBootstrap {
+export class MessagingModule implements OnApplicationBootstrap, OnModuleDestroy {
   static forRoot(options: MessagingModuleOptions): DynamicModule {
     const channels = options.channels ?? [];
 
@@ -237,5 +237,13 @@ export class MessagingModule implements OnApplicationBootstrap {
 
     const consumer = this.moduleRef.get(DistributedConsumer);
     consumer.run();
+  }
+
+  async onModuleDestroy(): Promise<any> {
+    const channels: Channel<ChannelConfig>[] = this.moduleRef.get(Service.CHANNELS);
+
+    for (const channel of channels) {
+      await channel.onChannelDestroy();
+    }
   }
 }
