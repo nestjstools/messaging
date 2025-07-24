@@ -104,7 +104,7 @@ export class DistributedConsumer {
               Log.create(
                 `Some error occurred in channel [${channel.config.name}]`,
                 {
-                  error: e,
+                  error: e instanceof Error ? e.message : String(e),
                   message: JSON.stringify(consumerMessage.message),
                   routingKey: consumerMessage.routingKey,
                 },
