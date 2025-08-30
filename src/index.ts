@@ -28,3 +28,6 @@ export * from './normalizer/message-normalizer';
 export * from './exception-listener/exception-listener';
 export * from './exception-listener/exception-context';
 export * from './exception/handlers.exception';
+export * from './logger/log';
+export * from './logger/messaging-logger';
+export * from './logger/nest-logger';

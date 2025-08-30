@@ -322,19 +322,58 @@ export class CustomExceptionListener implements ExceptionListener {
 }
 ```
 
+---
+
+## 📝 Custom Logger
+
+By default, the messaging system uses Nest’s built-in `NestLogger` for logging.  
+However, you can plug in your own **custom logger** to gain more control over how messages and errors are recorded.
+
+A custom logger must implement the interface `MessagingLogger` interface:
+
+### Providing a custom logger
+
+When configuring the **messaging module**, you can pass your own logger instance via options `customLogger`.
+```ts
+@Module({
+  imports: [
+    MessagingModule.forRoot({
+      customLogger: new MyCustomLogger(),
+       ...
+    }),
+  ],
+})
+export class AppModule {}
+```
+or if you defined it as provider
+```ts
+@Module({
+  imports: [
+    MessagingModule.forRoot({
+      customLogger: MyCustomLogger,
+       ...
+    }),
+  ],
+   providers: [
+      MyCustomLogger,
+   ],
+})
+export class AppModule {}
+```
+
 ## Configuration options
 Here’s a table with the documentation for the `MessagingModule.forRoot` configuration you requested, breaking it into **buses**, **channels** (with descriptions of both channels), and their respective properties, descriptions, and default values:
 
 ### `MessagingModule.forRoot` Configuration
 <br>
 
-| **Property**   | **Description**                                                        | **Default Value**             |
-|----------------|------------------------------------------------------------------------|-------------------------------|
-| **`buses`**    | Array of message buses that define routing and processing of messages. | `[]` (empty array by default) |
-| **`channels`** | Array of channel configurations used by the message buses.             | `[]` (empty array by default) |
-| **`debug`**    | Enables or disables debug mode for logging additional messages.        | `false`                       |
-| **`logging`**  | Enables or disables logging for bus activity (e.g., message dispatch). | `true`                        |
-
+| **Property**       | **Description**                                                                  | **Default Value**             |
+|--------------------|----------------------------------------------------------------------------------|-------------------------------|
+| **`buses`**        | Array of message buses that define routing and processing of messages.           | `[]` (empty array by default) |
+| **`channels`**     | Array of channel configurations used by the message buses.                       | `[]` (empty array by default) |
+| **`debug`**        | Enables or disables debug mode for logging additional messages.                  | `false`                       |
+| **`logging`**      | Enables or disables logging for bus activity (e.g., message dispatch).           | `true`                        |
+| **`customLogger`** | Instance of a class implements `MessagingLogger` for custom logging integration. | `NestLogger`                  |
 ---
 
 ### Buses
