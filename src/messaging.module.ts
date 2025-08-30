@@ -3,7 +3,7 @@ import {
   FactoryProvider,
   Logger as NestCommonLogger,
   Module,
-  OnApplicationBootstrap, OnApplicationShutdown, OnModuleDestroy,
+  OnApplicationBootstrap, OnModuleDestroy,
   Provider,
 } from '@nestjs/common';
 import {
@@ -18,7 +18,6 @@ import { Service } from './dependency-injection/service';
 import { CompositeChannelFactory } from './channel/factory/composite-channel.factory';
 import { ChannelRegistry } from './channel/channel.registry';
 import { CompositeMessageBusFactory } from './bus/composite-message-bus.factory';
-import { IMessagingLogger } from './logger/i-messaging-logger';
 import { DistributedMessageBus } from './bus/distributed-message.bus';
 import { DiscoveryModule, DiscoveryService, ModuleRef } from '@nestjs/core';
 import { InMemoryMessageBus } from './bus/in-memory-message.bus';
@@ -42,6 +41,7 @@ import { NormalizerRegistry } from './normalizer/normalizer.registry';
 import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-message.normalizer';
 import { ExceptionListenerRegistry } from './exception-listener/exception-listener.registry';
 import { ExceptionListenerHandler } from './exception-listener/exception-listener-handler';
+import { MessagingLogger } from './logger/messaging-logger';
 
 @Module({})
 export class MessagingModule implements OnApplicationBootstrap, OnModuleDestroy {
@@ -104,7 +104,7 @@ export class MessagingModule implements OnApplicationBootstrap, OnModuleDestroy 
         useFactory: (
           channelRegistry: ChannelRegistry,
           busFactory: CompositeMessageBusFactory,
-          logger: IMessagingLogger,
+          logger: MessagingLogger,
           normalizerRegistry: NormalizerRegistry,
         ) => {
           const messageBusCollection = new MessageBusCollection();
@@ -207,7 +207,7 @@ export class MessagingModule implements OnApplicationBootstrap, OnModuleDestroy 
         },
         {
           provide: Service.CHANNEL_REGISTRY,
-          useFactory: (channels: Channel<any>[], logger: IMessagingLogger) => {
+          useFactory: (channels: Channel<any>[], logger: MessagingLogger) => {
             return new ChannelRegistry(channels, logger);
           },
           inject: [Service.CHANNELS, Service.LOGGER],
