@@ -4,7 +4,6 @@ import {
   Logger as NestCommonLogger,
   Module,
   OnApplicationBootstrap,
-  OnApplicationShutdown,
   OnModuleDestroy,
   Provider,
 } from '@nestjs/common';
@@ -20,7 +19,6 @@ import { Service } from './dependency-injection/service';
 import { CompositeChannelFactory } from './channel/factory/composite-channel.factory';
 import { ChannelRegistry } from './channel/channel.registry';
 import { CompositeMessageBusFactory } from './bus/composite-message-bus.factory';
-import { MessagingLogger } from './logger/messaging-logger';
 import { DistributedMessageBus } from './bus/distributed-message.bus';
 import { DiscoveryModule, DiscoveryService, ModuleRef } from '@nestjs/core';
 import { InMemoryMessageBus } from './bus/in-memory-message.bus';
@@ -44,6 +42,7 @@ import { NormalizerRegistry } from './normalizer/normalizer.registry';
 import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-message.normalizer';
 import { ExceptionListenerRegistry } from './exception-listener/exception-listener.registry';
 import { ExceptionListenerHandler } from './exception-listener/exception-listener-handler';
+import { MessagingLogger } from './logger/messaging-logger';
 
 @Module({})
 export class MessagingModule
@@ -168,6 +167,21 @@ export class MessagingModule
       };
     };
 
+    const loggerProvider = (
+      options.customLogger && typeof options.customLogger === 'function'
+        ? { provide: Service.LOGGER, useClass: options.customLogger }
+        : {
+            provide: Service.LOGGER,
+            useValue:
+              options.customLogger ??
+              new NestLogger(
+                new NestCommonLogger(),
+                options.debug ?? false,
+                options.logging ?? true,
+              ),
+          }
+    ) as Provider;
+
     return {
       global: options.global ?? true,
       module: MessagingModule,
@@ -203,14 +217,7 @@ export class MessagingModule
           },
           inject: [Service.CHANNELS, Service.LOGGER],
         },
-        {
-          provide: Service.LOGGER,
-          useValue: new NestLogger(
-            new NestCommonLogger(),
-            options.debug ?? false,
-            options.logging ?? true,
-          ),
-        },
+        loggerProvider,
         HandlerMiddleware,
         CompositeChannelFactory,
         CompositeMessageBusFactory,
