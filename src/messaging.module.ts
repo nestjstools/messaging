@@ -167,18 +167,20 @@ export class MessagingModule
       };
     };
 
-    const loggerProvider = (options.customLogger && typeof options.customLogger === 'function'
-      ? { provide: Service.LOGGER, useClass: options.customLogger }
-      : {
-        provide: Service.LOGGER,
-        useValue:
-          options.customLogger ??
-          new NestLogger(
-            new NestCommonLogger(),
-            options.debug ?? false,
-            options.logging ?? true,
-          ),
-      }) as Provider;
+    const loggerProvider = (
+      options.customLogger && typeof options.customLogger === 'function'
+        ? { provide: Service.LOGGER, useClass: options.customLogger }
+        : {
+            provide: Service.LOGGER,
+            useValue:
+              options.customLogger ??
+              new NestLogger(
+                new NestCommonLogger(),
+                options.debug ?? false,
+                options.logging ?? true,
+              ),
+          }
+    ) as Provider;
 
     return {
       global: options.global ?? true,

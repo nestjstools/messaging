@@ -163,5 +163,5 @@ export interface MandatoryMessagingModuleOptions {
   debug?: boolean;
   logging?: boolean;
   global?: boolean;
-  customLogger?: MessagingLogger|object;
+  customLogger?: MessagingLogger | object;
 }
