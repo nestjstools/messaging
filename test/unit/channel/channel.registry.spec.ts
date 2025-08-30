@@ -1,12 +1,12 @@
 import { ChannelRegistry } from '../../../src/channel/channel.registry';
-import { IMessagingLogger } from '../../../src/logger/i-messaging-logger';
+import { MessagingLogger } from '../../../src/logger/messaging-logger';
 import { Channel } from '../../../src';
 import { MessagingException } from '../../../src/exception/messaging.exception';
 import { Logger } from '@nestjs/common';
 
 describe('ChannelRegistry', () => {
   let registry: ChannelRegistry;
-  let mockLogger: IMessagingLogger;
+  let mockLogger: MessagingLogger;
   let mockChannel: Channel<any>;
 
   beforeEach(() => {
