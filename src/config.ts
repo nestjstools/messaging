@@ -89,12 +89,6 @@ export class InMemoryChannelConfig extends ChannelConfig {
   }
 }
 
-export enum ExchangeType {
-  TOPIC = 'topic',
-  FANOUT = 'fanout',
-  DIRECT = 'direct',
-}
-
 /**
  * @description
  * Allows asynchronous configuration of messaging channels, similar to NestJS's `useFactory` pattern.
