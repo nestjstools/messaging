@@ -11,6 +11,10 @@ export class ConsumerMessageMediator implements ConsumerMessageDispatcher {
     this.$message.next(message);
   }
 
+  isReady(): boolean {
+    return this.$message.observers.length > 0;
+  }
+
   listen(): Observable<ConsumerMessage> {
     return this.$message.asObservable();
   }
