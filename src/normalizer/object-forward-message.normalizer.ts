@@ -1,5 +1,6 @@
 import { MessageNormalizer } from './message-normalizer';
 import { MessagingNormalizer } from '../dependency-injection/decorator';
+import { MessagingException } from '../exception/messaging.exception';
 
 @MessagingNormalizer()
 export class ObjectForwardMessageNormalizer implements MessageNormalizer {
@@ -9,7 +10,7 @@ export class ObjectForwardMessageNormalizer implements MessageNormalizer {
 
   async denormalize(message: string | object, type: string): Promise<object> {
     if (typeof message !== 'object') {
-      throw new Error('Unable to denormalize object');
+      throw new MessagingException('Unable to denormalize object');
     }
 
     return message;

@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "Simplifies asynchronous and synchronous message handling with support for buses, handlers, channels, and consumers. Build scalable, decoupled applications with ease and reliability.",
   "author": "Sebastian Iwanczyszyn",
   "license": "MIT",
@@ -43,8 +43,6 @@
     "lint": "node_modules/.bin/eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "npm run test:e2e && npm run test:unit",
     "test:watch": "node_modules/.bin/jest --watch",
-    "test:unit:watch": "node_modules/.bin/jest --watch --config ./test/jest-unit.json",
-    "test:cov": "node_modules/.bin/jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "node_modules/.bin/jest --config ./test/jest-e2e.json",
     "test:unit": "node_modules/.bin/jest --config ./test/jest-unit.json"

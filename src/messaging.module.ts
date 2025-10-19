@@ -240,7 +240,7 @@ export class MessagingModule
     private readonly discoveryService: DiscoveryService,
   ) {}
 
-  onApplicationBootstrap(): any {
+  onApplicationBootstrap(): void {
     registerHandlers(this.moduleRef, this.discoveryService);
     registerMiddlewares(this.moduleRef, this.discoveryService);
     registerMessageNormalizers(this.moduleRef, this.discoveryService);
