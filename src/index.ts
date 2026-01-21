@@ -23,6 +23,7 @@ export * from './channel/channel';
 export * from './middleware/middleware';
 export * from './exception/invalid-channel.exception';
 export * from './exception/invalid-channel-config.exception';
+export * from './exception/messaging.exception';
 export * from './middleware/middleware.context';
 export * from './normalizer/message-normalizer';
 export * from './exception-listener/exception-listener';
