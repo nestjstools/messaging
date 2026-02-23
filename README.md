@@ -1,8 +1,8 @@
 <p align="center">
-    <image src="nestjstools-logo.png" width="400">
+    <image src="nestjstools-logo.png" width="400" alt="NestJS Messaging Library">
 </p>
 
-# @nestjstools/messaging
+# NestJS Messaging Library - Message Bus & Service Bus for Distributed Systems
 
 A NestJS library for managing asynchronous and synchronous messages (service bus) with support for buses, handlers, channels, and consumers. This library simplifies building scalable and decoupled applications by facilitating robust message handling pipelines while ensuring flexibility and reliability.
 
@@ -30,7 +30,8 @@ A NestJS library for managing asynchronous and synchronous messages (service bus
 
 ## Documentation
 
-https://nestjstools.gitbook.io/nestjstools-messaging-docs
+- Official NestJSTools Messaging documentation: https://docs.nestjstools.com/messaging
+- NestJSTools website: https://nestjstools.com
 
 ---
 
@@ -493,3 +494,7 @@ export class YourMessageOptions implements MessageOptions {
 Classes with `Injectable()` decorator must be defined as providers in somewhere in application.
 
 ---
+## Keywords
+
+nestjs messaging library, nestjs message bus, nestjs service bus, <br>nestjs distributed systems,
+nestjs microservices messaging, broker independent messaging for nestjs

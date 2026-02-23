@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Simplifies asynchronous and synchronous message handling with support for buses, handlers, channels, and consumers. Build scalable, decoupled applications with ease and reliability.",
   "author": "Sebastian Iwanczyszyn",
   "license": "MIT",
@@ -22,16 +22,15 @@
     "package.json"
   ],
   "keywords": [
-    "nestjstools",
     "nestjs",
-    "distributed",
-    "messaging",
-    "nestjs-messaging",
-    "message-bus",
-    "service-bus",
-    "nestjs-service-bus",
-    "nestjs-message-bus",
-    "microservices"
+    "nestjs messaging",
+    "nestjs message bus",
+    "nestjs service bus",
+    "nestjs distributed systems",
+    "nestjs microservices",
+    "message broker",
+    "event driven architecture",
+    "microservices architecture"
   ],
   "scripts": {
     "build": "node_modules/.bin/nest build",
