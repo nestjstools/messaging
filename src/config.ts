@@ -6,8 +6,7 @@ import { MessagingLogger } from './logger/messaging-logger';
 
 export type DefineChannels = ChannelConfig[];
 
-export interface MessagingModuleOptions
-  extends MandatoryMessagingModuleOptions {
+export interface MessagingModuleOptions extends MandatoryMessagingModuleOptions {
   channels?: DefineChannels;
 }
 
@@ -95,8 +94,7 @@ export class InMemoryChannelConfig extends ChannelConfig {
  * Use this to define your channels dynamically, possibly depending on other injected services.
  * Note: Buses and other options must be configured in sync way.
  */
-export interface MessagingModuleAsyncOptions
-  extends MandatoryMessagingModuleOptions {
+export interface MessagingModuleAsyncOptions extends MandatoryMessagingModuleOptions {
   inject?: Array<Type | string | symbol>;
   useChannelFactory: (...args) => Promise<DefineChannels> | DefineChannels;
   imports?: Array<
