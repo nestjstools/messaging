@@ -9,6 +9,7 @@ export * from './dependency-injection/decorator';
 export * from './dependency-injection/injectable';
 export * from './handler/i-message.handler';
 export * from './bus/i-message-bus.factory';
+export * from './bus/consumer.message-bus';
 export * from './bus/i-message-bus';
 export * from './bus/in-memory-message.bus';
 export * from './message/default-message-options';
