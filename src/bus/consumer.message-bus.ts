@@ -19,24 +19,9 @@ export class ConsumerMessageBus {
     private readonly logger: MessagingLogger,
     private readonly consumer: IMessagingConsumer<any>,
     private readonly exceptionListenerHandler: ExceptionListenerHandler,
-  ) {
-  }
+  ) {}
 
-  async dispatch(consumerMessage: ConsumerMessage): Promise<object | void> {
-    const middlewares: Middleware[] = this.channel.config
-      .middlewares as Middleware[];
-
-    const routingMessage = new SealedRoutingMessage(
-      consumerMessage.message,
-      consumerMessage.routingKey,
-    ).createWithOptions(
-      new DefaultMessageOptions(
-        middlewares,
-        this.channel.config?.avoidErrorsForNotExistedHandlers ?? true,
-        this.channel.config.normalizer,
-      ),
-    );
-
+  async dispatch(consumerMessage: ConsumerMessage): Promise<void> {
     try {
       this.logger.debug(
         Log.create(
@@ -90,5 +75,7 @@ export class ConsumerMessageBus {
         ),
       );
     }
+
+    return Promise.resolve();
   }
 }

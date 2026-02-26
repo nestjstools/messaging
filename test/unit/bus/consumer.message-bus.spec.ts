@@ -11,10 +11,7 @@ import { SealedRoutingMessage } from '../../../src/message/sealed-routing-messag
 import { DefaultMessageOptions } from '../../../src';
 import { ObjectForwardMessageNormalizer } from '../../../src/normalizer/object-forward-message.normalizer';
 import { ConsumerDispatchedMessageError } from '../../../src';
-import {
-  HandlerError,
-  HandlersException,
-} from '../../../src';
+import { HandlerError, HandlersException } from '../../../src';
 import { ExceptionContext } from '../../../src';
 
 describe('ConsumerMessageBus', () => {

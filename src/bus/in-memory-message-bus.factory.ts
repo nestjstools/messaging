@@ -11,9 +11,7 @@ import { NormalizerRegistry } from '../normalizer/normalizer.registry';
 
 @Injectable()
 @MessageBusFactory(InMemoryChannel)
-export class InMemoryMessageBusFactory
-  implements IMessageBusFactory<InMemoryChannel>
-{
+export class InMemoryMessageBusFactory implements IMessageBusFactory<InMemoryChannel> {
   constructor(
     @Inject(Service.MESSAGE_HANDLERS_REGISTRY)
     private registry: MessageHandlerRegistry,
