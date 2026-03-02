@@ -1,6 +1,6 @@
 import {
   DynamicModule,
-  FactoryProvider,
+  FactoryProvider, Inject,
   Logger as NestCommonLogger,
   Module,
   OnApplicationBootstrap,
@@ -43,11 +43,11 @@ import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-mess
 import { ExceptionListenerRegistry } from './exception-listener/exception-listener.registry';
 import { ExceptionListenerHandler } from './exception-listener/exception-listener-handler';
 import { MessagingLogger } from './logger/messaging-logger';
+import { MessagingOptions } from './dependency-injection/injectable';
 
 @Module({})
 export class MessagingModule
-  implements OnApplicationBootstrap, OnModuleDestroy
-{
+  implements OnApplicationBootstrap, OnModuleDestroy {
   static forRoot(options: MessagingModuleOptions): DynamicModule {
     const channels = options.channels ?? [];
 
@@ -171,15 +171,15 @@ export class MessagingModule
       options.customLogger && typeof options.customLogger === 'function'
         ? { provide: Service.LOGGER, useClass: options.customLogger }
         : {
-            provide: Service.LOGGER,
-            useValue:
-              options.customLogger ??
-              new NestLogger(
-                new NestCommonLogger(),
-                options.debug ?? false,
-                options.logging ?? true,
-              ),
-          }
+          provide: Service.LOGGER,
+          useValue:
+            options.customLogger ??
+            new NestLogger(
+              new NestCommonLogger(),
+              options.debug ?? false,
+              options.logging ?? true,
+            ),
+        }
     ) as Provider;
 
     return {
@@ -217,6 +217,7 @@ export class MessagingModule
           },
           inject: [Service.CHANNELS, Service.LOGGER],
         },
+        { provide: MessagingOptions, useValue: options },
         loggerProvider,
         HandlerMiddleware,
         CompositeChannelFactory,
@@ -227,6 +228,7 @@ export class MessagingModule
         ObjectForwardMessageNormalizer,
       ],
       exports: [
+        MessagingOptions,
         Service.DEFAULT_MESSAGE_BUS,
         ...registerBuses().map((bus) => bus.provide),
         DistributedConsumer,
@@ -238,13 +240,19 @@ export class MessagingModule
   constructor(
     private readonly moduleRef: ModuleRef,
     private readonly discoveryService: DiscoveryService,
-  ) {}
+    @Inject(MessagingOptions) private readonly messagingOptions: MessagingModuleOptions,
+  ) {
+  }
 
   onApplicationBootstrap(): void {
     registerHandlers(this.moduleRef, this.discoveryService);
     registerMiddlewares(this.moduleRef, this.discoveryService);
     registerMessageNormalizers(this.moduleRef, this.discoveryService);
     registerExceptionListener(this.moduleRef, this.discoveryService);
+
+    if (this.messagingOptions?.disableAllConsumers) {
+      return;
+    }
 
     const consumer = this.moduleRef.get(DistributedConsumer);
     consumer.run();

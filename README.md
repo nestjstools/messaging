@@ -368,13 +368,14 @@ Here’s a table with the documentation for the `MessagingModule.forRoot` config
 ### `MessagingModule.forRoot` Configuration
 <br>
 
-| **Property**       | **Description**                                                                  | **Default Value**             |
-|--------------------|----------------------------------------------------------------------------------|-------------------------------|
-| **`buses`**        | Array of message buses that define routing and processing of messages.           | `[]` (empty array by default) |
-| **`channels`**     | Array of channel configurations used by the message buses.                       | `[]` (empty array by default) |
-| **`debug`**        | Enables or disables debug mode for logging additional messages.                  | `false`                       |
-| **`logging`**      | Enables or disables logging for bus activity (e.g., message dispatch).           | `true`                        |
-| **`customLogger`** | Instance of a class implements `MessagingLogger` for custom logging integration. | `NestLogger`                  |
+| **Property**              | **Description**                                                                              | **Default Value**             |
+|---------------------------|----------------------------------------------------------------------------------------------|-------------------------------|
+| **`buses`**               | Array of message buses that define routing and processing of messages.                       | `[]` (empty array by default) |
+| **`channels`**            | Array of channel configurations used by the message buses.                                   | `[]` (empty array by default) |
+| **`debug`**               | Enables or disables debug mode for logging additional messages.                              | `false`                       |
+| **`logging`**             | Enables or disables logging for bus activity (e.g., message dispatch).                       | `true`                        |
+| **`customLogger`**        | Instance of a class implements `MessagingLogger` for custom logging integration.             | `NestLogger`                  |
+| **`disableAllConsumers`** | Disables all consumers for all channels, effectively making the messaging system write-only. | `false`                       |
 ---
 
 ### Buses
