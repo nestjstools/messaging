@@ -108,9 +108,36 @@ export interface MessagingModuleAsyncOptions extends MandatoryMessagingModuleOpt
  * These options control core behaviors such as debugging, logging, buses and global registration.
  */
 export interface MandatoryMessagingModuleOptions {
+  /**
+   * @description
+   * Configuration for a messaging bus.
+   * Each bus is identified by a unique name and is associated with one or more channels.
+   * Define buses if you want to enable sending messages over specific channels.
+   */
   buses?: DefineBusOption[];
+  /**
+   * @description
+   * If true, enables detailed logging of messaging operations, including message flow and handler execution.
+   * Useful for development and debugging.
+   */
   debug?: boolean;
   logging?: boolean;
+  /**
+   * @description
+   * If true, registers the MessagingModule globally, making its services available across the entire application without needing to import it in other modules.
+   */
   global?: boolean;
+  /**
+   * @description
+   * If true, disables all consumers for all channels, effectively making the messaging system write-only.
+   * Useful for scenarios where you want to send messages but not process incoming messages.
+   */
+  disableAllConsumers?: boolean;
+  /**
+   * @description
+   * Custom logger instance or configuration object for the messaging module.
+   * If provided, this logger will be used for all logging operations within the messaging system.
+   * Use `MessagingLogger` interface to implement a custom logger that integrates with your application's logging strategy.
+   */
   customLogger?: MessagingLogger | object;
 }
