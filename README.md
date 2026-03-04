@@ -363,7 +363,6 @@ export class AppModule {}
 ```
 
 ## Configuration options
-Here’s a table with the documentation for the `MessagingModule.forRoot` configuration you requested, breaking it into **buses**, **channels** (with descriptions of both channels), and their respective properties, descriptions, and default values:
 
 ### `MessagingModule.forRoot` Configuration
 <br>
