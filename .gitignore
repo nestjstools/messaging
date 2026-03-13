@@ -7,3 +7,4 @@ packages/*/.yarn
 packages/*/yarn.lock
 packages/*/package-lock.json
 packages/*/node_modules
+packages/*/lib
