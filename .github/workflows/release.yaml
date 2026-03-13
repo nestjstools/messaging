@@ -65,12 +65,20 @@ jobs:
           done
 
           if [ ${#PACKAGES[@]} -eq 0 ]; then
-            echo "has_changes=false" >> "$GITHUB_OUTPUT"
-            echo 'matrix={"include":[]}' >> "$GITHUB_OUTPUT"
+            {
+              echo "has_changes=false"
+              echo "matrix<<EOF"
+              echo '{"include":[]}'
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
           else
-            MATRIX=$(printf '%s\n' "${PACKAGES[@]}" | jq -s '{include: .}')
-            echo "has_changes=true" >> "$GITHUB_OUTPUT"
-            echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
+            MATRIX=$(printf '%s\n' "${PACKAGES[@]}" | jq -s -c '{include: .}')
+            {
+              echo "has_changes=true"
+              echo "matrix<<EOF"
+              echo "$MATRIX"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
           fi
 
   release:
