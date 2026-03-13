@@ -12,6 +12,12 @@
     "build:messaging-nats-extension": "yarn workspace @nestjstools/messaging-nats-extension build",
     "build:messaging-rabbitmq-extension": "yarn workspace @nestjstools/messaging-rabbitmq-extension build",
     "build:messaging-redis-extension": "yarn workspace @nestjstools/messaging-redis-extension build",
+    "test:messaging-amazon-sqs-extension": "yarn workspace @nestjstools/messaging-amazon-sqs-extension test",
+    "test:messaging": "yarn workspace @nestjstools/messaging test",
+    "test:messaging-google-pubsub-extension": "yarn workspace @nestjstools/messaging-google-pubsub-extension test",
+    "test:messaging-nats-extension": "yarn workspace @nestjstools/messaging-nats-extension test",
+    "test:messaging-rabbitmq-extension": "yarn workspace @nestjstools/messaging-rabbitmq-extension test",
+    "test:messaging-redis-extension": "yarn workspace @nestjstools/messaging-redis-extension test",
     "test": "npm run test --workspaces --if-present"
   },
   "repository": {
@@ -22,8 +28,5 @@
   "bugs": {
     "url": "https://github.com/nestjstools/messaging/issues"
   },
-  "license": "MIT",
-  "dependencies": {
-    "@nestjstools/messaging": "^4.0.1"
-  }
+  "license": "MIT"
 }
