@@ -1,24 +1,101 @@
-name: Release
+name: Release packages
 
+#on:
+#  push:
+#    branches:
+#      - main
+#      - master
 on:
+  pull_request:
   push:
     branches:
       - main
+      - master
+  workflow_dispatch:
 
 permissions:
   contents: write
-  issues: write
-  pull-requests: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  release:
+  detect:
     runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ steps.detect.outputs.has_changes }}
+      matrix: ${{ steps.detect.outputs.matrix }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
-      - name: Setup Node.js
+      - name: Detect version changes
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          PACKAGES=()
+
+          for file in packages/*/package.json; do
+            [ -f "$file" ] || continue
+
+            NAME=$(jq -r '.name' "$file")
+            VERSION=$(jq -r '.version' "$file")
+            DIR=$(dirname "$file")
+            FOLDER=$(basename "$DIR")
+            TAG="${FOLDER}-v${VERSION}"
+
+            if ! git cat-file -e HEAD^:"$file" 2>/dev/null; then
+              echo "New package detected: $NAME@$VERSION"
+              PACKAGES+=("{\"name\":\"$NAME\",\"dir\":\"$DIR\",\"version\":\"$VERSION\",\"tag\":\"$TAG\"}")
+              continue
+            fi
+
+            OLD_VERSION=$(git show HEAD^:"$file" | jq -r '.version')
+
+            if [ "$OLD_VERSION" != "$VERSION" ]; then
+              echo "Version changed: $NAME $OLD_VERSION -> $VERSION"
+              PACKAGES+=("{\"name\":\"$NAME\",\"dir\":\"$DIR\",\"version\":\"$VERSION\",\"tag\":\"$TAG\"}")
+            fi
+          done
+
+          if [ ${#PACKAGES[@]} -eq 0 ]; then
+            {
+              echo "has_changes=false"
+              echo "matrix<<EOF"
+              echo '{"include":[]}'
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            MATRIX=$(printf '%s\n' "${PACKAGES[@]}" | jq -s -c '{include: .}')
+            {
+              echo "has_changes=true"
+              echo "matrix<<EOF"
+              echo "$MATRIX"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          fi
+
+  release:
+    needs: detect
+    if: needs.detect.outputs.has_changes == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.detect.outputs.matrix) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -27,11 +104,47 @@ jobs:
       - name: Install dependencies
         run: npm i
 
-      - name: Build library
-        run: npm run build
+      - name: Build package
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run build --workspace=@nestjstools/messaging
+          npm run build --workspace=${{ matrix.name }}
 
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+      - name: Check if tag already exists
+        id: tag_check
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git rev-parse "${{ matrix.tag }}" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+#      - name: Publish to npm
+#        if: steps.tag_check.outputs.exists == 'false'
+#        env:
+#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+#        run: npm publish --workspace=${{ matrix.name }} --access public
+
+      - name: Create git tag
+        if: steps.tag_check.outputs.exists == 'false'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "${{ matrix.tag }}"
+          git push origin "${{ matrix.tag }}"
+
+      - name: Create GitHub Release
+        if: steps.tag_check.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ matrix.tag }}
+          name: ${{ matrix.name }}@${{ matrix.version }}
+          generate_release_notes: true
+          body: |
+            Package: ${{ matrix.name }}
+            Version: ${{ matrix.version }}
