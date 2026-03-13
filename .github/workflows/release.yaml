@@ -105,7 +105,11 @@ jobs:
         run: npm i
 
       - name: Build package
-        run: npm run build --workspace=${{ matrix.name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run build --workspace=@nestjstools/messaging
+          npm run build --workspace=${{ matrix.name }}
 
       - name: Check if tag already exists
         id: tag_check
