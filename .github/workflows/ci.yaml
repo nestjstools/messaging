@@ -24,11 +24,6 @@ jobs:
       matrix:
         workspace:
           - "@nestjstools/messaging"
-          - "@nestjstools/messaging-amazon-sqs-extension"
-          - "@nestjstools/messaging-google-pubsub-extension"
-          - "@nestjstools/messaging-nats-extension"
-          - "@nestjstools/messaging-rabbitmq-extension"
-          - "@nestjstools/messaging-redis-extension"
 
     steps:
       - name: Checkout
