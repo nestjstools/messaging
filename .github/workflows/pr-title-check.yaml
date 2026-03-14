@@ -1,0 +1,32 @@
+name: PR Title check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+permissions:
+  pull-requests: read
+  contents: read
+
+jobs:
+  enforce-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Ensure PR title format
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          title='${{ github.event.pull_request.title }}'
+          package_pattern="$(ls -1 packages | paste -sd'|' -)"
+          regex="^\[(${package_pattern})\] (feat|chore|fix): .+$"
+
+          if [[ ! "${title}" =~ ${regex} ]]; then
+            echo "Invalid PR title: ${title}"
+            echo "Expected format: [name-from-package-dir] feat|chore|fix: short description"
+            echo "Regex: ${regex}"
+            exit 1
+          fi

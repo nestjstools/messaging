@@ -262,6 +262,15 @@ Please open an issue or pull request if you want to:
 * fix bugs
 * propose new features
 
+Before opening a pull request, please read the contribution guide:
+[CONTRIBUTING.md](./CONTRIBUTING.md)
+
+It explains:
+- branch naming conventions
+- pull request title format
+- how to work with the monorepo
+- when to bump package versions
+
 ---
 
 ## ⭐ Support
