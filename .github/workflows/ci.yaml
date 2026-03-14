@@ -1,37 +1,41 @@
-name: CI
+name: Test
 
 on:
   pull_request:
+  push:
     branches:
-      - "main"
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        workspace:
+          - "@nestjstools/messaging"
+
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 24
 
       - name: Install dependencies
-        run: yarn
+        run: npm install
 
-      - name: Run Prettier
-        env:
-          NODE_ENV: test
-        run: npm run prettier
-
-      - name: Run Tests
-        env:
-          NODE_ENV: test
-        run: npm run test
-
-      - name: Build the package
-        env:
-          NODE_ENV: production
-        run: npm run build
+      - name: Run tests
+        run: npm run test --workspace=${{ matrix.workspace }}
