@@ -17,8 +17,7 @@ import {
 
 @Injectable()
 @MessageConsumer(AmazonSqsChannel)
-export class AmazonSqsMessagingConsumer
-  implements IMessagingConsumer<AmazonSqsChannel> {
+export class AmazonSqsMessagingConsumer implements IMessagingConsumer<AmazonSqsChannel> {
   private channel?: AmazonSqsChannel = undefined;
 
   async consume(

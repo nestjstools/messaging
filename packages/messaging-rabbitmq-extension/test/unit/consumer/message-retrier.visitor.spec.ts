@@ -1,6 +1,9 @@
 import { MessageRetrierVisitor } from '../../../src/consumer/message-retrier.visitor';
 import { AmqpChannel } from '../../../src/channel/amqp.channel';
-import { RABBITMQ_HEADER_RETRY_COUNT, RABBITMQ_HEADER_ROUTING_KEY } from '../../../src/const';
+import {
+  RABBITMQ_HEADER_RETRY_COUNT,
+  RABBITMQ_HEADER_ROUTING_KEY,
+} from '../../../src/const';
 import { ConsumerDispatchedMessageError } from '@nestjstools/messaging';
 import { ChannelWrapper } from 'amqp-connection-manager';
 
@@ -36,7 +39,12 @@ describe('MessageRetrierVisitor', () => {
         },
       } as any;
 
-      await visitor.retryMessage(mockErrored, mockChannel, mockAmqpChannel, currentRetryCount);
+      await visitor.retryMessage(
+        mockErrored,
+        mockChannel,
+        mockAmqpChannel,
+        currentRetryCount,
+      );
 
       expect(mockAmqpChannel.publish).toHaveBeenCalledWith(
         'test-exchange_retry.exchange',
@@ -47,7 +55,7 @@ describe('MessageRetrierVisitor', () => {
             [RABBITMQ_HEADER_RETRY_COUNT]: 3,
             [RABBITMQ_HEADER_ROUTING_KEY]: mockRoutingKey,
           },
-        }
+        },
       );
     });
 
@@ -63,7 +71,12 @@ describe('MessageRetrierVisitor', () => {
         },
       } as any;
 
-      await visitor.retryMessage(mockErrored, mockChannel, mockAmqpChannel, currentRetryCount);
+      await visitor.retryMessage(
+        mockErrored,
+        mockChannel,
+        mockAmqpChannel,
+        currentRetryCount,
+      );
 
       expect(mockAmqpChannel.publish).toHaveBeenCalledWith(
         'test-exchange_retry.exchange',
@@ -74,7 +87,7 @@ describe('MessageRetrierVisitor', () => {
             [RABBITMQ_HEADER_RETRY_COUNT]: 1,
             [RABBITMQ_HEADER_ROUTING_KEY]: mockRoutingKey,
           },
-        }
+        },
       );
     });
 
@@ -93,7 +106,12 @@ describe('MessageRetrierVisitor', () => {
         },
       } as any;
 
-      const result = await visitor.retryMessage(mockErrored, mockChannel, mockAmqpChannel, currentRetryCount);
+      const result = await visitor.retryMessage(
+        mockErrored,
+        mockChannel,
+        mockAmqpChannel,
+        currentRetryCount,
+      );
 
       expect(mockAmqpChannel.publish).toHaveBeenCalledWith(
         'test-exchange_retry.exchange',
@@ -104,7 +122,7 @@ describe('MessageRetrierVisitor', () => {
             [RABBITMQ_HEADER_RETRY_COUNT]: 6,
             [RABBITMQ_HEADER_ROUTING_KEY]: mockRoutingKey,
           },
-        }
+        },
       );
       expect(result).toBeUndefined();
     });

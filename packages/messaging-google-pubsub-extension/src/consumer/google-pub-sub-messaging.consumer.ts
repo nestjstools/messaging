@@ -11,8 +11,7 @@ import { ROUTING_KEY_ATTRIBUTE_NAME } from '../const';
 
 @Injectable()
 @MessageConsumer(GooglePubSubChannel)
-export class GooglePubSubMessagingConsumer
-  implements IMessagingConsumer<GooglePubSubChannel> {
+export class GooglePubSubMessagingConsumer implements IMessagingConsumer<GooglePubSubChannel> {
   private channel: GooglePubSubChannel;
 
   async consume(

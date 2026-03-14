@@ -5,9 +5,7 @@ import { AmazonSqsChannelConfig } from './amazon-sqs.channel-config';
 
 @Injectable()
 @ChannelFactory(AmazonSqsChannelConfig)
-export class AmazonSqsChannelFactory
-  implements IChannelFactory<AmazonSqsChannelConfig>
-{
+export class AmazonSqsChannelFactory implements IChannelFactory<AmazonSqsChannelConfig> {
   create(channelConfig: AmazonSqsChannelConfig): AmazonSqsChannel {
     return new AmazonSqsChannel(channelConfig);
   }

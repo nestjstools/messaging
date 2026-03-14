@@ -7,9 +7,7 @@ import { NatsJetStreamMessageBus } from './nats-jet-stream-message-bus';
 
 @Injectable()
 @MessageBusFactory(NatsJetStreamChannel)
-export class NatsJetStreamMessageBusFactory
-  implements IMessageBusFactory<NatsJetStreamChannel>
-{
+export class NatsJetStreamMessageBusFactory implements IMessageBusFactory<NatsJetStreamChannel> {
   create(channel: NatsJetStreamChannel): IMessageBus {
     return new NatsJetStreamMessageBus(channel);
   }

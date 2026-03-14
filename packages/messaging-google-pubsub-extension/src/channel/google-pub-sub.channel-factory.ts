@@ -5,9 +5,7 @@ import { GooglePubSubChannelConfig } from './google-pub-sub.channel-config';
 
 @Injectable()
 @ChannelFactory(GooglePubSubChannelConfig)
-export class GooglePubSubChannelFactory
-  implements IChannelFactory<GooglePubSubChannelConfig>
-{
+export class GooglePubSubChannelFactory implements IChannelFactory<GooglePubSubChannelConfig> {
   create(channelConfig: GooglePubSubChannelConfig): GooglePubSubChannel {
     return new GooglePubSubChannel(channelConfig);
   }

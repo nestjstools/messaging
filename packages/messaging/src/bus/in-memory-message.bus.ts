@@ -66,11 +66,10 @@ export class InMemoryMessageBus implements IMessageBus {
       message instanceof RoutingMessage ? message.message : {};
 
     if (message instanceof SealedRoutingMessage) {
-      let normalizerDefinition: object = (
+      const normalizerDefinition: object =
         message.messageOptions instanceof DefaultMessageOptions
           ? message.messageOptions.normalizer
-          : ObjectForwardMessageNormalizer
-      ) as object;
+          : ObjectForwardMessageNormalizer;
 
       messageToDispatch = await this.normalizerRegistry
         .getByName(normalizerDefinition['name'])

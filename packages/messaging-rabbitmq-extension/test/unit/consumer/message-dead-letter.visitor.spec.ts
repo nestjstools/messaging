@@ -45,7 +45,7 @@ describe('MessageDeadLetterVisitor', () => {
           headers: {
             [RABBITMQ_HEADER_ROUTING_KEY]: mockRoutingKey,
           },
-        }
+        },
       );
     });
 
@@ -72,7 +72,7 @@ describe('MessageDeadLetterVisitor', () => {
           headers: {
             [RABBITMQ_HEADER_ROUTING_KEY]: 'user.created',
           },
-        }
+        },
       );
     });
   });

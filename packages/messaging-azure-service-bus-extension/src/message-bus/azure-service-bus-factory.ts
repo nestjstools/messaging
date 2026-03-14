@@ -7,9 +7,7 @@ import { AzureServiceBusChannel } from '../channel/azure-service-bus.channel';
 
 @Injectable()
 @MessageBusFactory(AzureServiceBusChannel)
-export class AzureServiceBusFactory
-  implements IMessageBusFactory<AzureServiceBusChannel>
-{
+export class AzureServiceBusFactory implements IMessageBusFactory<AzureServiceBusChannel> {
   create(channel: AzureServiceBusChannel): IMessageBus {
     return new AzureServiceBusMessageBus(channel);
   }

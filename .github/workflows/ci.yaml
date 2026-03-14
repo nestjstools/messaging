@@ -15,8 +15,14 @@ concurrency:
 
 jobs:
   test:
-    name: test (@nestjstools/messaging)
+    name: test (${{ matrix.workspace }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        workspace:
+          - "@nestjstools/messaging"
+          - "@nestjstools/messaging-rabbitmq-extension"
 
     steps:
       - name: Checkout
@@ -27,8 +33,14 @@ jobs:
         with:
           node-version: 24
 
+      - name: Enable Corepack (Yarn)
+        run: corepack enable
+
       - name: Install dependencies
-        run: npm install
+        run: yarn install --immutable
+
+      - name: Check formatting
+        run: yarn format:check
 
       - name: Run tests
-        run: npm run test --workspace=@nestjstools/messaging
+        run: yarn workspace ${{ matrix.workspace }} test

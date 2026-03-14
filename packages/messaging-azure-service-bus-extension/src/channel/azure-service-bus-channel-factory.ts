@@ -5,9 +5,7 @@ import { AzureServiceBusChannelConfig } from './azure-service-bus-channel.config
 
 @Injectable()
 @ChannelFactory(AzureServiceBusChannelConfig)
-export class AzureServiceBusChannelFactory
-  implements IChannelFactory<AzureServiceBusChannelConfig>
-{
+export class AzureServiceBusChannelFactory implements IChannelFactory<AzureServiceBusChannelConfig> {
   create(channelConfig: AzureServiceBusChannelConfig): AzureServiceBusChannel {
     return new AzureServiceBusChannel(channelConfig);
   }

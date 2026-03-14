@@ -7,9 +7,7 @@ import { GooglePubSubChannel } from '../channel/google-pub-sub.channel';
 
 @Injectable()
 @MessageBusFactory(GooglePubSubChannel)
-export class GooglePubSubMessageBusFactory
-  implements IMessageBusFactory<GooglePubSubChannel>
-{
+export class GooglePubSubMessageBusFactory implements IMessageBusFactory<GooglePubSubChannel> {
   create(channel: GooglePubSubChannel): IMessageBus {
     return new GooglePubSubMessageBus(channel);
   }
