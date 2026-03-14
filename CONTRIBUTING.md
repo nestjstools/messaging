@@ -32,19 +32,6 @@ Clone the repository and install dependencies from the repository root:
 * cd messaging
 * yarn install / or npm install
 
-### Branch naming
-
-Push your commits using one of the following branch formats:
-
-- `feat/your-feature-name`
-- `fix/your-fix-name`
-
-Example:
-
-feat/add-sqs-batch-processing  
-fix/rabbitmq-retry-handling
-
-
 ### Pull request title
 
 PR titles should follow this format:
