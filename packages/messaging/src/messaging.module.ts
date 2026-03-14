@@ -1,6 +1,6 @@
 import {
   DynamicModule,
-  FactoryProvider,
+  FactoryProvider, Inject,
   Logger as NestCommonLogger,
   Module,
   OnApplicationBootstrap,
@@ -46,8 +46,7 @@ import { MessagingLogger } from './logger/messaging-logger';
 
 @Module({})
 export class MessagingModule
-  implements OnApplicationBootstrap, OnModuleDestroy
-{
+  implements OnApplicationBootstrap, OnModuleDestroy {
   static forRoot(options: MessagingModuleOptions): DynamicModule {
     const channels = options.channels ?? [];
 
@@ -171,15 +170,15 @@ export class MessagingModule
       options.customLogger && typeof options.customLogger === 'function'
         ? { provide: Service.LOGGER, useClass: options.customLogger }
         : {
-            provide: Service.LOGGER,
-            useValue:
-              options.customLogger ??
-              new NestLogger(
-                new NestCommonLogger(),
-                options.debug ?? false,
-                options.logging ?? true,
-              ),
-          }
+          provide: Service.LOGGER,
+          useValue:
+            options.customLogger ??
+            new NestLogger(
+              new NestCommonLogger(),
+              options.debug ?? false,
+              options.logging ?? true,
+            ),
+        }
     ) as Provider;
 
     return {
@@ -217,6 +216,10 @@ export class MessagingModule
           },
           inject: [Service.CHANNELS, Service.LOGGER],
         },
+        {
+          provide: Service.MESSAGING_CONFIGURATION,
+          useValue: options,
+        },
         loggerProvider,
         HandlerMiddleware,
         CompositeChannelFactory,
@@ -238,13 +241,23 @@ export class MessagingModule
   constructor(
     private readonly moduleRef: ModuleRef,
     private readonly discoveryService: DiscoveryService,
-  ) {}
+    @Inject(Service.MESSAGING_CONFIGURATION)
+    private readonly configuration: MandatoryMessagingModuleOptions,
+    @Inject(Service.LOGGER)
+    private readonly logger: MessagingLogger,
+  ) {
+  }
 
   onApplicationBootstrap(): void {
     registerHandlers(this.moduleRef, this.discoveryService);
     registerMiddlewares(this.moduleRef, this.discoveryService);
     registerMessageNormalizers(this.moduleRef, this.discoveryService);
     registerExceptionListener(this.moduleRef, this.discoveryService);
+
+    if (this.configuration.forceDisableAllConsumers ?? false) {
+      this.logger.log(`All consumers are disabled by configuration`);
+      return;
+    }
 
     const consumer = this.moduleRef.get(DistributedConsumer);
     consumer.run();

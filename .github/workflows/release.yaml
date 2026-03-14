@@ -126,8 +126,22 @@ jobs:
         if: steps.tag_check.outputs.exists == 'false'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-#        run: npm publish --workspace=${{ matrix.name }} --access public
-        run: echo ${{ matrix.name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          
+          VERSION="${{ matrix.version }}"
+          
+          if [[ "$VERSION" == *"-beta."* ]]; then
+            echo "Publishing beta version: $VERSION"
+#            npm publish --workspace=${{ matrix.name }} --access public --tag beta
+          elif [[ "$VERSION" == *"-rc."* ]]; then
+            echo "Publishing rc version: $VERSION"
+#            npm publish --workspace=${{ matrix.name }} --access public --tag rc
+          else
+            echo "Publishing stable version: $VERSION"
+#            npm publish --workspace=${{ matrix.name }} --access public
+          fi
 
       - name: Create git tag
         if: steps.tag_check.outputs.exists == 'false'
