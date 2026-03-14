@@ -134,13 +134,13 @@ jobs:
           
           if [[ "$VERSION" == *"-beta."* ]]; then
             echo "Publishing beta version: $VERSION"
-            # npm publish --workspace=${{ matrix.name }} --access public --tag beta
+            npm publish --workspace=${{ matrix.name }} --access public --tag beta
           elif [[ "$VERSION" == *"-rc."* ]]; then
             echo "Publishing rc version: $VERSION"
-            # npm publish --workspace=${{ matrix.name }} --access public --tag rc
+            npm publish --workspace=${{ matrix.name }} --access public --tag rc
           else
             echo "Publishing stable version: $VERSION"
-            # npm publish --workspace=${{ matrix.name }} --access public
+            npm publish --workspace=${{ matrix.name }} --access public
           fi
 
       - name: Create git tag
