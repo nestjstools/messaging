@@ -17,7 +17,7 @@
     "test:messaging-google-pubsub-extension": "yarn workspace @nestjstools/messaging-google-pubsub-extension test",
     "test:messaging-nats-extension": "yarn workspace @nestjstools/messaging-nats-extension test",
     "test:messaging-rabbitmq-extension": "yarn workspace @nestjstools/messaging-rabbitmq-extension test",
-    "test:messaging-redis-extension": "yarn workspace @nestjstools/messaging-redis-extension test",
+    "test:messaging-redis-extension": "yarn workspace @nestjstools/messaging-redis-extension test"
   },
   "repository": {
     "type": "git",
