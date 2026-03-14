@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging-google-pubsub-extension",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Extension to handle messages and dispatch them over Google PubSub",
   "author": "Sebastian Iwanczyszyn",
   "publishConfig": {
@@ -9,11 +9,12 @@
   "license": "MIT",
   "main": "lib/index.js",
   "bugs": {
-    "url": "https://github.com/nestjstools/messaging-google-pubsub-extension/issues"
+    "url": "https://github.com/nestjstools/messaging/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nestjstools/messaging-google-pubsub-extension"
+    "url": "git+https://github.com/nestjstools/messaging",
+    "directory": "packages/messaging-google-pubsub-extension"
   },
   "keywords": [
     "nestjs",
@@ -111,5 +112,6 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "homepage": "https://docs.nestjstools.com/messaging"
 }
