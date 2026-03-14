@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging-amazon-sqs-extension",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Extension to handle messages and dispatch them over Amazon SQS",
   "author": "Sebastian Iwanczyszyn",
   "license": "MIT",
@@ -9,11 +9,12 @@
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/nestjstools/messaging-amazon-sqs-extension/issues"
+    "url": "https://github.com/nestjstools/messaging/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nestjstools/messaging-amazon-sqs-extension"
+    "url": "git+https://github.com/nestjstools/messaging",
+    "directory": "packages/messaging-amazon-sqs-extension"
   },
   "keywords": [
     "nestjs",
@@ -108,5 +109,6 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "homepage": "https://docs.nestjstools.com/messaging"
 }
