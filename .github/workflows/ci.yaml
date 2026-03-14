@@ -14,8 +14,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  prettier:
+    name: Check prettier
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Enable Corepack (Yarn)
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Check formatting
+        run: yarn format:check
+
   test:
     name: test (${{ matrix.workspace }})
+    needs: prettier
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -38,9 +61,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --immutable
-
-      - name: Check formatting
-        run: yarn format:check
 
       - name: Build core messaging package
         if: matrix.workspace != '@nestjstools/messaging'
