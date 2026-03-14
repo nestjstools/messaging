@@ -17,8 +17,7 @@ import { StorageType } from '../channel/nats-jet-stream-channel.config';
 
 @Injectable()
 @MessageConsumer(NatsJetStreamChannel)
-export class NatsJetStreamMessagingConsumer
-  implements IMessagingConsumer<NatsJetStreamChannel> {
+export class NatsJetStreamMessagingConsumer implements IMessagingConsumer<NatsJetStreamChannel> {
   private channel?: NatsJetStreamChannel = undefined;
 
   async consume(

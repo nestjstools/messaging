@@ -7,9 +7,7 @@ import { AmazonSqsChannel } from '../channel/amazon-sqs.channel';
 
 @Injectable()
 @MessageBusFactory(AmazonSqsChannel)
-export class AmazonSqsMessageBusFactory
-  implements IMessageBusFactory<AmazonSqsChannel>
-{
+export class AmazonSqsMessageBusFactory implements IMessageBusFactory<AmazonSqsChannel> {
   create(channel: AmazonSqsChannel): IMessageBus {
     return new AmazonSqsMessageBus(channel);
   }

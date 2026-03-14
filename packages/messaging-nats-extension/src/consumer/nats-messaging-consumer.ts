@@ -3,7 +3,8 @@ import {
   ConsumerMessage,
   IMessagingConsumer,
   MessageConsumer,
-  ConsumerDispatchedMessageError, ConsumerMessageBus,
+  ConsumerDispatchedMessageError,
+  ConsumerMessageBus,
 } from '@nestjstools/messaging';
 import { Injectable, OnApplicationShutdown } from '@nestjs/common';
 import { NatsConnection } from 'nats';
@@ -11,7 +12,8 @@ import { NatsConnection } from 'nats';
 @Injectable()
 @MessageConsumer(NatsChannel)
 export class NatsMessagingConsumer
-  implements IMessagingConsumer<NatsChannel>, OnApplicationShutdown {
+  implements IMessagingConsumer<NatsChannel>, OnApplicationShutdown
+{
   private channel?: NatsChannel = undefined;
   private client?: NatsConnection = undefined;
 

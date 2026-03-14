@@ -3,7 +3,8 @@ import {
   ConsumerMessage,
   IMessagingConsumer,
   MessageConsumer,
-  ConsumerDispatchedMessageError, ConsumerMessageBus,
+  ConsumerDispatchedMessageError,
+  ConsumerMessageBus,
 } from '@nestjstools/messaging';
 import { Injectable } from '@nestjs/common';
 import { ROUTING_KEY_ATTRIBUTE_NAME } from '../const';
@@ -11,8 +12,7 @@ import { ServiceBusReceiver } from '@azure/service-bus';
 
 @Injectable()
 @MessageConsumer(AzureServiceBusChannel)
-export class AzureServiceBusMessagingConsumer
-  implements IMessagingConsumer<AzureServiceBusChannel> {
+export class AzureServiceBusMessagingConsumer implements IMessagingConsumer<AzureServiceBusChannel> {
   private channel: AzureServiceBusChannel;
 
   async consume(

@@ -1,4 +1,4 @@
-name: Test
+name: Check formatting
 
 on:
   pull_request:
@@ -10,18 +10,13 @@ permissions:
   contents: read
 
 concurrency:
-  group: test-${{ github.ref }}
+  group: prettier-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  test:
+  prettier:
+    name: check formatting
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        workspace:
-          - "@nestjstools/messaging"
 
     steps:
       - name: Checkout
@@ -32,8 +27,11 @@ jobs:
         with:
           node-version: 24
 
-      - name: Install dependencies
-        run: npm install
+      - name: Enable Corepack (Yarn)
+        run: corepack enable
 
-      - name: Run tests
-        run: npm run test --workspace=${{ matrix.workspace }}
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Check formatting
+        run: yarn format:check

@@ -12,7 +12,7 @@ export class MessageHandlerRegistry {
 
   private registerSingle(name: string, handler: IMessageHandler<any>): void {
     if (this.registry.has(name)) {
-      const bucket = this.registry.get(name) as Array<IMessageHandler<any>>;
+      const bucket = this.registry.get(name);
 
       if (bucket.includes(handler)) {
         return;

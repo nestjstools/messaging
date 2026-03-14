@@ -77,12 +77,12 @@ export class ChannelConfig {
 
 export class InMemoryChannelConfig extends ChannelConfig {
   constructor({
-                name,
-                avoidErrorsForNotExistedHandlers,
-                middlewares,
-                enableConsumer,
-                normalizer,
-              }: InMemoryChannelConfig) {
+    name,
+    avoidErrorsForNotExistedHandlers,
+    middlewares,
+    enableConsumer,
+    normalizer,
+  }: InMemoryChannelConfig) {
     super(
       name,
       avoidErrorsForNotExistedHandlers,

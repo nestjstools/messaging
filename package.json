@@ -5,6 +5,10 @@
     "packages/*"
   ],
   "scripts": {
+    "lint": "eslint \"packages/*/{src,apps,libs,test}/**/*.ts\"",
+    "lint:fix": "eslint \"packages/*/{src,apps,libs,test}/**/*.ts\" --fix",
+    "format:check": "prettier --check \"packages/*/{src,apps,libs,test}/**/*.ts\"",
+    "format": "prettier --write \"packages/*/{src,apps,libs,test}/**/*.ts\"",
     "build:messaging-amazon-sqs-extension": "yarn workspace @nestjstools/messaging-amazon-sqs-extension build",
     "build:messaging-azure-service-bus-extension": "yarn workspace @nestjstools/messaging-azure-service-bus-extension build",
     "build:messaging": "yarn workspace @nestjstools/messaging build",

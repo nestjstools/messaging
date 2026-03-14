@@ -12,7 +12,8 @@ import { Worker } from 'bullmq';
 @Injectable()
 @MessageConsumer(RedisChannel)
 export class RedisMessagingConsumer
-  implements IMessagingConsumer<RedisChannel>, OnModuleDestroy {
+  implements IMessagingConsumer<RedisChannel>, OnModuleDestroy
+{
   private channel?: RedisChannel = undefined;
   private worker?: Worker = undefined;
 

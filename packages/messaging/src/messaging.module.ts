@@ -1,6 +1,7 @@
 import {
   DynamicModule,
-  FactoryProvider, Inject,
+  FactoryProvider,
+  Inject,
   Logger as NestCommonLogger,
   Module,
   OnApplicationBootstrap,
@@ -46,7 +47,8 @@ import { MessagingLogger } from './logger/messaging-logger';
 
 @Module({})
 export class MessagingModule
-  implements OnApplicationBootstrap, OnModuleDestroy {
+  implements OnApplicationBootstrap, OnModuleDestroy
+{
   static forRoot(options: MessagingModuleOptions): DynamicModule {
     const channels = options.channels ?? [];
 
@@ -170,15 +172,15 @@ export class MessagingModule
       options.customLogger && typeof options.customLogger === 'function'
         ? { provide: Service.LOGGER, useClass: options.customLogger }
         : {
-          provide: Service.LOGGER,
-          useValue:
-            options.customLogger ??
-            new NestLogger(
-              new NestCommonLogger(),
-              options.debug ?? false,
-              options.logging ?? true,
-            ),
-        }
+            provide: Service.LOGGER,
+            useValue:
+              options.customLogger ??
+              new NestLogger(
+                new NestCommonLogger(),
+                options.debug ?? false,
+                options.logging ?? true,
+              ),
+          }
     ) as Provider;
 
     return {
@@ -245,8 +247,7 @@ export class MessagingModule
     private readonly configuration: MandatoryMessagingModuleOptions,
     @Inject(Service.LOGGER)
     private readonly logger: MessagingLogger,
-  ) {
-  }
+  ) {}
 
   onApplicationBootstrap(): void {
     registerHandlers(this.moduleRef, this.discoveryService);
@@ -255,7 +256,9 @@ export class MessagingModule
     registerExceptionListener(this.moduleRef, this.discoveryService);
 
     if (this.configuration.forceDisableAllConsumers ?? false) {
-      this.logger.log(`All consumers are disabled by configuration. Only [InMemoryChannel] is available for message dispatching`);
+      this.logger.log(
+        `All consumers are disabled by configuration. Only [InMemoryChannel] is available for message dispatching`,
+      );
       return;
     }
 

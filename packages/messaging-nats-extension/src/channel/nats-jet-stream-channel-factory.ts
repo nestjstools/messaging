@@ -5,9 +5,7 @@ import { NatsJetStreamChannel } from './nats-jet-stream.channel';
 
 @Injectable()
 @ChannelFactory(NatsJetStreamChannelConfig)
-export class NatsJetStreamChannelFactory
-  implements IChannelFactory<NatsJetStreamChannelConfig>
-{
+export class NatsJetStreamChannelFactory implements IChannelFactory<NatsJetStreamChannelConfig> {
   create(channelConfig: NatsJetStreamChannelConfig): NatsJetStreamChannel {
     return new NatsJetStreamChannel(channelConfig);
   }

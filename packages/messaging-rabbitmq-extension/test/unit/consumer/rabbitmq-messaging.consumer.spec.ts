@@ -110,7 +110,8 @@ describe('RabbitmqMessagingConsumer', () => {
 
       await consumer.consume(dispatcher, channel);
 
-      const wrapper = channel.createChannelWrapper() as unknown as jest.Mocked<ChannelWrapper>;
+      const wrapper =
+        channel.createChannelWrapper() as unknown as jest.Mocked<ChannelWrapper>;
       const rawChannel = {
         consume: jest.fn(),
         prefetch: jest.fn().mockResolvedValue(undefined),
@@ -121,15 +122,15 @@ describe('RabbitmqMessagingConsumer', () => {
       await setupFn(rawChannel);
       expect(rawChannel.prefetch).toHaveBeenCalledWith(10);
 
-      const consumeHandler = (rawChannel.consume as jest.Mock).mock.calls[0][1] as (
-        msg: ConsumeMessage | null,
-      ) => Promise<void>;
+      const consumeHandler = (rawChannel.consume as jest.Mock).mock
+        .calls[0][1] as (msg: ConsumeMessage | null) => Promise<void>;
       const msg = createMessage({ hello: 'world' });
 
       await consumeHandler(msg);
 
       expect(dispatcher.dispatch).toHaveBeenCalledTimes(1);
-      const dispatchedMessage = (dispatcher.dispatch as jest.Mock).mock.calls[0][0];
+      const dispatchedMessage = (dispatcher.dispatch as jest.Mock).mock
+        .calls[0][0];
       expect(dispatchedMessage.message).toEqual({ hello: 'world' });
       expect(dispatchedMessage.routingKey).toBe('fallback.routing');
       expect(dispatchedMessage.metadata).toEqual({
@@ -148,7 +149,8 @@ describe('RabbitmqMessagingConsumer', () => {
 
       await consumer.consume(dispatcher, channel);
 
-      const wrapper = channel.createChannelWrapper() as unknown as jest.Mocked<ChannelWrapper>;
+      const wrapper =
+        channel.createChannelWrapper() as unknown as jest.Mocked<ChannelWrapper>;
       const rawChannel = {
         consume: jest.fn(),
         prefetch: jest.fn().mockResolvedValue(undefined),
@@ -158,9 +160,8 @@ describe('RabbitmqMessagingConsumer', () => {
       const setupFn = (wrapper.addSetup as jest.Mock).mock.calls[0][0];
       await setupFn(rawChannel);
 
-      const consumeHandler = (rawChannel.consume as jest.Mock).mock.calls[0][1] as (
-        msg: ConsumeMessage | null,
-      ) => Promise<void>;
+      const consumeHandler = (rawChannel.consume as jest.Mock).mock
+        .calls[0][1] as (msg: ConsumeMessage | null) => Promise<void>;
       const msg = createMessage(
         { hello: 'world' },
         {
@@ -172,7 +173,8 @@ describe('RabbitmqMessagingConsumer', () => {
 
       await consumeHandler(msg);
 
-      const dispatchedMessage = (dispatcher.dispatch as jest.Mock).mock.calls[0][0];
+      const dispatchedMessage = (dispatcher.dispatch as jest.Mock).mock
+        .calls[0][0];
       expect(dispatchedMessage.routingKey).toBe('original.routing');
       expect(dispatchedMessage.metadata).toEqual({
         [RABBITMQ_HEADER_RETRY_COUNT]: 2,
@@ -188,7 +190,8 @@ describe('RabbitmqMessagingConsumer', () => {
 
       await consumer.consume(dispatcher, channel);
 
-      const wrapper = channel.createChannelWrapper() as unknown as jest.Mocked<ChannelWrapper>;
+      const wrapper =
+        channel.createChannelWrapper() as unknown as jest.Mocked<ChannelWrapper>;
       const rawChannel = {
         consume: jest.fn(),
         prefetch: jest.fn().mockResolvedValue(undefined),
@@ -198,9 +201,8 @@ describe('RabbitmqMessagingConsumer', () => {
       const setupFn = (wrapper.addSetup as jest.Mock).mock.calls[0][0];
       await setupFn(rawChannel);
 
-      const consumeHandler = (rawChannel.consume as jest.Mock).mock.calls[0][1] as (
-        msg: ConsumeMessage | null,
-      ) => Promise<void>;
+      const consumeHandler = (rawChannel.consume as jest.Mock).mock
+        .calls[0][1] as (msg: ConsumeMessage | null) => Promise<void>;
       const msg = {
         content: Buffer.from('{broken-json'),
         properties: { headers: {} },

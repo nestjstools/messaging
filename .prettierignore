@@ -1,0 +1,29 @@
+# Build and dependencies
+node_modules/
+dist/
+lib/
+coverage/
+
+# Docs
+*.md
+
+# Locks
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Data and config not related to TS/JS formatting
+*.json
+*.yaml
+*.yml
+*.toml
+*.xml
+
+# Assets
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.pdf
