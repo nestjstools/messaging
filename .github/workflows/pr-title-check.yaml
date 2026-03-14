@@ -22,7 +22,7 @@ jobs:
 
           title='${{ github.event.pull_request.title }}'
           package_pattern="$(ls -1 packages | paste -sd'|' -)"
-          regex="^\[(${package_pattern})\] (feat|chore|fix): .+$"
+          regex="^\[(${package_pattern|repo|repository})\] (feat|chore|fix): .+$"
 
           if [[ ! "${title}" =~ ${regex} ]]; then
             echo "Invalid PR title: ${title}"
