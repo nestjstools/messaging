@@ -1,16 +1,9 @@
 name: Release packages
 
-#on:
-#  push:
-#    branches:
-#      - main
-#      - master
 on:
-  pull_request:
   push:
     branches:
       - main
-      - master
   workflow_dispatch:
 
 permissions:

@@ -18,7 +18,6 @@
     "test:messaging-nats-extension": "yarn workspace @nestjstools/messaging-nats-extension test",
     "test:messaging-rabbitmq-extension": "yarn workspace @nestjstools/messaging-rabbitmq-extension test",
     "test:messaging-redis-extension": "yarn workspace @nestjstools/messaging-redis-extension test",
-    "test": "npm run test --workspaces --if-present"
   },
   "repository": {
     "type": "git",
