@@ -204,7 +204,7 @@ export class AppController {
 
 ### High level flow of message dispatching and handling:
 
-```marmaid
+```mermaid
 flowchart LR
 
     M[Message]
@@ -221,7 +221,7 @@ flowchart LR
 
 ### Exception handling flow:
 
-```marmaid
+```mermaid
 flowchart LR
 
     M[Message]
