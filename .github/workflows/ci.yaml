@@ -42,5 +42,9 @@ jobs:
       - name: Check formatting
         run: yarn format:check
 
+      - name: Build core messaging package
+        if: matrix.workspace != '@nestjstools/messaging'
+        run: yarn workspace @nestjstools/messaging build
+
       - name: Run tests
         run: yarn workspace ${{ matrix.workspace }} test
