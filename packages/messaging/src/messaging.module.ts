@@ -255,7 +255,7 @@ export class MessagingModule
     registerExceptionListener(this.moduleRef, this.discoveryService);
 
     if (this.configuration.forceDisableAllConsumers ?? false) {
-      this.logger.log(`All consumers are disabled by configuration`);
+      this.logger.log(`All consumers are disabled by configuration. Only [InMemoryChannel] is available for message dispatching`);
       return;
     }
 
