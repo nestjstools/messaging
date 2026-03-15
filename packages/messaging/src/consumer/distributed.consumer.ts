@@ -20,7 +20,8 @@ export class DistributedConsumer {
     private readonly exceptionListenerHandler: ExceptionListenerHandler,
     @Inject(Service.LOGGER) private readonly logger: MessagingLogger,
     private readonly discoveryService: DiscoveryService,
-  ) {}
+  ) {
+  }
 
   async run(): Promise<void> {
     for (const channel of this.channelRegistry.getAll()) {

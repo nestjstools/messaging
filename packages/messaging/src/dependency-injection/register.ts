@@ -4,7 +4,7 @@ import { MessagingLogger } from '../logger/messaging-logger';
 import { Service } from './service';
 import {
   MESSAGE_HANDLER_METADATA,
-  MESSAGING_EXCEPTION_LISTENER_METADATA,
+  MESSAGING_EXCEPTION_LISTENER_METADATA, MESSAGING_LISTENER_METADATA,
   MESSAGING_MIDDLEWARE_METADATA,
   MESSAGING_NORMALIZER_METADATA,
 } from './decorator';
@@ -13,6 +13,7 @@ import { Registry } from '../shared/registry';
 import { MiddlewareRegistry } from '../middleware/middleware.registry';
 import { ExceptionListenerRegistry } from '../exception-listener/exception-listener.registry';
 import { NormalizerRegistry } from '../normalizer/normalizer.registry';
+import { ListenerRegistry } from '../listener/listener.registry';
 
 export const registerHandlers = (
   moduleRef: ModuleRef,
@@ -78,10 +79,23 @@ export const registerExceptionListener = (
   );
 };
 
+export const registerListener = (
+  moduleRef: ModuleRef,
+  discoveryService: DiscoveryService,
+) => {
+  register<ListenerRegistry>(
+    moduleRef,
+    discoveryService,
+    ListenerRegistry,
+    MESSAGING_LISTENER_METADATA,
+    'MessagingListener',
+  );
+};
+
 const register = <T extends Registry<object>>(
   moduleRef: ModuleRef,
   discoveryService: DiscoveryService,
-  registryProvider: string,
+  registryProvider: string | Function,
   decoratorMetadata: string,
   name: string,
 ) => {

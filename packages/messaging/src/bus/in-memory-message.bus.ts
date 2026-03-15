@@ -13,6 +13,7 @@ import { Message } from '../message/message';
 import { RoutingMessage } from '../message/routing-message';
 import { NormalizerRegistry } from '../normalizer/normalizer.registry';
 import { DefaultMessageOptions } from '../message/default-message-options';
+import { ListenerHandler } from '../listener/listener-handler';
 
 export class InMemoryMessageBus implements IMessageBus {
   constructor(
@@ -20,7 +21,9 @@ export class InMemoryMessageBus implements IMessageBus {
     private middlewareRegistry: MiddlewareRegistry,
     private channel: InMemoryChannel,
     private normalizerRegistry: NormalizerRegistry,
-  ) {}
+    private listenerHandler: ListenerHandler,
+  ) {
+  }
 
   async dispatch(message: Message): Promise<object | void> {
     const middlewares = [];
@@ -29,6 +32,24 @@ export class InMemoryMessageBus implements IMessageBus {
       ...(message.messageOptions?.middlewares ?? []),
       HandlerMiddleware,
     );
+
+    let messageToDispatch =
+      message instanceof RoutingMessage ? message.message : {};
+
+    if (message instanceof SealedRoutingMessage) {
+      const normalizerDefinition: object =
+        message.messageOptions instanceof DefaultMessageOptions
+          ? message.messageOptions.normalizer
+          : ObjectForwardMessageNormalizer;
+
+      messageToDispatch = await this.normalizerRegistry
+        .getByName(normalizerDefinition['name'])
+        .denormalize(message.message, message.messageRoutingKey);
+    }
+
+    const routingMessage = MessageFactory.creteRoutingFromMessage(messageToDispatch, message);
+
+    await this.listenerHandler.handlePreMessageDispatched(routingMessage);
 
     try {
       this.registry.getByRoutingKey(message.messageRoutingKey);
@@ -60,26 +81,15 @@ export class InMemoryMessageBus implements IMessageBus {
         DecoratorExtractor.extractMessageMiddleware(middleware),
       ),
     );
+
     const context = MiddlewareContext.createFresh(middlewareInstances);
 
-    let messageToDispatch =
-      message instanceof RoutingMessage ? message.message : {};
-
-    if (message instanceof SealedRoutingMessage) {
-      const normalizerDefinition: object =
-        message.messageOptions instanceof DefaultMessageOptions
-          ? message.messageOptions.normalizer
-          : ObjectForwardMessageNormalizer;
-
-      messageToDispatch = await this.normalizerRegistry
-        .getByName(normalizerDefinition['name'])
-        .denormalize(message.message, message.messageRoutingKey);
-    }
-
     const response = await middlewareInstances[0].process(
-      MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
+      routingMessage,
       context,
     );
+
+    await this.listenerHandler.handlePostMessageDispatched(routingMessage);
 
     return Promise.resolve(response);
   }

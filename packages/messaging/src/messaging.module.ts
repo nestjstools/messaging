@@ -30,7 +30,7 @@ import { InMemoryChannelFactory } from './channel/factory/in-memory-channel.fact
 import { DistributedConsumer } from './consumer/distributed.consumer';
 import {
   registerExceptionListener,
-  registerHandlers,
+  registerHandlers, registerListener,
   registerMessageNormalizers,
   registerMiddlewares,
 } from './dependency-injection/register';
@@ -44,11 +44,12 @@ import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-mess
 import { ExceptionListenerRegistry } from './exception-listener/exception-listener.registry';
 import { ExceptionListenerHandler } from './exception-listener/exception-listener-handler';
 import { MessagingLogger } from './logger/messaging-logger';
+import { ListenerHandler } from './listener/listener-handler';
+import { ListenerRegistry } from './listener/listener.registry';
 
 @Module({})
 export class MessagingModule
-  implements OnApplicationBootstrap, OnModuleDestroy
-{
+  implements OnApplicationBootstrap, OnModuleDestroy {
   static forRoot(options: MessagingModuleOptions): DynamicModule {
     const channels = options.channels ?? [];
 
@@ -146,6 +147,7 @@ export class MessagingModule
           messageHandlerRegistry: MessageHandlerRegistry,
           middlewareRegistry: MiddlewareRegistry,
           normalizerRegistry: NormalizerRegistry,
+          listenerHandler: ListenerHandler,
         ) => {
           return new InMemoryMessageBus(
             messageHandlerRegistry,
@@ -158,12 +160,14 @@ export class MessagingModule
               }),
             ),
             normalizerRegistry,
+            listenerHandler,
           );
         },
         inject: [
           Service.MESSAGE_HANDLERS_REGISTRY,
           Service.MIDDLEWARE_REGISTRY,
           Service.MESSAGE_NORMALIZERS_REGISTRY,
+          ListenerHandler,
         ],
       };
     };
@@ -172,15 +176,15 @@ export class MessagingModule
       options.customLogger && typeof options.customLogger === 'function'
         ? { provide: Service.LOGGER, useClass: options.customLogger }
         : {
-            provide: Service.LOGGER,
-            useValue:
-              options.customLogger ??
-              new NestLogger(
-                new NestCommonLogger(),
-                options.debug ?? false,
-                options.logging ?? true,
-              ),
-          }
+          provide: Service.LOGGER,
+          useValue:
+            options.customLogger ??
+            new NestLogger(
+              new NestCommonLogger(),
+              options.debug ?? false,
+              options.logging ?? true,
+            ),
+        }
     ) as Provider;
 
     return {
@@ -230,6 +234,8 @@ export class MessagingModule
         InMemoryChannelFactory,
         DistributedConsumer,
         ObjectForwardMessageNormalizer,
+        ListenerRegistry,
+        ListenerHandler,
       ],
       exports: [
         Service.DEFAULT_MESSAGE_BUS,
@@ -247,13 +253,15 @@ export class MessagingModule
     private readonly configuration: MandatoryMessagingModuleOptions,
     @Inject(Service.LOGGER)
     private readonly logger: MessagingLogger,
-  ) {}
+  ) {
+  }
 
   onApplicationBootstrap(): void {
     registerHandlers(this.moduleRef, this.discoveryService);
     registerMiddlewares(this.moduleRef, this.discoveryService);
     registerMessageNormalizers(this.moduleRef, this.discoveryService);
     registerExceptionListener(this.moduleRef, this.discoveryService);
+    registerListener(this.moduleRef, this.discoveryService);
 
     if (this.configuration.forceDisableAllConsumers ?? false) {
       this.logger.log(
