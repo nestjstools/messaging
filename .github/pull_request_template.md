@@ -6,6 +6,8 @@ Describe what this PR changes and why.
 - [ ] Feature
 - [ ] Refactor
 - [ ] Documentation
+- [ ] Code improvement / refactoring
+- [ ] Other (please describe)
 
 ## Breaking change
 - [ ] Yes
@@ -15,4 +17,3 @@ Describe what this PR changes and why.
 - [ ] Unit tests added/updated
 - [ ] E2E tests added/updated (if applicable)
 - [ ] Documentation updated if needed
-- [ ] Build and tests pass locally

@@ -11,7 +11,7 @@ export const MESSAGING_EXCEPTION_LISTENER_METADATA =
 export const MESSAGING_MESSAGE_METADATA = 'MESSAGING_MESSAGE_METADATA';
 
 export const MessageHandler = (...routingKey: string[]): ClassDecorator => {
-  return (target: Function) => {
+  return (target) => {
     Reflect.defineMetadata(MESSAGE_HANDLER_METADATA, routingKey, target);
   };
 };
@@ -19,7 +19,7 @@ export const MessageHandler = (...routingKey: string[]): ClassDecorator => {
 export const ChannelFactory = (
   channelConfig: ChannelConfig,
 ): ClassDecorator => {
-  return (target: Function) => {
+  return (target) => {
     Reflect.defineMetadata(CHANNEL_FACTORY_METADATA, channelConfig, target);
   };
 };
@@ -27,7 +27,7 @@ export const ChannelFactory = (
 export const MessageBusFactory = (channel: any): ClassDecorator => {
   classValidator(channel, 'Channel');
 
-  return (target: Function) => {
+  return (target) => {
     Reflect.defineMetadata(MESSAGE_BUS_FACTORY_METADATA, channel, target);
   };
 };
@@ -35,13 +35,13 @@ export const MessageBusFactory = (channel: any): ClassDecorator => {
 export const MessageConsumer = (channel: any): ClassDecorator => {
   classValidator(channel, 'Channel');
 
-  return (target: Function) => {
+  return (target) => {
     Reflect.defineMetadata(MESSAGE_CONSUMER_METADATA, channel, target);
   };
 };
 
 export const MessagingMiddleware = (name?: string): ClassDecorator => {
-  return (target: Function) => {
+  return (target) => {
     Reflect.defineMetadata(
       MESSAGING_MIDDLEWARE_METADATA,
       name ?? target.name,
@@ -51,7 +51,7 @@ export const MessagingMiddleware = (name?: string): ClassDecorator => {
 };
 
 export const MessagingNormalizer = (name?: string): ClassDecorator => {
-  return (target: Function) => {
+  return (target) => {
     Reflect.defineMetadata(
       MESSAGING_NORMALIZER_METADATA,
       name ?? target.name,
@@ -61,7 +61,7 @@ export const MessagingNormalizer = (name?: string): ClassDecorator => {
 };
 
 export const MessagingExceptionListener = (): ClassDecorator => {
-  return (target: Function) => {
+  return (target) => {
     Reflect.defineMetadata(
       MESSAGING_EXCEPTION_LISTENER_METADATA,
       target.name,

@@ -1,4 +1,4 @@
-name: Check formatting
+name: Check code
 
 on:
   pull_request:
@@ -14,8 +14,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prettier:
-    name: check formatting
+  check:
+    name: check prettier and eslint
     runs-on: ubuntu-latest
 
     steps:
@@ -35,3 +35,6 @@ jobs:
 
       - name: Check formatting
         run: yarn format:check
+
+      - name: Check linting
+        run: yarn lint
