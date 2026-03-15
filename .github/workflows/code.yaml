@@ -1,4 +1,4 @@
-name: Check formatting
+name: Check code
 
 on:
   pull_request:
@@ -14,8 +14,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prettier:
-    name: check formatting
+  initialize:
+    name: initialize
     runs-on: ubuntu-latest
 
     steps:
@@ -33,5 +33,19 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+  prettier:
+    name: check formatting
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Check formatting
         run: yarn format:check
+
+  lint:
+    name: check lint
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Check formatting
+        run: yarn lint:check
