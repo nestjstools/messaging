@@ -14,8 +14,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  initialize:
-    name: initialize
+  check:
+    name: check prettier and eslint
     runs-on: ubuntu-latest
 
     steps:
@@ -33,19 +33,8 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-  prettier:
-    name: check formatting
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Check formatting
         run: yarn format:check
-
-  lint:
-    name: check lint
-    runs-on: ubuntu-latest
-
-    steps:
 
       - name: Check formatting
         run: yarn lint:check
