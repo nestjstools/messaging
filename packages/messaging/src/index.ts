@@ -31,3 +31,4 @@ export * from './exception/handlers.exception';
 export * from './logger/log';
 export * from './logger/messaging-logger';
 export * from './logger/nest-logger';
+export * from './lifecycle-hook/messaging-lifecycle-hook-listener'

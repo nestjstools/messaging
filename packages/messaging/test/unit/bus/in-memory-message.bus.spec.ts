@@ -8,17 +8,25 @@ import { MessageHandlerRegistry } from '../../../src/handler/message-handler.reg
 import { MiddlewareRegistry } from '../../../src/middleware/middleware.registry';
 import { InMemoryChannel } from '../../../src/channel/in-memory.channel';
 import { NormalizerRegistry } from '../../../src/normalizer/normalizer.registry';
+import { MessagingLifecycleHookHandler } from '../../../src/lifecycle-hook/messaging-lifecycle-hook-handler';
 
 describe('InMemoryMessageBus', () => {
   let handlerRegistry: MessageHandlerRegistry;
   let middlewareRegistry: MiddlewareRegistry;
   let normalizerRegistry: NormalizerRegistry;
+  let messagingHookHandler: MessagingLifecycleHookHandler;
   let defaultMiddleware: Middleware;
 
   beforeEach(async () => {
     handlerRegistry = new MessageHandlerRegistry();
     middlewareRegistry = new MiddlewareRegistry();
     normalizerRegistry = new NormalizerRegistry();
+    messagingHookHandler = {
+      handleAfterConsumerDispatchMessage: jest.fn(),
+      handleAfterMessageDenormalized: jest.fn(),
+      handleBeforeMessageHandler: jest.fn(),
+      handleAfterMessageHandlerExecuted: jest.fn(),
+    } as unknown as MessagingLifecycleHookHandler;
 
     defaultMiddleware = {
       process: jest.fn().mockImplementation(() => {
@@ -37,6 +45,7 @@ describe('InMemoryMessageBus', () => {
         name: 'example.bus',
       }),
       normalizerRegistry,
+      messagingHookHandler,
     );
 
     await subjectUnderTest.dispatch(
@@ -52,6 +61,7 @@ describe('InMemoryMessageBus', () => {
         name: 'default.bus',
       }),
       normalizerRegistry,
+      messagingHookHandler,
     );
 
     await subjectUnderTest.dispatch(
@@ -68,6 +78,7 @@ describe('InMemoryMessageBus', () => {
         avoidErrorsForNotExistedHandlers: false,
       }),
       normalizerRegistry,
+      messagingHookHandler,
     );
 
     await expect(
@@ -94,6 +105,7 @@ describe('InMemoryMessageBus', () => {
         avoidErrorsForNotExistedHandlers: false,
       }),
       normalizerRegistry,
+      messagingHookHandler,
     );
 
     const response = await subjectUnderTest.dispatch(

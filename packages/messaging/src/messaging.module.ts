@@ -30,7 +30,7 @@ import { InMemoryChannelFactory } from './channel/factory/in-memory-channel.fact
 import { DistributedConsumer } from './consumer/distributed.consumer';
 import {
   registerExceptionListener,
-  registerHandlers, registerListener,
+  registerHandlers, registerMessagingHooks,
   registerMessageNormalizers,
   registerMiddlewares,
 } from './dependency-injection/register';
@@ -44,8 +44,8 @@ import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-mess
 import { ExceptionListenerRegistry } from './exception-listener/exception-listener.registry';
 import { ExceptionListenerHandler } from './exception-listener/exception-listener-handler';
 import { MessagingLogger } from './logger/messaging-logger';
-import { ListenerHandler } from './listener/listener-handler';
-import { ListenerRegistry } from './listener/listener.registry';
+import { MessagingLifecycleHookHandler } from './lifecycle-hook/messaging-lifecycle-hook-handler';
+import { MessagingLifecycleHookRegistry } from './lifecycle-hook/messaging-lifecycle-hook.registry';
 
 @Module({})
 export class MessagingModule
@@ -147,7 +147,7 @@ export class MessagingModule
           messageHandlerRegistry: MessageHandlerRegistry,
           middlewareRegistry: MiddlewareRegistry,
           normalizerRegistry: NormalizerRegistry,
-          listenerHandler: ListenerHandler,
+          messagingHookHandler: MessagingLifecycleHookHandler,
         ) => {
           return new InMemoryMessageBus(
             messageHandlerRegistry,
@@ -160,14 +160,14 @@ export class MessagingModule
               }),
             ),
             normalizerRegistry,
-            listenerHandler,
+            messagingHookHandler,
           );
         },
         inject: [
           Service.MESSAGE_HANDLERS_REGISTRY,
           Service.MIDDLEWARE_REGISTRY,
           Service.MESSAGE_NORMALIZERS_REGISTRY,
-          ListenerHandler,
+          MessagingLifecycleHookHandler,
         ],
       };
     };
@@ -234,8 +234,8 @@ export class MessagingModule
         InMemoryChannelFactory,
         DistributedConsumer,
         ObjectForwardMessageNormalizer,
-        ListenerRegistry,
-        ListenerHandler,
+        MessagingLifecycleHookRegistry,
+        MessagingLifecycleHookHandler,
       ],
       exports: [
         Service.DEFAULT_MESSAGE_BUS,
@@ -261,7 +261,7 @@ export class MessagingModule
     registerMiddlewares(this.moduleRef, this.discoveryService);
     registerMessageNormalizers(this.moduleRef, this.discoveryService);
     registerExceptionListener(this.moduleRef, this.discoveryService);
-    registerListener(this.moduleRef, this.discoveryService);
+    registerMessagingHooks(this.moduleRef, this.discoveryService);
 
     if (this.configuration.forceDisableAllConsumers ?? false) {
       this.logger.log(

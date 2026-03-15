@@ -2,7 +2,7 @@ import { Registry } from './registry';
 import { MessagingException } from '../exception/messaging.exception';
 
 export abstract class BaseRegistry<T extends object> implements Registry<T> {
-  private registry: Map<string, T> = new Map();
+  protected registry: Map<string, T> = new Map();
 
   register(name: string, middleware: T): void {
     if (this.registry.has(name)) {
