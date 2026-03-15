@@ -95,9 +95,10 @@ export class RabbitmqMessagingConsumer
 
     if (channel.config.retryMessage) {
       const limit = channel.config.retryMessage;
-      const retryCountValue =
-        errored.dispatchedConsumerMessage.metadata[RABBITMQ_HEADER_RETRY_COUNT];
-      const currentRetryCount = Number(retryCountValue ?? 0);
+      const currentRetryCount =
+        errored.dispatchedConsumerMessage.metadata[
+          RABBITMQ_HEADER_RETRY_COUNT
+        ] ?? 0;
 
       if (currentRetryCount < limit) {
         return this.messageRetrier.retryMessage(
