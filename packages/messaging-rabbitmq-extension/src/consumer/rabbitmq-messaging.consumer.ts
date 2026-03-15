@@ -17,8 +17,7 @@ import { MessageDeadLetterVisitor } from './message-dead-letter.visitor';
 @Injectable()
 @MessageConsumer(AmqpChannel)
 export class RabbitmqMessagingConsumer
-  implements IMessagingConsumer<AmqpChannel>, OnModuleDestroy
-{
+  implements IMessagingConsumer<AmqpChannel>, OnModuleDestroy {
   private channel?: AmqpChannel = undefined;
   private amqpChannel: ChannelWrapper;
 
@@ -26,7 +25,8 @@ export class RabbitmqMessagingConsumer
     private readonly rabbitMqMigrator: RabbitmqMigrator,
     private readonly messageRetrier: MessageRetrierVisitor,
     private readonly messageDeadLetter: MessageDeadLetterVisitor,
-  ) {}
+  ) {
+  }
 
   async consume(
     dispatcher: ConsumerMessageBus,
@@ -95,10 +95,11 @@ export class RabbitmqMessagingConsumer
 
     if (channel.config.retryMessage) {
       const limit = channel.config.retryMessage;
-      const currentRetryCount =
+      const retryCountValue =
         errored.dispatchedConsumerMessage.metadata[
           RABBITMQ_HEADER_RETRY_COUNT
-        ] ?? 0;
+          ];
+      const currentRetryCount = Number(retryCountValue ?? 0);
 
       if (currentRetryCount < limit) {
         return this.messageRetrier.retryMessage(
