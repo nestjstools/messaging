@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DiscoveryService } from '@nestjs/core';
 import { Service } from '../dependency-injection/service';
 import { IMessageBus } from '../bus/i-message-bus';
@@ -9,7 +9,9 @@ import { MESSAGE_CONSUMER_METADATA } from '../dependency-injection/decorator';
 import { IMessagingConsumer } from './i-messaging-consumer';
 import { ExceptionListenerHandler } from '../exception-listener/exception-listener-handler';
 import { ConsumerMessageBus } from '../bus/consumer.message-bus';
+import { MessagingLifecycleHookHandler } from '../lifecycle-hook/messaging-lifecycle-hook-handler';
 
+@Injectable()
 export class DistributedConsumer {
   constructor(
     @Inject(Service.DEFAULT_MESSAGE_BUS)
@@ -20,6 +22,7 @@ export class DistributedConsumer {
     private readonly exceptionListenerHandler: ExceptionListenerHandler,
     @Inject(Service.LOGGER) private readonly logger: MessagingLogger,
     private readonly discoveryService: DiscoveryService,
+    private readonly messagingLifecycleHookHandler: MessagingLifecycleHookHandler,
   ) {
   }
 
@@ -64,6 +67,7 @@ export class DistributedConsumer {
         this.logger,
         consumer,
         this.exceptionListenerHandler,
+        this.messagingLifecycleHookHandler,
       );
 
       await consumer.consume(dispatcher, channel);

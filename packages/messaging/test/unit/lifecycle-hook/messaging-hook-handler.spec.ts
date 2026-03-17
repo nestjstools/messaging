@@ -18,7 +18,7 @@ describe('MessagingHookHandler', () => {
     } as unknown as MessagingLifecycleHookRegistry;
 
     handler = new MessagingLifecycleHookHandler(hookRegistry);
-    listener = { on: jest.fn().mockResolvedValue(undefined) };
+    listener = { hook: jest.fn().mockResolvedValue(undefined) };
   });
 
   test('should execute listeners for AFTER_MESSAGE_DENORMALIZED hook', async () => {
@@ -29,7 +29,7 @@ describe('MessagingHookHandler', () => {
     expect(hookRegistry.getAllByHook).toHaveBeenCalledWith(
       LifecycleHook.AFTER_MESSAGE_DENORMALIZED,
     );
-    expect(listener.on).toHaveBeenCalledWith(message);
+    expect(listener.hook).toHaveBeenCalledWith(message);
   });
 
   test('should execute listeners for BEFORE_MESSAGE_HANDLER hook', async () => {
@@ -40,7 +40,7 @@ describe('MessagingHookHandler', () => {
     expect(hookRegistry.getAllByHook).toHaveBeenCalledWith(
       LifecycleHook.BEFORE_MESSAGE_HANDLER,
     );
-    expect(listener.on).toHaveBeenCalledWith(message);
+    expect(listener.hook).toHaveBeenCalledWith(message);
   });
 
   test('should execute listeners for AFTER_MESSAGE_HANDLER_EXECUTED hook', async () => {
@@ -51,6 +51,6 @@ describe('MessagingHookHandler', () => {
     expect(hookRegistry.getAllByHook).toHaveBeenCalledWith(
       LifecycleHook.AFTER_MESSAGE_HANDLER_EXECUTED,
     );
-    expect(listener.on).toHaveBeenCalledWith(message);
+    expect(listener.hook).toHaveBeenCalledWith(message);
   });
 });

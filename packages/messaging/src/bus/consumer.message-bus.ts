@@ -11,6 +11,8 @@ import { ConsumerDispatchedMessageError } from '../consumer/consumer-dispatched-
 import { HandlersException } from '../exception/handlers.exception';
 import { ExceptionListenerHandler } from '../exception-listener/exception-listener-handler';
 import { ExceptionContext } from '../exception-listener/exception-context';
+import { MessagingLifecycleHookHandler } from '../lifecycle-hook/messaging-lifecycle-hook-handler';
+import { DetailedConsumerMessage } from '../lifecycle-hook/messaging-lifecycle-hook-listener';
 
 export class ConsumerMessageBus {
   constructor(
@@ -19,7 +21,9 @@ export class ConsumerMessageBus {
     private readonly logger: MessagingLogger,
     private readonly consumer: IMessagingConsumer<any>,
     private readonly exceptionListenerHandler: ExceptionListenerHandler,
-  ) {}
+    private readonly messagingHookHandler: MessagingLifecycleHookHandler,
+  ) {
+  }
 
   async dispatch(consumerMessage: ConsumerMessage): Promise<void> {
     try {
@@ -72,6 +76,14 @@ export class ConsumerMessageBus {
           this.channel.config.name,
           consumerMessage.message,
           consumerMessage.routingKey,
+        ),
+      );
+
+      await this.messagingHookHandler.handleOnFailedMessageConsumer(
+        DetailedConsumerMessage.fromConsumerMessage(
+          consumerMessage,
+          this.channel.config.name,
+          this.channel.constructor.name,
         ),
       );
     }
