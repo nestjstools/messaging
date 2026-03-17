@@ -27,7 +27,6 @@ export class InMemoryMessageBus implements IMessageBus {
 
   async dispatch(message: Message): Promise<object | void> {
     const middlewares = [];
-    // Execution order: channel middlewares -> message middlewares -> handler middleware.
     middlewares.push(
       ...(this.channel.config?.middlewares ?? []),
       ...(message.messageOptions?.middlewares ?? []),
