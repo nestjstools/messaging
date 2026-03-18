@@ -14,6 +14,7 @@ import { RoutingMessage } from '../message/routing-message';
 import { NormalizerRegistry } from '../normalizer/normalizer.registry';
 import { DefaultMessageOptions } from '../message/default-message-options';
 import { MessagingLifecycleHookHandler } from '../lifecycle-hook/messaging-lifecycle-hook-handler';
+import { HookMessage } from '../lifecycle-hook/messaging-lifecycle-hook-listener';
 
 export class InMemoryMessageBus implements IMessageBus {
   constructor(
@@ -49,7 +50,11 @@ export class InMemoryMessageBus implements IMessageBus {
 
     // Hook fired once the payload shape is ready for handler pipeline.
     await this.messagingHookHandler.handleAfterMessageDenormalized(
-      MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
+      HookMessage.fromRoutingMessage(
+        MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
+        this.channel.config.name,
+        this.channel.constructor.name,
+      ),
     );
 
     try {
@@ -88,7 +93,11 @@ export class InMemoryMessageBus implements IMessageBus {
 
     // Hook around handler execution.
     await this.messagingHookHandler.handleBeforeMessageHandler(
-      MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
+      HookMessage.fromRoutingMessage(
+        MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
+        this.channel.config.name,
+        this.channel.constructor.name,
+      ),
     );
 
     const response = await middlewareInstances[0].process(
@@ -97,7 +106,11 @@ export class InMemoryMessageBus implements IMessageBus {
     );
 
     await this.messagingHookHandler.handleAfterMessageHandlerExecuted(
-      MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
+      HookMessage.fromRoutingMessage(
+        MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
+        this.channel.config.name,
+        this.channel.constructor.name,
+      ),
     );
 
     return Promise.resolve(response);

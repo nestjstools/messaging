@@ -41,7 +41,7 @@ describe('MessagingLifecycleHookRegistry', () => {
     );
 
     expect(
-      registry.getAllByHook(LifecycleHook.AFTER_MESSAGE_HANDLER_EXECUTED),
+      registry.getAllByHook(LifecycleHook.AFTER_MESSAGE_HANDLER_EXECUTION),
     ).toEqual([]);
   });
 });

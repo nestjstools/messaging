@@ -1,39 +1,7 @@
-import { RoutingMessage } from '../message/routing-message';
 import { ConsumerMessage } from '../consumer/consumer-message';
+import { RoutingMessage } from '../message/routing-message';
 
-export type MessagingData =
-  | RoutingMessage
-  | ConsumerMessage
-  | DetailedConsumerMessage
-  | MessageBusMessage;
-
-export class DetailedConsumerMessage extends ConsumerMessage {
-  constructor(
-    public readonly message: object | string,
-    public readonly routingKey: string,
-    public readonly metadata: Record<string, any> = {},
-    public readonly channelName: string,
-    public readonly channelType: string,
-  ) {
-    super(message, routingKey, metadata);
-  }
-
-  static fromConsumerMessage(
-    consumerMessage: ConsumerMessage,
-    channelName: string,
-    channelType: string,
-  ): DetailedConsumerMessage {
-    return new DetailedConsumerMessage(
-      consumerMessage.message,
-      consumerMessage.routingKey,
-      consumerMessage.metadata,
-      channelName,
-      channelType,
-    );
-  }
-}
-
-export class MessageBusMessage<T = any> {
+export class HookMessage<T = any> {
   constructor(
     public readonly message: T,
     public readonly routingKey: string,
@@ -46,8 +14,34 @@ export class MessageBusMessage<T = any> {
     routingKey: string,
     channelName: string,
     channelType: string,
-  ): MessageBusMessage<T> {
-    return new MessageBusMessage(message, routingKey, channelName, channelType);
+  ): HookMessage<T> {
+    return new HookMessage(message, routingKey, channelName, channelType);
+  }
+
+  static fromConsumerMessage(
+    consumerMessage: ConsumerMessage,
+    channelName: string,
+    channelType: string,
+  ): HookMessage {
+    return new HookMessage(
+      consumerMessage.message,
+      consumerMessage.routingKey,
+      channelName,
+      channelType,
+    );
+  }
+
+  static fromRoutingMessage(
+    routingMessage: RoutingMessage,
+    channelName: string,
+    channelType: string,
+  ): HookMessage {
+    return new HookMessage(
+      routingMessage.message,
+      routingMessage.messageRoutingKey,
+      channelName,
+      channelType,
+    );
   }
 }
 
@@ -56,10 +50,10 @@ export enum LifecycleHook {
   AFTER_MESSAGE_NORMALIZATION = 'AFTER_MESSAGE_NORMALIZATION',
   AFTER_MESSAGE_DENORMALIZED = 'AFTER_MESSAGE_DENORMALIZED',
   BEFORE_MESSAGE_HANDLER = 'BEFORE_MESSAGE_HANDLER',
-  AFTER_MESSAGE_HANDLER_EXECUTED = 'AFTER_MESSAGE_HANDLER_EXECUTED',
+  AFTER_MESSAGE_HANDLER_EXECUTION = 'AFTER_MESSAGE_HANDLER_EXECUTION',
   ON_FAILED_MESSAGE_CONSUMER = 'ON_FAILED_MESSAGE_CONSUMER',
 }
 
 export interface MessagingLifecycleHookListener {
-  hook(data: MessagingData): Promise<void>;
+  hook(message: HookMessage): Promise<void>;
 }

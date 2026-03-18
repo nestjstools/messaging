@@ -219,6 +219,8 @@ flowchart LR
     MW --> H
 ```
 
+---
+
 ### Exception handling flow:
 
 ```mermaid

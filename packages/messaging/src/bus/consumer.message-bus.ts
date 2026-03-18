@@ -12,7 +12,7 @@ import { HandlersException } from '../exception/handlers.exception';
 import { ExceptionListenerHandler } from '../exception-listener/exception-listener-handler';
 import { ExceptionContext } from '../exception-listener/exception-context';
 import { MessagingLifecycleHookHandler } from '../lifecycle-hook/messaging-lifecycle-hook-handler';
-import { DetailedConsumerMessage } from '../lifecycle-hook/messaging-lifecycle-hook-listener';
+import { HookMessage } from '../lifecycle-hook/messaging-lifecycle-hook-listener';
 
 export class ConsumerMessageBus {
   constructor(
@@ -79,7 +79,7 @@ export class ConsumerMessageBus {
       );
 
       await this.messagingHookHandler.handleOnFailedMessageConsumer(
-        DetailedConsumerMessage.fromConsumerMessage(
+        HookMessage.fromConsumerMessage(
           consumerMessage,
           this.channel.config.name,
           this.channel.constructor.name,

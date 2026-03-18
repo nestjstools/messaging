@@ -6,7 +6,7 @@ import { RoutingMessage } from '../message/routing-message';
 import { MessageFactory } from '../message/message.factory';
 import { NormalizerRegistry } from '../normalizer/normalizer.registry';
 import { MessagingLifecycleHookHandler } from '../lifecycle-hook/messaging-lifecycle-hook-handler';
-import { MessageBusMessage } from '../lifecycle-hook/messaging-lifecycle-hook-listener';
+import { HookMessage } from '../lifecycle-hook/messaging-lifecycle-hook-listener';
 
 @Injectable()
 export class DistributedMessageBus implements IMessageBus {
@@ -24,7 +24,7 @@ export class DistributedMessageBus implements IMessageBus {
     const response = [];
     for (const collection of this.messageBusCollection.getAll()) {
       await this.messagingLifecycleHookHandler.handleBeforeMessageNormalization(
-        MessageBusMessage.fromMessage(
+        HookMessage.fromMessage(
           message.message,
           message.messageRoutingKey,
           collection.channel.config.name,
@@ -37,7 +37,7 @@ export class DistributedMessageBus implements IMessageBus {
         .normalize(message.message, message.messageRoutingKey);
 
       await this.messagingLifecycleHookHandler.handleAfterMessageNormalization(
-        MessageBusMessage.fromMessage(
+        HookMessage.fromMessage(
           message.message,
           message.messageRoutingKey,
           collection.channel.config.name,
