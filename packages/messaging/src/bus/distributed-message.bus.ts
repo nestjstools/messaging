@@ -14,8 +14,7 @@ export class DistributedMessageBus implements IMessageBus {
     private messageBusCollection: MessageBusCollection,
     private normalizerRegistry: NormalizerRegistry,
     private messagingLifecycleHookHandler: MessagingLifecycleHookHandler,
-  ) {
-  }
+  ) {}
 
   async dispatch(message: RoutingMessage): Promise<MessageResponse> {
     if (!(message instanceof RoutingMessage)) {

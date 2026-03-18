@@ -23,8 +23,7 @@ export class ConsumerMessageBus {
     private readonly consumer: IMessagingConsumer<any>,
     private readonly exceptionListenerHandler: ExceptionListenerHandler,
     private readonly messagingHookHandler: MessagingLifecycleHookHandler,
-  ) {
-  }
+  ) {}
 
   async dispatch(consumerMessage: ConsumerMessage): Promise<void> {
     try {

@@ -8,8 +8,7 @@ export class HookMessage<T = any> {
     public readonly routingKey: string,
     public readonly channelName?: string,
     public readonly channelType?: string,
-  ) {
-  }
+  ) {}
 
   static fromConsumerMessage(
     consumerMessage: ConsumerMessage,
