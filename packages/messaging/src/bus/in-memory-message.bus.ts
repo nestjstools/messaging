@@ -22,8 +22,7 @@ export class InMemoryMessageBus implements IMessageBus {
     private channel: InMemoryChannel,
     private normalizerRegistry: NormalizerRegistry,
     private messagingHookHandler: MessagingLifecycleHookHandler,
-  ) {
-  }
+  ) {}
 
   async dispatch(message: Message): Promise<object | void> {
     const middlewares = [];

@@ -11,7 +11,9 @@ describe('MessagingLifecycleHookRegistry', () => {
 
   beforeEach(() => {
     registry = new MessagingLifecycleHookRegistry();
-    beforeListener = { on: jest.fn() } as unknown as MessagingLifecycleHookListener;
+    beforeListener = {
+      on: jest.fn(),
+    } as unknown as MessagingLifecycleHookListener;
     afterDenormalizedListener = {
       on: jest.fn(),
     } as unknown as MessagingLifecycleHookListener;
@@ -27,9 +29,9 @@ describe('MessagingLifecycleHookRegistry', () => {
       afterDenormalizedListener,
     );
 
-    expect(registry.getAllByHook(LifecycleHook.BEFORE_MESSAGE_HANDLER)).toEqual([
-      beforeListener,
-    ]);
+    expect(registry.getAllByHook(LifecycleHook.BEFORE_MESSAGE_HANDLER)).toEqual(
+      [beforeListener],
+    );
   });
 
   test('should return empty array when no listeners are registered for given lifecycle hook', () => {

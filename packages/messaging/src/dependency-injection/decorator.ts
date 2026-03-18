@@ -10,7 +10,8 @@ export const MESSAGING_NORMALIZER_METADATA = 'MESSAGING_NORMALIZER_METADATA';
 export const MESSAGING_EXCEPTION_LISTENER_METADATA =
   'MESSAGING_EXCEPTION_LISTENER_METADATA';
 export const MESSAGING_MESSAGE_METADATA = 'MESSAGING_MESSAGE_METADATA';
-export const MESSAGING_LIFECYCLE_HOOK_METADATA = 'MESSAGING_LIFECYCLE_HOOK_METADATA';
+export const MESSAGING_LIFECYCLE_HOOK_METADATA =
+  'MESSAGING_LIFECYCLE_HOOK_METADATA';
 
 export const MessageHandler = (...routingKey: string[]): ClassDecorator => {
   return (target) => {
@@ -72,7 +73,9 @@ export const MessagingExceptionListener = (): ClassDecorator => {
   };
 };
 
-export const MessagingLifecycleHook = (lifecycleHook: LifecycleHook): ClassDecorator => {
+export const MessagingLifecycleHook = (
+  lifecycleHook: LifecycleHook,
+): ClassDecorator => {
   return (target) => {
     Reflect.defineMetadata(
       MESSAGING_LIFECYCLE_HOOK_METADATA,

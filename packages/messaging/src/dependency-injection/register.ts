@@ -4,7 +4,8 @@ import { MessagingLogger } from '../logger/messaging-logger';
 import { Service } from './service';
 import {
   MESSAGE_HANDLER_METADATA,
-  MESSAGING_EXCEPTION_LISTENER_METADATA, MESSAGING_LIFECYCLE_HOOK_METADATA,
+  MESSAGING_EXCEPTION_LISTENER_METADATA,
+  MESSAGING_LIFECYCLE_HOOK_METADATA,
   MESSAGING_MIDDLEWARE_METADATA,
   MESSAGING_NORMALIZER_METADATA,
 } from './decorator';
@@ -102,18 +103,13 @@ const register = <T extends Registry<object>>(
   const exceptions = [DEFAULT_NORMALIZER, DEFAULT_MIDDLEWARE];
   const registry: Registry<T> = moduleRef.get(registryProvider);
   const logger: MessagingLogger = moduleRef.get(Service.LOGGER);
-  const instances = discoveryService
-    .getProviders()
-    .filter((provider) => {
-      if (!provider.metatype) {
-        return false;
-      }
+  const instances = discoveryService.getProviders().filter((provider) => {
+    if (!provider.metatype) {
+      return false;
+    }
 
-      return Reflect.hasMetadata(
-        decoratorMetadata,
-        provider.metatype,
-      );
-    });
+    return Reflect.hasMetadata(decoratorMetadata, provider.metatype);
+  });
 
   instances.forEach((provider) => {
     registry.register(

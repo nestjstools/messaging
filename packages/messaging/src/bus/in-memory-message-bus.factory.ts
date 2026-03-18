@@ -21,8 +21,7 @@ export class InMemoryMessageBusFactory implements IMessageBusFactory<InMemoryCha
     @Inject(Service.MESSAGE_NORMALIZERS_REGISTRY)
     private messageNormalizerRegistry: NormalizerRegistry,
     private messagingHookHandler: MessagingLifecycleHookHandler,
-  ) {
-  }
+  ) {}
 
   create(channel: InMemoryChannel): IMessageBus {
     return new InMemoryMessageBus(
