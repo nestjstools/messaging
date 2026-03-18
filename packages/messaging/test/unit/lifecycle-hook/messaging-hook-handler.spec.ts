@@ -3,7 +3,8 @@ import { MessagingLifecycleHookRegistry } from '../../../src/lifecycle-hook/mess
 import {
   HookMessage,
   LifecycleHook,
-  MessagingLifecycleHookListener, RoutingMessage,
+  MessagingLifecycleHookListener,
+  RoutingMessage,
 } from '../../../src';
 
 describe('MessagingHookHandler', () => {
@@ -24,7 +25,11 @@ describe('MessagingHookHandler', () => {
   test('should execute listeners for AFTER_MESSAGE_DENORMALIZED hook', async () => {
     (hookRegistry.getAllByHook as jest.Mock).mockReturnValue([listener]);
 
-    const hookMessage = HookMessage.fromRoutingMessage(message, 'example', 'example');
+    const hookMessage = HookMessage.fromRoutingMessage(
+      message,
+      'example',
+      'example',
+    );
 
     await handler.handleAfterMessageDenormalized(hookMessage);
 
@@ -37,7 +42,11 @@ describe('MessagingHookHandler', () => {
   test('should execute listeners for BEFORE_MESSAGE_HANDLER hook', async () => {
     (hookRegistry.getAllByHook as jest.Mock).mockReturnValue([listener]);
 
-    const hookMessage = HookMessage.fromRoutingMessage(message, 'example', 'example');
+    const hookMessage = HookMessage.fromRoutingMessage(
+      message,
+      'example',
+      'example',
+    );
 
     await handler.handleBeforeMessageHandler(hookMessage);
 
@@ -50,7 +59,11 @@ describe('MessagingHookHandler', () => {
   test('should execute listeners for AFTER_MESSAGE_HANDLER_EXECUTED hook', async () => {
     (hookRegistry.getAllByHook as jest.Mock).mockReturnValue([listener]);
 
-    const hookMessage = HookMessage.fromRoutingMessage(message, 'example', 'example');
+    const hookMessage = HookMessage.fromRoutingMessage(
+      message,
+      'example',
+      'example',
+    );
 
     await handler.handleAfterMessageHandlerExecuted(hookMessage);
 
