@@ -23,7 +23,8 @@ export class InMemoryMessageBus implements IMessageBus {
     private channel: InMemoryChannel,
     private normalizerRegistry: NormalizerRegistry,
     private messagingHookHandler: MessagingLifecycleHookHandler,
-  ) {}
+  ) {
+  }
 
   async dispatch(message: Message): Promise<object | void> {
     const middlewares = [];
@@ -52,8 +53,6 @@ export class InMemoryMessageBus implements IMessageBus {
     await this.messagingHookHandler.handleAfterMessageDenormalized(
       HookMessage.fromRoutingMessage(
         MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
-        this.channel.config.name,
-        this.channel.constructor.name,
       ),
     );
 
@@ -95,8 +94,6 @@ export class InMemoryMessageBus implements IMessageBus {
     await this.messagingHookHandler.handleBeforeMessageHandler(
       HookMessage.fromRoutingMessage(
         MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
-        this.channel.config.name,
-        this.channel.constructor.name,
       ),
     );
 
@@ -108,8 +105,6 @@ export class InMemoryMessageBus implements IMessageBus {
     await this.messagingHookHandler.handleAfterMessageHandlerExecuted(
       HookMessage.fromRoutingMessage(
         MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
-        this.channel.config.name,
-        this.channel.constructor.name,
       ),
     );
 

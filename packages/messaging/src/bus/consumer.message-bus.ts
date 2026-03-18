@@ -13,6 +13,7 @@ import { ExceptionListenerHandler } from '../exception-listener/exception-listen
 import { ExceptionContext } from '../exception-listener/exception-context';
 import { MessagingLifecycleHookHandler } from '../lifecycle-hook/messaging-lifecycle-hook-handler';
 import { HookMessage } from '../lifecycle-hook/messaging-lifecycle-hook-listener';
+import { MessageFactory } from '../message/message.factory';
 
 export class ConsumerMessageBus {
   constructor(
@@ -22,7 +23,8 @@ export class ConsumerMessageBus {
     private readonly consumer: IMessagingConsumer<any>,
     private readonly exceptionListenerHandler: ExceptionListenerHandler,
     private readonly messagingHookHandler: MessagingLifecycleHookHandler,
-  ) {}
+  ) {
+  }
 
   async dispatch(consumerMessage: ConsumerMessage): Promise<void> {
     try {
@@ -46,6 +48,14 @@ export class ConsumerMessageBus {
           middlewares,
           this.channel.config?.avoidErrorsForNotExistedHandlers ?? true,
           this.channel.config.normalizer,
+        ),
+      );
+
+      await this.messagingHookHandler.handleAfterMessageDenormalized(
+        HookMessage.fromSealedRoutingMessage(
+          routingMessage,
+          this.channel.config.name,
+          this.channel.constructor.name,
         ),
       );
 

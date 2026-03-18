@@ -46,4 +46,10 @@ export class MessagingLifecycleHookHandler {
       .getAllByHook(LifecycleHook.AFTER_MESSAGE_NORMALIZATION)
       .forEach((listener) => listener.hook(message));
   }
+
+  async handleOnConsumerHandledMessage(message: HookMessage): Promise<void> {
+    await this.messagingHookRegistry
+      .getAllByHook(LifecycleHook.ON_CONSUMER_HANDLED_MESSAGE)
+      .forEach((listener) => listener.hook(message));
+  }
 }

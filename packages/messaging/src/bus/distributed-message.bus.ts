@@ -14,7 +14,8 @@ export class DistributedMessageBus implements IMessageBus {
     private messageBusCollection: MessageBusCollection,
     private normalizerRegistry: NormalizerRegistry,
     private messagingLifecycleHookHandler: MessagingLifecycleHookHandler,
-  ) {}
+  ) {
+  }
 
   async dispatch(message: RoutingMessage): Promise<MessageResponse> {
     if (!(message instanceof RoutingMessage)) {
@@ -24,9 +25,8 @@ export class DistributedMessageBus implements IMessageBus {
     const response = [];
     for (const collection of this.messageBusCollection.getAll()) {
       await this.messagingLifecycleHookHandler.handleBeforeMessageNormalization(
-        HookMessage.fromMessage(
-          message.message,
-          message.messageRoutingKey,
+        HookMessage.fromRoutingMessage(
+          message,
           collection.channel.config.name,
           collection.channel.constructor.name,
         ),
@@ -37,9 +37,8 @@ export class DistributedMessageBus implements IMessageBus {
         .normalize(message.message, message.messageRoutingKey);
 
       await this.messagingLifecycleHookHandler.handleAfterMessageNormalization(
-        HookMessage.fromMessage(
-          message.message,
-          message.messageRoutingKey,
+        HookMessage.fromRoutingMessage(
+          message,
           collection.channel.config.name,
           collection.channel.constructor.name,
         ),
