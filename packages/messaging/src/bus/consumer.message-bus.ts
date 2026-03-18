@@ -51,7 +51,7 @@ export class ConsumerMessageBus {
         ),
       );
 
-      await this.messagingHookHandler.handleAfterMessageDenormalized(
+      await this.messagingHookHandler.handleOnConsumerHandledMessage(
         HookMessage.fromSealedRoutingMessage(
           routingMessage,
           this.channel.config.name,
