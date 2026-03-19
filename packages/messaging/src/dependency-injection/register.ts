@@ -96,7 +96,10 @@ export const registerMessagingHooks = (
 const register = <T extends Registry<object>>(
   moduleRef: ModuleRef,
   discoveryService: DiscoveryService,
-  registryProvider: string | Function,
+  registryProvider:
+    | string
+    | symbol
+    | (abstract new (...args: unknown[]) => unknown),
   decoratorMetadata: string,
   name: string,
 ) => {
