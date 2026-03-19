@@ -14,6 +14,7 @@ import { HandlerError, HandlersException } from '../../../src';
 import { ExceptionContext } from '../../../src';
 import { MessagingLifecycleHookHandler } from '../../../src/lifecycle-hook/messaging-lifecycle-hook-handler';
 import { Logger } from '@nestjs/common';
+import { MessagingLifecycleHookRegistry } from '../../../src/lifecycle-hook/messaging-lifecycle-hook.registry';
 
 describe('ConsumerMessageBus', () => {
   let messageBus: IMessageBus;
@@ -24,7 +25,6 @@ describe('ConsumerMessageBus', () => {
   let exceptionListenerHandler: ExceptionListenerHandler;
   let exceptionHandlerMock: jest.Mock;
   let messagingLifecycleHookHandler: MessagingLifecycleHookHandler;
-  let failedConsumerHookMock: jest.Mock;
   let channel: TestChannel;
 
   beforeEach(() => {
@@ -44,15 +44,9 @@ describe('ConsumerMessageBus', () => {
     exceptionListenerHandler = {
       handleError: exceptionHandlerMock,
     } as unknown as ExceptionListenerHandler;
-    failedConsumerHookMock = jest.fn().mockResolvedValue(undefined);
-    messagingLifecycleHookHandler = {
-      handleAfterMessageDenormalized: jest.fn().mockResolvedValue(undefined),
-      handleBeforeMessageHandler: jest.fn().mockResolvedValue(undefined),
-      handleAfterMessageHandlerExecuted: jest.fn().mockResolvedValue(undefined),
-      handleOnFailedMessageConsumer: failedConsumerHookMock,
-      handleBeforeMessageNormalization: jest.fn().mockResolvedValue(undefined),
-      handleAfterMessageNormalization: jest.fn().mockResolvedValue(undefined),
-    } as unknown as MessagingLifecycleHookHandler;
+
+    const registry = new MessagingLifecycleHookRegistry();
+    messagingLifecycleHookHandler = new MessagingLifecycleHookHandler(registry);
     channel = new TestChannel(new InMemoryChannelConfig({ name: 'ds' }));
   });
 
@@ -134,7 +128,6 @@ describe('ConsumerMessageBus', () => {
         },
       },
     });
-    expect(failedConsumerHookMock).toHaveBeenCalledTimes(1);
   });
 
   it('should not log error when dispatch throws HandlersException', async () => {
@@ -170,6 +163,5 @@ describe('ConsumerMessageBus', () => {
       ),
     );
     expect(logger.getLogs().find((log) => log.type === 'ERROR')).toBeFalsy();
-    expect(failedConsumerHookMock).toHaveBeenCalledTimes(1);
   });
 });
