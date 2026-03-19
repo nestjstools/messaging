@@ -5,6 +5,7 @@ import { Service } from './service';
 import {
   MESSAGE_HANDLER_METADATA,
   MESSAGING_EXCEPTION_LISTENER_METADATA,
+  MESSAGING_LIFECYCLE_HOOK_METADATA,
   MESSAGING_MIDDLEWARE_METADATA,
   MESSAGING_NORMALIZER_METADATA,
 } from './decorator';
@@ -13,6 +14,7 @@ import { Registry } from '../shared/registry';
 import { MiddlewareRegistry } from '../middleware/middleware.registry';
 import { ExceptionListenerRegistry } from '../exception-listener/exception-listener.registry';
 import { NormalizerRegistry } from '../normalizer/normalizer.registry';
+import { MessagingLifecycleHookRegistry } from '../lifecycle-hook/messaging-lifecycle-hook.registry';
 
 export const registerHandlers = (
   moduleRef: ModuleRef,
@@ -78,36 +80,47 @@ export const registerExceptionListener = (
   );
 };
 
+export const registerMessagingHooks = (
+  moduleRef: ModuleRef,
+  discoveryService: DiscoveryService,
+) => {
+  register<MessagingLifecycleHookRegistry>(
+    moduleRef,
+    discoveryService,
+    MessagingLifecycleHookRegistry,
+    MESSAGING_LIFECYCLE_HOOK_METADATA,
+    'MessagingLifecycleHook',
+  );
+};
+
 const register = <T extends Registry<object>>(
   moduleRef: ModuleRef,
   discoveryService: DiscoveryService,
-  registryProvider: string,
+  registryProvider:
+    | string
+    | symbol
+    | (abstract new (...args: unknown[]) => unknown),
   decoratorMetadata: string,
   name: string,
 ) => {
   const exceptions = [DEFAULT_NORMALIZER, DEFAULT_MIDDLEWARE];
   const registry: Registry<T> = moduleRef.get(registryProvider);
   const logger: MessagingLogger = moduleRef.get(Service.LOGGER);
-  const instances = discoveryService
-    .getProviders()
-    .filter((messageExceptionListener) => {
-      if (!messageExceptionListener.metatype) {
-        return false;
-      }
+  const instances = discoveryService.getProviders().filter((provider) => {
+    if (!provider.metatype) {
+      return false;
+    }
 
-      return Reflect.hasMetadata(
-        decoratorMetadata,
-        messageExceptionListener.metatype,
-      );
-    });
+    return Reflect.hasMetadata(decoratorMetadata, provider.metatype);
+  });
 
-  instances.forEach((messageExceptionListener) => {
+  instances.forEach((provider) => {
     registry.register(
-      Reflect.getMetadata(decoratorMetadata, messageExceptionListener.metatype),
-      messageExceptionListener.instance,
+      Reflect.getMetadata(decoratorMetadata, provider.metatype),
+      provider.instance,
     );
-    if (!exceptions.includes(messageExceptionListener.name)) {
-      logger.log(`${name} [${messageExceptionListener.name}] was registered`);
+    if (!exceptions.includes(provider.name)) {
+      logger.log(`${name} [${provider.name}] was registered`);
     }
   });
 };

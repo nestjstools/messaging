@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import { ConsumerMessageBus } from '../../../src';
 import { IMessageBus } from '../../../src';
 import { TestChannel } from '../../support/test.channel';
@@ -13,26 +12,41 @@ import { ObjectForwardMessageNormalizer } from '../../../src/normalizer/object-f
 import { ConsumerDispatchedMessageError } from '../../../src';
 import { HandlerError, HandlersException } from '../../../src';
 import { ExceptionContext } from '../../../src';
+import { MessagingLifecycleHookHandler } from '../../../src/lifecycle-hook/messaging-lifecycle-hook-handler';
+import { Logger } from '@nestjs/common';
+import { MessagingLifecycleHookRegistry } from '../../../src/lifecycle-hook/messaging-lifecycle-hook.registry';
 
 describe('ConsumerMessageBus', () => {
   let messageBus: IMessageBus;
+  let messageBusDispatchMock: jest.Mock;
   let logger: SpyLogger;
   let consumer: IMessagingConsumer<any>;
+  let consumerOnErrorMock: jest.Mock;
   let exceptionListenerHandler: ExceptionListenerHandler;
+  let exceptionHandlerMock: jest.Mock;
+  let messagingLifecycleHookHandler: MessagingLifecycleHookHandler;
   let channel: TestChannel;
 
   beforeEach(() => {
+    jest.clearAllMocks();
+
+    messageBusDispatchMock = jest.fn().mockResolvedValue(undefined);
     messageBus = {
-      dispatch: jest.fn().mockResolvedValue(undefined),
+      dispatch: messageBusDispatchMock,
     } as unknown as IMessageBus;
     logger = new SpyLogger(new Logger(), false, false);
+    consumerOnErrorMock = jest.fn().mockResolvedValue(undefined);
     consumer = {
       consume: jest.fn(),
-      onError: jest.fn().mockResolvedValue(undefined),
+      onError: consumerOnErrorMock,
     } as unknown as IMessagingConsumer<any>;
+    exceptionHandlerMock = jest.fn().mockResolvedValue(undefined);
     exceptionListenerHandler = {
-      handleError: jest.fn().mockResolvedValue(undefined),
+      handleError: exceptionHandlerMock,
     } as unknown as ExceptionListenerHandler;
+
+    const registry = new MessagingLifecycleHookRegistry();
+    messagingLifecycleHookHandler = new MessagingLifecycleHookHandler(registry);
     channel = new TestChannel(new InMemoryChannelConfig({ name: 'ds' }));
   });
 
@@ -43,6 +57,7 @@ describe('ConsumerMessageBus', () => {
       logger,
       consumer,
       exceptionListenerHandler,
+      messagingLifecycleHookHandler,
     );
 
     await subjectUnderTest.dispatch(
@@ -72,8 +87,9 @@ describe('ConsumerMessageBus', () => {
 
   it('should call onError and exception listener when message bus dispatch throws regular error', async () => {
     const error = new Error('boom');
+    messageBusDispatchMock = jest.fn().mockRejectedValue(error);
     messageBus = {
-      dispatch: jest.fn().mockRejectedValue(error),
+      dispatch: messageBusDispatchMock,
     } as unknown as IMessageBus;
 
     const subjectUnderTest = new ConsumerMessageBus(
@@ -82,6 +98,7 @@ describe('ConsumerMessageBus', () => {
       logger,
       consumer,
       exceptionListenerHandler,
+      messagingLifecycleHookHandler,
     );
 
     const consumerMessage = new ConsumerMessage({ status: 'fail' }, 'rk.fail');
@@ -118,8 +135,9 @@ describe('ConsumerMessageBus', () => {
       new HandlerError('MyHandler', new Error('handler failed')),
     ]);
 
+    messageBusDispatchMock = jest.fn().mockRejectedValue(handlersError);
     messageBus = {
-      dispatch: jest.fn().mockRejectedValue(handlersError),
+      dispatch: messageBusDispatchMock,
     } as unknown as IMessageBus;
 
     const subjectUnderTest = new ConsumerMessageBus(
@@ -128,6 +146,7 @@ describe('ConsumerMessageBus', () => {
       logger,
       consumer,
       exceptionListenerHandler,
+      messagingLifecycleHookHandler,
     );
 
     await subjectUnderTest.dispatch(

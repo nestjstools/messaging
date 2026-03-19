@@ -11,6 +11,7 @@ import { TestChannel } from '../../support/test.channel';
 import { IMessageBus } from '../../../src';
 import { ExceptionListenerHandler } from '../../../src/exception-listener/exception-listener-handler';
 import { ConsumerMessageBus } from '../../../src';
+import { MessagingLifecycleHookHandler } from '../../../src/lifecycle-hook/messaging-lifecycle-hook-handler';
 
 describe('DistributedConsumer', () => {
   let subjectUnderTest: DistributedConsumer;
@@ -20,6 +21,7 @@ describe('DistributedConsumer', () => {
   let discoveryService: DiscoveryService;
   let consumeMock: jest.Mock;
   let onErrorMock: jest.Mock;
+  let messagingLifecycleHookHandler: MessagingLifecycleHookHandler;
 
   beforeEach(() => {
     logger = new SpyLogger(new Logger(), false, false);
@@ -29,6 +31,15 @@ describe('DistributedConsumer', () => {
     messageBus = {
       dispatch: jest.fn(),
     } as unknown as IMessageBus;
+
+    messagingLifecycleHookHandler = {
+      handleAfterMessageDenormalized: jest.fn().mockResolvedValue(undefined),
+      handleBeforeMessageHandler: jest.fn().mockResolvedValue(undefined),
+      handleAfterMessageHandlerExecuted: jest.fn().mockResolvedValue(undefined),
+      handleOnFailedMessageConsumer: jest.fn().mockResolvedValue(undefined),
+      handleBeforeMessageNormalization: jest.fn().mockResolvedValue(undefined),
+      handleAfterMessageNormalization: jest.fn().mockResolvedValue(undefined),
+    } as unknown as MessagingLifecycleHookHandler;
 
     consumeMock = jest.fn().mockResolvedValue(undefined);
     onErrorMock = jest.fn().mockResolvedValue(undefined);
@@ -61,6 +72,7 @@ describe('DistributedConsumer', () => {
       exceptionListenerHandler,
       logger,
       discoveryService,
+      messagingLifecycleHookHandler,
     );
 
     await subjectUnderTest.run();
@@ -92,6 +104,7 @@ describe('DistributedConsumer', () => {
       exceptionListenerHandler,
       logger,
       discoveryService,
+      messagingLifecycleHookHandler,
     );
 
     await subjectUnderTest.run();
@@ -122,6 +135,7 @@ describe('DistributedConsumer', () => {
       exceptionListenerHandler,
       logger,
       discoveryService,
+      messagingLifecycleHookHandler,
     );
 
     await subjectUnderTest.run();
@@ -145,6 +159,7 @@ describe('DistributedConsumer', () => {
       exceptionListenerHandler,
       logger,
       discoveryService,
+      messagingLifecycleHookHandler,
     );
 
     await expect(subjectUnderTest.run()).rejects.toThrow(
@@ -184,6 +199,7 @@ describe('DistributedConsumer', () => {
       exceptionListenerHandler,
       logger,
       discoveryService,
+      messagingLifecycleHookHandler,
     );
 
     await expect(subjectUnderTest.run()).rejects.toThrow(

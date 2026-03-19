@@ -31,6 +31,7 @@ import { DistributedConsumer } from './consumer/distributed.consumer';
 import {
   registerExceptionListener,
   registerHandlers,
+  registerMessagingHooks,
   registerMessageNormalizers,
   registerMiddlewares,
 } from './dependency-injection/register';
@@ -44,6 +45,8 @@ import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-mess
 import { ExceptionListenerRegistry } from './exception-listener/exception-listener.registry';
 import { ExceptionListenerHandler } from './exception-listener/exception-listener-handler';
 import { MessagingLogger } from './logger/messaging-logger';
+import { MessagingLifecycleHookHandler } from './lifecycle-hook/messaging-lifecycle-hook-handler';
+import { MessagingLifecycleHookRegistry } from './lifecycle-hook/messaging-lifecycle-hook.registry';
 
 @Module({})
 export class MessagingModule
@@ -110,6 +113,7 @@ export class MessagingModule
           busFactory: CompositeMessageBusFactory,
           logger: MessagingLogger,
           normalizerRegistry: NormalizerRegistry,
+          messagingLifecycleHookHandler: MessagingLifecycleHookHandler,
         ) => {
           const messageBusCollection = new MessageBusCollection();
 
@@ -124,6 +128,7 @@ export class MessagingModule
           const messageBus = new DistributedMessageBus(
             messageBusCollection,
             normalizerRegistry,
+            messagingLifecycleHookHandler,
           );
 
           logger.log(`MessageBus [${bus.name}] was created successfully`);
@@ -135,6 +140,7 @@ export class MessagingModule
           CompositeMessageBusFactory,
           Service.LOGGER,
           Service.MESSAGE_NORMALIZERS_REGISTRY,
+          MessagingLifecycleHookHandler,
         ],
       }));
     };
@@ -146,6 +152,7 @@ export class MessagingModule
           messageHandlerRegistry: MessageHandlerRegistry,
           middlewareRegistry: MiddlewareRegistry,
           normalizerRegistry: NormalizerRegistry,
+          messagingHookHandler: MessagingLifecycleHookHandler,
         ) => {
           return new InMemoryMessageBus(
             messageHandlerRegistry,
@@ -158,12 +165,14 @@ export class MessagingModule
               }),
             ),
             normalizerRegistry,
+            messagingHookHandler,
           );
         },
         inject: [
           Service.MESSAGE_HANDLERS_REGISTRY,
           Service.MIDDLEWARE_REGISTRY,
           Service.MESSAGE_NORMALIZERS_REGISTRY,
+          MessagingLifecycleHookHandler,
         ],
       };
     };
@@ -230,6 +239,8 @@ export class MessagingModule
         InMemoryChannelFactory,
         DistributedConsumer,
         ObjectForwardMessageNormalizer,
+        MessagingLifecycleHookRegistry,
+        MessagingLifecycleHookHandler,
       ],
       exports: [
         Service.DEFAULT_MESSAGE_BUS,
@@ -254,6 +265,7 @@ export class MessagingModule
     registerMiddlewares(this.moduleRef, this.discoveryService);
     registerMessageNormalizers(this.moduleRef, this.discoveryService);
     registerExceptionListener(this.moduleRef, this.discoveryService);
+    registerMessagingHooks(this.moduleRef, this.discoveryService);
 
     if (this.configuration.forceDisableAllConsumers ?? false) {
       this.logger.log(

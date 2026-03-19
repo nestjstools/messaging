@@ -13,6 +13,8 @@ import { Message } from '../message/message';
 import { RoutingMessage } from '../message/routing-message';
 import { NormalizerRegistry } from '../normalizer/normalizer.registry';
 import { DefaultMessageOptions } from '../message/default-message-options';
+import { MessagingLifecycleHookHandler } from '../lifecycle-hook/messaging-lifecycle-hook-handler';
+import { HookMessage } from '../lifecycle-hook/messaging-lifecycle-hook-listener';
 
 export class InMemoryMessageBus implements IMessageBus {
   constructor(
@@ -20,6 +22,7 @@ export class InMemoryMessageBus implements IMessageBus {
     private middlewareRegistry: MiddlewareRegistry,
     private channel: InMemoryChannel,
     private normalizerRegistry: NormalizerRegistry,
+    private messagingHookHandler: MessagingLifecycleHookHandler,
   ) {}
 
   async dispatch(message: Message): Promise<object | void> {
@@ -28,6 +31,28 @@ export class InMemoryMessageBus implements IMessageBus {
       ...(this.channel.config?.middlewares ?? []),
       ...(message.messageOptions?.middlewares ?? []),
       HandlerMiddleware,
+    );
+
+    let messageToDispatch =
+      message instanceof RoutingMessage ? message.message : {};
+
+    if (message instanceof SealedRoutingMessage) {
+      // Sealed messages carry raw payload and must be denormalized before dispatch.
+      const normalizerDefinition: object =
+        message.messageOptions instanceof DefaultMessageOptions
+          ? message.messageOptions.normalizer
+          : ObjectForwardMessageNormalizer;
+
+      messageToDispatch = await this.normalizerRegistry
+        .getByName(normalizerDefinition['name'])
+        .denormalize(message.message, message.messageRoutingKey);
+    }
+
+    // Hook fired once the payload shape is ready for handler pipeline.
+    await this.messagingHookHandler.handleAfterMessageDenormalized(
+      HookMessage.fromRoutingMessage(
+        MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
+      ),
     );
 
     try {
@@ -48,6 +73,7 @@ export class InMemoryMessageBus implements IMessageBus {
           avoidErrorsForNonExistedHandlers;
       }
 
+      // Missing handler can be configured as no-op for fire-and-forget scenarios.
       if (avoidErrorsForNonExistedHandlers) {
         return Promise.resolve();
       }
@@ -60,25 +86,25 @@ export class InMemoryMessageBus implements IMessageBus {
         DecoratorExtractor.extractMessageMiddleware(middleware),
       ),
     );
+
     const context = MiddlewareContext.createFresh(middlewareInstances);
 
-    let messageToDispatch =
-      message instanceof RoutingMessage ? message.message : {};
-
-    if (message instanceof SealedRoutingMessage) {
-      const normalizerDefinition: object =
-        message.messageOptions instanceof DefaultMessageOptions
-          ? message.messageOptions.normalizer
-          : ObjectForwardMessageNormalizer;
-
-      messageToDispatch = await this.normalizerRegistry
-        .getByName(normalizerDefinition['name'])
-        .denormalize(message.message, message.messageRoutingKey);
-    }
+    // Hook around handler execution.
+    await this.messagingHookHandler.handleBeforeMessageHandler(
+      HookMessage.fromRoutingMessage(
+        MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
+      ),
+    );
 
     const response = await middlewareInstances[0].process(
       MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
       context,
+    );
+
+    await this.messagingHookHandler.handleAfterMessageHandlerExecuted(
+      HookMessage.fromRoutingMessage(
+        MessageFactory.creteRoutingFromMessage(messageToDispatch, message),
+      ),
     );
 
     return Promise.resolve(response);

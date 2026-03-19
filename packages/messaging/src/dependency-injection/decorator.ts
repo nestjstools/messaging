@@ -1,4 +1,5 @@
 import { ChannelConfig } from '../config';
+import { LifecycleHook } from '../lifecycle-hook/messaging-lifecycle-hook-listener';
 
 export const MESSAGE_HANDLER_METADATA = 'MESSAGE_HANDLER_METADATA';
 export const CHANNEL_FACTORY_METADATA = 'CHANNEL_FACTORY_METADATA';
@@ -9,6 +10,8 @@ export const MESSAGING_NORMALIZER_METADATA = 'MESSAGING_NORMALIZER_METADATA';
 export const MESSAGING_EXCEPTION_LISTENER_METADATA =
   'MESSAGING_EXCEPTION_LISTENER_METADATA';
 export const MESSAGING_MESSAGE_METADATA = 'MESSAGING_MESSAGE_METADATA';
+export const MESSAGING_LIFECYCLE_HOOK_METADATA =
+  'MESSAGING_LIFECYCLE_HOOK_METADATA';
 
 export const MessageHandler = (...routingKey: string[]): ClassDecorator => {
   return (target) => {
@@ -65,6 +68,18 @@ export const MessagingExceptionListener = (): ClassDecorator => {
     Reflect.defineMetadata(
       MESSAGING_EXCEPTION_LISTENER_METADATA,
       target.name,
+      target,
+    );
+  };
+};
+
+export const MessagingLifecycleHook = (
+  lifecycleHook: LifecycleHook,
+): ClassDecorator => {
+  return (target) => {
+    Reflect.defineMetadata(
+      MESSAGING_LIFECYCLE_HOOK_METADATA,
+      `${lifecycleHook}:${target.name}`,
       target,
     );
   };
