@@ -66,19 +66,19 @@ export class HandlerMiddleware implements Middleware {
     }
 
     const results = await Promise.allSettled(
-      handlers.map((handler) => {
+      handlers.map(async (handler) => {
         try {
           this.logHandlerMessage(
             handler.constructor.name,
             message.messageRoutingKey,
           );
-          return handler.handle(
+          return await handler.handle(
             this.convertToInstance(handler, message.message),
           );
         } catch (err) {
           return Promise.reject({
             handler: handler.constructor.name,
-            error: err,
+            error: err instanceof Error ? err : new Error(String(err)),
           });
         }
       }),
