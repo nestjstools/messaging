@@ -175,10 +175,10 @@ export class AppController {
 
 ### ⚠️ Warning!
 
-🚨 Important Notice: You can **return responses from handlers**, but currently, it only works with the `InMemoryChannel`.
+Important Notice: You can **return responses from handlers**, but currently, it only works with the `InMemoryChannel`.
 This behavior may not function as expected if multiple handlers are processing a single message.
 
-🛠️ Please ensure you're using a compatible setup when working with multiple handlers, as this could result in unexpected
+Please ensure you're using a compatible setup when working with multiple handlers, as this could result in unexpected
 behavior.
 
 ---
