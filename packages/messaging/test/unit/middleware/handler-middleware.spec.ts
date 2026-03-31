@@ -37,4 +37,34 @@ describe('HandlerMiddleware', () => {
       },
     ]);
   });
+
+  test('should wrap rejected handler errors when multiple handlers are registered', async () => {
+    const firstHandler = {
+      handle: jest.fn(() => Promise.resolve()),
+    } as IMessageHandler<any>;
+
+    const secondHandler = {
+      handle: jest.fn(() => Promise.reject(new Error('Expected error'))),
+    } as IMessageHandler<any>;
+
+    registry = new MessageHandlerRegistry();
+    registry.register(['abc'], firstHandler);
+    registry.register(['abc'], secondHandler);
+
+    const subjectUnderTest = new HandlerMiddleware(registry, logger);
+
+    await expect(
+      subjectUnderTest.process(
+        new RoutingMessage({ id: 1 }, 'abc'),
+        MiddlewareContext.createFresh([]),
+      ),
+    ).rejects.toMatchObject({
+      errors: [
+        {
+          handler: 'Object',
+          errorMessage: 'Expected error',
+        },
+      ],
+    });
+  });
 });
