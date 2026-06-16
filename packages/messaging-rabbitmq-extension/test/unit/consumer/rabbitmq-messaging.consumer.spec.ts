@@ -120,7 +120,7 @@ describe('RabbitmqMessagingConsumer', () => {
       } as unknown as jest.Mocked<Channel>;
       const setupFn = (wrapper.addSetup as jest.Mock).mock.calls[0][0];
       await setupFn(rawChannel);
-      expect(rawChannel.prefetch).toHaveBeenCalledWith(10);
+      expect(rawChannel.prefetch).toHaveBeenCalledWith(10, false);
 
       const consumeHandler = (rawChannel.consume as jest.Mock).mock
         .calls[0][1] as (msg: ConsumeMessage | null) => Promise<void>;
@@ -230,13 +230,16 @@ describe('RabbitmqMessagingConsumer', () => {
       } as any;
 
       amqpChannel = {} as any;
-
-      (consumer as any).channel = channel;
-      (consumer as any).amqpChannel = amqpChannel;
+      (consumer as any).channelWrappers.set(channel, amqpChannel);
     });
 
     it('should return when no amqpChannel is available', async () => {
-      (consumer as any).amqpChannel = undefined;
+      const unregisteredChannel = {
+        config: {
+          retryMessage: 3,
+          deadLetterQueueFeature: true,
+        },
+      } as any;
 
       const errored: ConsumerDispatchedMessageError = {
         dispatchedConsumerMessage: {
@@ -244,7 +247,7 @@ describe('RabbitmqMessagingConsumer', () => {
         },
       } as any;
 
-      const result = await consumer.onError(errored, channel);
+      const result = await consumer.onError(errored, unregisteredChannel);
 
       expect(result).toBeUndefined();
       expect(mockRetrier.retryMessage).not.toHaveBeenCalled();
@@ -311,6 +314,7 @@ describe('RabbitmqMessagingConsumer', () => {
           deadLetterQueueFeature: true,
         },
       } as any;
+      (consumer as any).channelWrappers.set(channelWithoutRetry, amqpChannel);
 
       const errored: ConsumerDispatchedMessageError = {
         dispatchedConsumerMessage: {
@@ -335,6 +339,10 @@ describe('RabbitmqMessagingConsumer', () => {
           deadLetterQueueFeature: false,
         },
       } as any;
+      (consumer as any).channelWrappers.set(
+        channelWithDisabledDeadLetter,
+        amqpChannel,
+      );
 
       const errored: ConsumerDispatchedMessageError = {
         dispatchedConsumerMessage: {
@@ -367,26 +375,27 @@ describe('RabbitmqMessagingConsumer', () => {
   });
 
   describe('onModuleDestroy', () => {
-    it('should close connection and clear channel reference', async () => {
+    it('should close all registered channel connections', async () => {
       const close = jest.fn().mockResolvedValue(undefined);
-      (consumer as any).channel = {
+      const channel = {
         connection: {
           close,
         },
       };
+      (consumer as any).channels.add(channel);
 
       await consumer.onModuleDestroy();
 
       expect(close).toHaveBeenCalledTimes(1);
-      expect((consumer as any).channel).toBeUndefined();
+      expect((consumer as any).channels.size).toBe(0);
     });
 
-    it('should only clear channel reference when connection does not exist', async () => {
-      (consumer as any).channel = { connection: undefined };
+    it('should ignore channels without connection and still clear registry', async () => {
+      (consumer as any).channels.add({ connection: undefined });
 
       await consumer.onModuleDestroy();
 
-      expect((consumer as any).channel).toBeUndefined();
+      expect((consumer as any).channels.size).toBe(0);
     });
   });
 });
