@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging-amazon-sqs-extension",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Extension to handle messages and dispatch them over Amazon SQS",
   "author": "Sebastian Iwanczyszyn",
   "license": "MIT",
@@ -49,7 +49,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.998.0"
+    "@aws-sdk/client-sqs": "^3.1068.0"
   },
   "peerDependencies": {
     "@nestjs/common": "^10.x||^11.x",

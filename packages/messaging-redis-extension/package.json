@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging-redis-extension",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Extension to handle messages and dispatch them over Redis",
   "author": "Sebastian Iwanczyszyn",
   "license": "MIT",
@@ -51,7 +51,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "bullmq": "^5.70.1"
+    "bullmq": "^5.78.1"
   },
   "peerDependencies": {
     "@nestjs/common": "^10.x||^11.x",
