@@ -19,8 +19,8 @@ import { MessageDeadLetterVisitor } from './message-dead-letter.visitor';
 export class RabbitmqMessagingConsumer
   implements IMessagingConsumer<AmqpChannel>, OnModuleDestroy
 {
-  private channel?: AmqpChannel = undefined;
-  private amqpChannel: ChannelWrapper;
+  private readonly channelWrappers = new WeakMap<AmqpChannel, ChannelWrapper>();
+  private readonly channels = new Set<AmqpChannel>();
 
   constructor(
     private readonly rabbitMqMigrator: RabbitmqMigrator,
@@ -32,7 +32,7 @@ export class RabbitmqMessagingConsumer
     dispatcher: ConsumerMessageBus,
     channel: AmqpChannel,
   ): Promise<void> {
-    this.channel = channel;
+    this.channels.add(channel);
     await this.rabbitMqMigrator.run(channel);
 
     if (!channel.connection) {
@@ -43,10 +43,10 @@ export class RabbitmqMessagingConsumer
 
     const channelWrapper = channel.createChannelWrapper();
     await channelWrapper.waitForConnect();
-    this.amqpChannel = channelWrapper;
+    this.channelWrappers.set(channel, channelWrapper);
 
     await channelWrapper.addSetup(async (rawChannel: Channel) => {
-      await rawChannel.prefetch(this.channel.config.qos, false);
+      await rawChannel.prefetch(channel.config.qos, false);
       return rawChannel.consume(
         channel.config.queue,
         async (msg: ConsumeMessage | null) => {
@@ -89,7 +89,9 @@ export class RabbitmqMessagingConsumer
     errored: ConsumerDispatchedMessageError,
     channel: AmqpChannel,
   ): Promise<void> {
-    if (!this.amqpChannel) {
+    const channelWrapper = this.channelWrappers.get(channel);
+
+    if (!channelWrapper) {
       return;
     }
 
@@ -104,25 +106,27 @@ export class RabbitmqMessagingConsumer
         return this.messageRetrier.retryMessage(
           errored,
           channel,
-          this.amqpChannel,
+          channelWrapper,
           currentRetryCount,
         );
       }
     }
 
-    if (channel.config.deadLetterQueueFeature && this.amqpChannel) {
+    if (channel.config.deadLetterQueueFeature) {
       return this.messageDeadLetter.sendToDeadLetter(
         errored,
         channel,
-        this.amqpChannel,
+        channelWrapper,
       );
     }
   }
 
   async onModuleDestroy(): Promise<void> {
-    if (this.channel?.connection) {
-      await this.channel.connection.close();
+    for (const channel of this.channels) {
+      if (channel.connection) {
+        await channel.connection.close();
+      }
     }
-    this.channel = undefined;
+    this.channels.clear();
   }
 }
