@@ -46,7 +46,7 @@ export class RabbitmqMessagingConsumer
     this.amqpChannel = channelWrapper;
 
     await channelWrapper.addSetup(async (rawChannel: Channel) => {
-      await rawChannel.prefetch(this.channel.config.qos);
+      await rawChannel.prefetch(this.channel.config.qos, false);
       return rawChannel.consume(
         channel.config.queue,
         async (msg: ConsumeMessage | null) => {
