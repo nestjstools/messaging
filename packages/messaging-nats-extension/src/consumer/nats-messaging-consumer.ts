@@ -24,8 +24,8 @@ export class NatsMessagingConsumer
     this.channel = channel;
     this.client = await this.channel.client;
 
-    this.client.subscribe(channel.config.subscriberName, {
-      callback: async (err, msg) => {
+    await this.client.subscribe(channel.config.subscriberName, {
+      callback: (err, msg) => {
         if (err) {
           throw new Error(`Nats error ${err.message}`);
         }
@@ -33,7 +33,7 @@ export class NatsMessagingConsumer
         const headers = msg.headers ?? undefined;
 
         const deserialized = JSON.parse(msg.string());
-        await dispatcher.dispatch(
+        dispatcher.dispatch(
           new ConsumerMessage(
             deserialized,
             headers?.get('messaging-routing-key') ?? msg.subject,
