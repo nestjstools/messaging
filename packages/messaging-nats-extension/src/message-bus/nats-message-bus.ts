@@ -2,7 +2,7 @@ import { RoutingMessage } from '@nestjstools/messaging';
 import { IMessageBus } from '@nestjstools/messaging';
 import { Injectable } from '@nestjs/common';
 import { NatsChannel } from '../channel/nats.channel';
-import { headers } from 'nats';
+import { headers } from '@nats-io/nats-core';
 
 @Injectable()
 export class NatsMessageBus implements IMessageBus {

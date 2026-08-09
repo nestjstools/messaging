@@ -1,7 +1,7 @@
 import { RoutingMessage } from '@nestjstools/messaging';
 import { IMessageBus } from '@nestjstools/messaging';
 import { Injectable } from '@nestjs/common';
-import { headers } from 'nats';
+import { headers } from '@nats-io/nats-core';
 import { NatsJetStreamChannel } from '../channel/nats-jet-stream.channel';
 
 @Injectable()
