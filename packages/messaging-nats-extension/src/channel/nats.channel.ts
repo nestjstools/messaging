@@ -1,6 +1,7 @@
 import { Channel } from '@nestjstools/messaging';
 import { NatsChannelConfig } from './nats-channel.config';
-import { connect, NatsConnection } from 'nats';
+import { NatsConnection } from '@nats-io/nats-core';
+import { connect } from '@nats-io/transport-node';
 
 export class NatsChannel extends Channel<NatsChannelConfig> {
   public readonly client: Promise<NatsConnection>;

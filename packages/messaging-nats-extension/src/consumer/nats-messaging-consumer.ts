@@ -7,7 +7,7 @@ import {
   ConsumerMessageBus,
 } from '@nestjstools/messaging';
 import { Injectable, OnApplicationShutdown } from '@nestjs/common';
-import { NatsConnection } from 'nats';
+import { NatsConnection } from '@nats-io/nats-core';
 
 @Injectable()
 @MessageConsumer(NatsChannel)

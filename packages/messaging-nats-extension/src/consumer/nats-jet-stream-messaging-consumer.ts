@@ -12,7 +12,7 @@ import {
   DeliverPolicy,
   RetentionPolicy,
   StorageType as NatsStorageType,
-} from 'nats/lib/jetstream/jsapi_types';
+} from '@nats-io/jetstream';
 import { StorageType } from '../channel/nats-jet-stream-channel.config';
 
 @Injectable()
