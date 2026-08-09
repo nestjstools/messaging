@@ -1,10 +1,12 @@
 import { Channel } from '@nestjstools/messaging';
+import { NatsConnection } from '@nats-io/nats-core';
 import {
-  connect,
+  jetstream,
+  jetstreamManager,
   JetStreamClient,
   JetStreamManager,
-  NatsConnection,
-} from 'nats';
+} from '@nats-io/jetstream';
+import { connect } from '@nats-io/transport-node';
 import { NatsJetStreamChannelConfig } from './nats-jet-stream-channel.config';
 
 export class NatsJetStreamChannel extends Channel<NatsJetStreamChannelConfig> {
@@ -17,12 +19,12 @@ export class NatsJetStreamChannel extends Channel<NatsJetStreamChannelConfig> {
 
   async jetStreamClient(): Promise<JetStreamClient> {
     const client = await this.client;
-    return client.jetstream();
+    return jetstream(client);
   }
 
   async jetStreamManager(): Promise<JetStreamManager> {
     const client = await this.client;
-    return client.jetstreamManager();
+    return jetstreamManager(client);
   }
 
   async onChannelDestroy(): Promise<void> {
