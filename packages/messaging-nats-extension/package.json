@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging-nats-extension",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0",
   "description": "Extension to handle messages and dispatch them over Nats",
   "author": "Sebastian Iwanczyszyn",
   "license": "MIT",
