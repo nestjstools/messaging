@@ -40,7 +40,7 @@ export class NatsJetStreamMessagingConsumer implements IMessagingConsumer<NatsJe
         });
       }
     } catch (err) {
-      if (err.code === '404') {
+      if (err.constructor.name === 'StreamNotFoundError') {
         // Stream does not exist — safe to create
         await jsm.streams.add({
           name: channel.config.streamConfig.streamName,
