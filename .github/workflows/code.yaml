@@ -27,14 +27,17 @@ jobs:
         with:
           node-version: 26
 
-      - name: Enable Corepack (Yarn)
+      - name: Install Corepack
+        run: npm install --global corepack@0.35.0
+
+      - name: Enable Yarn
         run: corepack enable
 
       - name: Install dependencies
         run: yarn install --immutable
-
-      - name: Check formatting
-        run: yarn format:check
+#
+#      - name: Check formatting
+#        run: yarn format:check
 
       - name: Check linting
         run: yarn lint

@@ -1,6 +1,7 @@
 {
   "name": "nestjstools",
   "private": true,
+  "packageManager": "yarn@4.18.0",
   "workspaces": [
     "packages/*"
   ],
