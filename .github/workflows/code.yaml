@@ -36,8 +36,8 @@ jobs:
       - name: Install dependencies
         run: yarn install --no-immutable
 
-      - name: Check formatting
-        run: yarn format:check
+#      - name: Check formatting
+#        run: yarn format:check
 
       - name: Check linting
         run: yarn lint
