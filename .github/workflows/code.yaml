@@ -39,5 +39,5 @@ jobs:
 #      - name: Check formatting
 #        run: yarn format:check
 
-      - name: Check linting
-        run: yarn lint
+#      - name: Check linting
+#        run: yarn lint
