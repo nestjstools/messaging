@@ -40,7 +40,7 @@ jobs:
         run: corepack enable
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn install --no-immutable
 
       - name: Build core messaging package
         if: matrix.workspace != '@nestjstools/messaging'
