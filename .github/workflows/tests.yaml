@@ -33,11 +33,14 @@ jobs:
         with:
           node-version: 26
 
-      - name: Enable Corepack (Yarn)
+      - name: Install Corepack
+        run: npm install --global corepack@0.35.0
+
+      - name: Enable Yarn
         run: corepack enable
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn install --no-immutable
 
       - name: Build core messaging package
         if: matrix.workspace != '@nestjstools/messaging'

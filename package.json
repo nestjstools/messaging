@@ -1,9 +1,14 @@
 {
   "name": "nestjstools",
   "private": true,
+  "packageManager": "yarn@4.18.0",
   "workspaces": [
     "packages/*"
   ],
+  "devDependencies": {
+    "eslint": "^9.39.2",
+    "prettier": "^3.8.1"
+  },
   "scripts": {
     "lint": "eslint \"packages/*/{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "eslint \"packages/*/{src,apps,libs,test}/**/*.ts\" --fix",
