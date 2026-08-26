@@ -51,7 +51,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "bullmq": "^6.3.0"
+    "bullmq": "^6.2.2"
   },
   "peerDependencies": {
     "@nestjs/common": "^10.x||^11.x",
