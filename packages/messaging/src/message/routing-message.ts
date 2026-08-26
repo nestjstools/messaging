@@ -1,4 +1,3 @@
-import { DefaultMessageOptions } from './default-message-options';
 import { Message } from './message';
 
 export class RoutingMessage implements Message {
