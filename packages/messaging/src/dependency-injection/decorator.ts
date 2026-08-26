@@ -13,11 +13,51 @@ export const MESSAGING_MESSAGE_METADATA = 'MESSAGING_MESSAGE_METADATA';
 export const MESSAGING_LIFECYCLE_HOOK_METADATA =
   'MESSAGING_LIFECYCLE_HOOK_METADATA';
 
-export const MessageHandler = (...routingKey: string[]): ClassDecorator => {
-  return (target) => {
-    Reflect.defineMetadata(MESSAGE_HANDLER_METADATA, routingKey, target);
+export interface MessageHandlerOptions {
+  priority?: number;
+}
+
+export interface MessageHandlerConfig extends MessageHandlerOptions {
+  routingKey: string | string[];
+}
+
+export interface MessageHandlerMetadata {
+  routingKey: string[];
+  options?: MessageHandlerOptions;
+}
+
+export function MessageHandler(...routingKey: string[]): ClassDecorator;
+export function MessageHandler(
+  routingKey: string,
+  ...args: [...routingKeys: string[], options: MessageHandlerOptions]
+): ClassDecorator;
+export function MessageHandler(config: MessageHandlerConfig): ClassDecorator;
+export function MessageHandler(...args: unknown[]): ClassDecorator {
+  const [firstArgument] = args;
+  const isConfig =
+    typeof firstArgument === 'object' &&
+    firstArgument !== null &&
+    'routingKey' in firstArgument;
+  const lastArgument = args.at(-1);
+  const trailingOptions =
+    !isConfig && typeof lastArgument === 'object' && lastArgument !== null
+      ? (lastArgument as MessageHandlerOptions)
+      : undefined;
+  const config = firstArgument as MessageHandlerConfig;
+  const { routingKey: configuredRoutingKey, ...configuredOptions } = config;
+  const routingKey = isConfig
+    ? configuredRoutingKey
+    : (trailingOptions ? args.slice(0, -1) : args).map(String);
+  const options = isConfig ? configuredOptions : trailingOptions;
+  const metadata: MessageHandlerMetadata = {
+    routingKey: Array.isArray(routingKey) ? routingKey : [routingKey],
+    ...(options && { options }),
   };
-};
+
+  return (target) => {
+    Reflect.defineMetadata(MESSAGE_HANDLER_METADATA, metadata, target);
+  };
+}
 
 export const ChannelFactory = (
   channelConfig: ChannelConfig,

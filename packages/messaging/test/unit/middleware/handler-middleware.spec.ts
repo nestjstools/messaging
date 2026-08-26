@@ -67,4 +67,33 @@ describe('HandlerMiddleware', () => {
       ],
     });
   });
+
+  test('should execute higher-priority handlers before lower-priority handlers', async () => {
+    const executionOrder: string[] = [];
+    const lowerPriorityHandler = {
+      handle: jest.fn(async () => {
+        executionOrder.push('lower');
+      }),
+    } as IMessageHandler<any>;
+    const higherPriorityHandler = {
+      handle: jest.fn(async () => {
+        executionOrder.push('higher:start');
+        await Promise.resolve();
+        executionOrder.push('higher:end');
+      }),
+    } as IMessageHandler<any>;
+
+    registry = new MessageHandlerRegistry();
+    registry.register(['abc'], lowerPriorityHandler, { priority: 1 });
+    registry.register(['abc'], higherPriorityHandler, { priority: 2 });
+
+    const subjectUnderTest = new HandlerMiddleware(registry, logger);
+
+    await subjectUnderTest.process(
+      new RoutingMessage({ id: 1 }, 'abc'),
+      MiddlewareContext.createFresh([]),
+    );
+
+    expect(executionOrder).toEqual(['higher:start', 'higher:end', 'lower']);
+  });
 });

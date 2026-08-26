@@ -5,7 +5,7 @@ export class SealedRoutingMessage implements Message {
   constructor(
     public readonly message: object | string,
     public readonly messageRoutingKey: string,
-    public readonly messageOptions: MessageOptions | undefined = undefined,
+    public readonly messageOptions?: unknown,
   ) {}
 
   createWithOptions(options: MessageOptions): SealedRoutingMessage {

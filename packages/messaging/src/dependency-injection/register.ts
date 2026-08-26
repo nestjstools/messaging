@@ -4,6 +4,7 @@ import { MessagingLogger } from '../logger/messaging-logger';
 import { Service } from './service';
 import {
   MESSAGE_HANDLER_METADATA,
+  MessageHandlerMetadata,
   MESSAGING_EXCEPTION_LISTENER_METADATA,
   MESSAGING_LIFECYCLE_HOOK_METADATA,
   MESSAGING_MIDDLEWARE_METADATA,
@@ -33,10 +34,12 @@ export const registerHandlers = (
   });
 
   handlerInstances.forEach((handler) => {
-    registry.register(
-      Reflect.getMetadata(MESSAGE_HANDLER_METADATA, handler.metatype),
-      handler.instance,
-    );
+    const metadata = Reflect.getMetadata(
+      MESSAGE_HANDLER_METADATA,
+      handler.metatype,
+    ) as MessageHandlerMetadata;
+
+    registry.register(metadata.routingKey, handler.instance, metadata.options);
     logger.log(`Handler [${handler.name}] was registered`);
   });
 };

@@ -26,6 +26,10 @@ export class InMemoryMessageBus implements IMessageBus {
   ) {}
 
   async dispatch(message: Message): Promise<object | void> {
+    if (!(message.messageOptions instanceof DefaultMessageOptions)) {
+      throw new Error(`Other messages than DefaultMessageOptions are not supported`);
+    }
+
     const middlewares = [];
     middlewares.push(
       ...(this.channel.config?.middlewares ?? []),
