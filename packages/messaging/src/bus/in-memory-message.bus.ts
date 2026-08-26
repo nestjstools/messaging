@@ -26,14 +26,15 @@ export class InMemoryMessageBus implements IMessageBus {
   ) {}
 
   async dispatch(message: Message): Promise<object | void> {
-    if (!(message.messageOptions instanceof DefaultMessageOptions)) {
-      throw new Error(`Other messages than DefaultMessageOptions are not supported`);
-    }
+    const messageOptions =
+      message.messageOptions instanceof DefaultMessageOptions
+        ? message.messageOptions
+        : new DefaultMessageOptions([], true);
 
     const middlewares = [];
     middlewares.push(
       ...(this.channel.config?.middlewares ?? []),
-      ...(message.messageOptions?.middlewares ?? []),
+      ...messageOptions.middlewares,
       HandlerMiddleware,
     );
 
@@ -43,9 +44,7 @@ export class InMemoryMessageBus implements IMessageBus {
     if (message instanceof SealedRoutingMessage) {
       // Sealed messages carry raw payload and must be denormalized before dispatch.
       const normalizerDefinition: object =
-        message.messageOptions instanceof DefaultMessageOptions
-          ? message.messageOptions.normalizer
-          : ObjectForwardMessageNormalizer;
+        messageOptions.normalizer ?? ObjectForwardMessageNormalizer;
 
       messageToDispatch = await this.normalizerRegistry
         .getByName(normalizerDefinition['name'])
@@ -73,7 +72,7 @@ export class InMemoryMessageBus implements IMessageBus {
           avoidErrorsForNonExistedHandlers;
       } else {
         avoidErrorsForNonExistedHandlers =
-          message.messageOptions?.avoidErrorsWhenNotExistedHandler ??
+          messageOptions.avoidErrorsWhenNotExistedHandler ??
           avoidErrorsForNonExistedHandlers;
       }
 
