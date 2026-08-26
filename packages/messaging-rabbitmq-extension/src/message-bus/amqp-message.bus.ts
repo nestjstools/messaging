@@ -29,9 +29,9 @@ export class AmqpMessageBus implements IMessageBus {
     }
 
     const messageBuilder: AmqpMessageBuilder =
-      message.messageOptions === undefined
-        ? this.createMessageBuilderWhenUndefined(message)
-        : this.createMessageBuilderWhenDefined(message);
+      message.messageOptions instanceof AmqpMessageOptions
+        ? this.createMessageBuilderWhenDefined(message, message.messageOptions)
+        : this.createMessageBuilderWhenUndefined(message);
 
     messageBuilder.addHeader(
       RABBITMQ_HEADER_ROUTING_KEY,
@@ -78,8 +78,8 @@ export class AmqpMessageBus implements IMessageBus {
 
   private createMessageBuilderWhenDefined(
     message: RoutingMessage,
+    options: AmqpMessageOptions,
   ): AmqpMessageBuilder {
-    const options = message.messageOptions as AmqpMessageOptions;
     const messageBuilder = AmqpMessageBuilder.create();
 
     messageBuilder
