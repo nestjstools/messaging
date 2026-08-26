@@ -32,6 +32,11 @@ export class RmqChannelConfig extends ChannelConfig {
   public readonly autoCreate?: boolean;
 
   /**
+   * @description Whether to forcefully recreate all queues in this channel's topology on application startup. This deletes all queued messages and can be used when changing immutable queue settings.
+   */
+  public readonly forceRecreateQueue?: boolean;
+
+  /**
    * @description Enable dead letter queue functionality for failed messages
    */
   public readonly deadLetterQueueFeature?: boolean;
@@ -56,6 +61,11 @@ export class RmqChannelConfig extends ChannelConfig {
    */
   public readonly qos?: number;
 
+  /**
+   * @description Use a quorum queue instead of a classic queue when automatically creating the queue.
+   */
+  public readonly quorum?: boolean;
+
   constructor({
     name,
     connectionUri,
@@ -65,6 +75,7 @@ export class RmqChannelConfig extends ChannelConfig {
     enableConsumer,
     bindingKeys,
     autoCreate,
+    forceRecreateQueue,
     deadLetterQueueFeature,
     avoidErrorsForNotExistedHandlers,
     middlewares,
@@ -73,6 +84,7 @@ export class RmqChannelConfig extends ChannelConfig {
     retryMessageTtl,
     forceRecreateRetryQueue,
     qos,
+    quorum,
   }: RmqChannelConfig) {
     super(
       name,
@@ -87,11 +99,13 @@ export class RmqChannelConfig extends ChannelConfig {
     this.queue = queue;
     this.bindingKeys = bindingKeys;
     this.autoCreate = autoCreate ?? true;
+    this.forceRecreateQueue = forceRecreateQueue ?? false;
     this.deadLetterQueueFeature = deadLetterQueueFeature ?? false;
     this.retryMessage = retryMessage;
     this.retryMessageTtl = retryMessageTtl;
     this.forceRecreateRetryQueue = forceRecreateRetryQueue;
     this.qos = qos ?? 1;
+    this.quorum = quorum ?? false;
   }
 }
 

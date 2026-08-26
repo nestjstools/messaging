@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging-google-pubsub-extension",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Extension to handle messages and dispatch them over Google PubSub",
   "author": "Sebastian Iwanczyszyn",
   "publishConfig": {
@@ -52,7 +52,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@google-cloud/pubsub": "^5.3.1"
+    "@google-cloud/pubsub": "^6.0.1"
   },
   "peerDependencies": {
     "@nestjs/common": "^10.x||^11.x",
