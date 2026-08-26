@@ -12,7 +12,6 @@ export * from './bus/i-message-bus';
 export * from './bus/in-memory-message.bus';
 export * from './message/default-message-options';
 export * from './message/routing-message';
-export * from './message/message-options';
 export * from './message/message';
 export * from './message/message-response';
 export * from './channel/factory/composite-channel.factory';

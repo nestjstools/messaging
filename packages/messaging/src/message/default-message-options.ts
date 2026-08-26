@@ -1,7 +1,6 @@
-import { MessageOptions } from './message-options';
 import { Middleware } from '../middleware/middleware';
 
-export class DefaultMessageOptions implements MessageOptions {
+export class DefaultMessageOptions {
   constructor(
     public readonly middlewares: Middleware[] = [],
     public readonly avoidErrorsWhenNotExistedHandler: boolean = false,

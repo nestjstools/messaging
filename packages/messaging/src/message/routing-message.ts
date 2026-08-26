@@ -1,4 +1,4 @@
-import { MessageOptions } from './message-options';
+import { DefaultMessageOptions } from './default-message-options';
 import { Message } from './message';
 
 export class RoutingMessage implements Message {
@@ -8,7 +8,7 @@ export class RoutingMessage implements Message {
     public readonly messageOptions?: unknown,
   ) {}
 
-  createWithOptions(options: MessageOptions): RoutingMessage {
+  createWithOptions(options: DefaultMessageOptions): RoutingMessage {
     return new RoutingMessage(this.message, this.messageRoutingKey, options);
   }
 }
