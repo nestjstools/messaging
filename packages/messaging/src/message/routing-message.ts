@@ -8,7 +8,7 @@ export class RoutingMessage implements Message {
     public readonly messageOptions?: unknown,
   ) {}
 
-  createWithOptions(options: DefaultMessageOptions): RoutingMessage {
+  createWithOptions(options: unknown): RoutingMessage {
     return new RoutingMessage(this.message, this.messageRoutingKey, options);
   }
 }
