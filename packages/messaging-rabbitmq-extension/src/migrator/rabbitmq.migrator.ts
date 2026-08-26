@@ -13,7 +13,7 @@ export class RabbitmqMigrator {
     }
 
     if (!channel.connection) {
-      throw new Error('Brak aktywnego połączenia AMQP');
+      throw new Error('Connection is missing');
     }
 
     this.channelWrapper = channel.createChannelWrapper();
@@ -27,8 +27,15 @@ export class RabbitmqMigrator {
       );
 
       // Queue
+      if (channel.config.forceRecreateQueue) {
+        await ch.deleteQueue(channel.config.queue);
+      }
+
       await ch.assertQueue(channel.config.queue, {
         durable: true,
+        arguments: {
+          ...(channel.config.quorum ? { 'x-queue-type': 'quorum' } : {}),
+        },
       });
 
       // Dead letter infra
@@ -36,7 +43,15 @@ export class RabbitmqMigrator {
         const dlxExchange = 'dead_letter.exchange';
         const dlq = `${channel.config.queue}_dead_letter`;
         await ch.assertExchange(dlxExchange, 'direct', { durable: true });
-        await ch.assertQueue(dlq, { durable: true });
+        if (channel.config.forceRecreateQueue) {
+          await ch.deleteQueue(dlq);
+        }
+        await ch.assertQueue(dlq, {
+          durable: true,
+          arguments: {
+            ...(channel.config.quorum ? { 'x-queue-type': 'quorum' } : {}),
+          },
+        });
         await ch.bindQueue(dlq, dlxExchange, dlq);
       }
 
@@ -49,10 +64,11 @@ export class RabbitmqMigrator {
           durable: true,
         });
 
-        if (channel.config.forceRecreateRetryQueue) {
-          if (await ch.checkQueue(channel.config.queue)) {
-            await ch.deleteQueue(retryQueue);
-          }
+        if (
+          channel.config.forceRecreateQueue ||
+          channel.config.forceRecreateRetryQueue
+        ) {
+          await ch.deleteQueue(retryQueue);
         }
 
         await ch.assertQueue(retryQueue, {
