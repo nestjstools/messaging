@@ -19,6 +19,18 @@ export class MqttMessagingConsumer implements IMessagingConsumer<MqttChannel> {
   ): Promise<void> {
     const client = await channel.start();
     if (channel.config.subscriptions.length === 0) return;
+
+    client.on('message', (topic, payload, packet) => {
+      const subscription = channel.config.subscriptions.find(
+        ({ topicFilter }) => topicMatches(topicFilter, topic),
+      );
+      const decoded = decode(payload.toString(), topic);
+      const routingKey = subscription?.routingKey ?? decoded.routingKey;
+      void dispatcher.dispatch(
+        new ConsumerMessage(decoded.payload, routingKey, metadata(packet)),
+      );
+    });
+
     const subscriptions = Object.fromEntries(
       channel.config.subscriptions.map(({ topicFilter, qos }) => [
         topicFilter,
@@ -30,28 +42,18 @@ export class MqttMessagingConsumer implements IMessagingConsumer<MqttChannel> {
         error ? reject(error) : resolve(),
       ),
     );
-    client.on('message', (topic, payload, packet) => {
-      const subscription = channel.config.subscriptions.find(
-        ({ topicFilter }) => topicMatches(topicFilter, topic),
-      );
-      const decoded = decode(payload.toString(), topic);
-      const routingKey = subscription?.routingKey ?? decoded.routingKey;
-      void dispatcher
-        .dispatch(
-          new ConsumerMessage(decoded.payload, routingKey, metadata(packet)),
-        )
-        .catch(() => undefined);
-    });
   }
-  async onError(errored: ConsumerDispatchedMessageError): Promise<void> {
-    return Promise.reject(errored.error);
+  async onError(_errored: ConsumerDispatchedMessageError): Promise<void> {
+    // MQTT acknowledges a packet before application dispatch. Rejecting here
+    // would only suppress ConsumerMessageBus logging; it cannot trigger a nack.
+    return Promise.resolve();
   }
 }
 
 function decode(raw: string, topic: string): MqttMessageEnvelope {
   try {
     const value = JSON.parse(raw) as Partial<MqttMessageEnvelope>;
-    if ('payload' in value && typeof value.routingKey === 'string')
+    if ('payload' in value && typeof value.routingKey === 'string') {
       return {
         payload: value.payload as object | string,
         routingKey: value.routingKey,
@@ -59,6 +61,17 @@ function decode(raw: string, topic: string): MqttMessageEnvelope {
         timestamp: value.timestamp ?? '',
         messageId: value.messageId ?? '',
       };
+    }
+
+    if (typeof value === 'object' && value !== null) {
+      return {
+        payload: value,
+        routingKey: topic,
+        headers: {},
+        timestamp: '',
+        messageId: '',
+      };
+    }
   } catch {}
   return {
     payload: raw,
