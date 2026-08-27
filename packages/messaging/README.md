@@ -109,10 +109,11 @@ export class SendMessage {
 
 ```typescript
 import { SendMessage } from './send-message';
-import { MessageResponse, MessageHandler, IMessageHandler } from '@nestjstools/messaging';
+import { MessageResponse, MessageHandler, type IMessageHandler } from '@nestjstools/messaging';
 import { Injectable } from '@nestjs/common';
 
 // You can define multiple routing messages on the same handler: @MessageHandler('your.message', 'your.message2')
+// You can define priority of the handler, for the same message: @MessageHandler({routingKey: 'your.message', priority: 10})
 @Injectable()
 @MessageHandler('your.message')
 export class SendMessageHandler implements IMessageHandler<SendMessage> {
@@ -134,7 +135,7 @@ Here’s an example using an HTTP endpoint:
 
 ```typescript
 import { Controller, Get } from '@nestjs/common';
-import { MessageBus, IMessageBus, RoutingMessage } from '@nestjstools/messaging';
+import { MessageBus, type IMessageBus, RoutingMessage } from '@nestjstools/messaging';
 import { SendMessage } from './test/send-message';
 
 
@@ -199,7 +200,7 @@ You can use it to make it works with:
 
 ```typescript
 import { Injectable } from '@nestjs/common';
-import { MessagingNormalizer, MessageNormalizer } from '@nestjstools/messaging';
+import { MessagingNormalizer, type MessageNormalizer } from '@nestjstools/messaging';
 import { Buffer } from 'buffer';
 
 @Injectable()
@@ -257,7 +258,7 @@ Here's an example middleware class that logs a message when the middleware is ap
 
 ```typescript
 import { Injectable } from '@nestjs/common';
-import { Middleware, RoutingMessage } from '@nestjstools/messaging';
+import { type Middleware, RoutingMessage } from '@nestjstools/messaging';
 
 @Injectable()
 @MessagingMiddleware()
@@ -357,7 +358,7 @@ You can log the error, send a notification, or trigger fallback logic whenever a
 
 ```typescript
 import { Injectable } from '@nestjs/common';
-import { ExceptionListener, MessagingExceptionListener, ExceptionContext } from '@nestjstools/messaging';
+import { type ExceptionListener, MessagingExceptionListener, ExceptionContext } from '@nestjstools/messaging';
 
 @MessagingExceptionListener()
 export class CustomExceptionListener implements ExceptionListener {
