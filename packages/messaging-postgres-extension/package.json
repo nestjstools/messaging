@@ -1,0 +1,60 @@
+{
+  "name": "@nestjstools/messaging-postgres-extension",
+  "version": "1.0.0",
+  "description": "Extension to handle messages and dispatch them over PostgreSQL",
+  "author": "Sebastian Iwanczyszyn",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nestjstools/messaging",
+    "directory": "packages/messaging-postgres-extension"
+  },
+  "keywords": [
+    "nestjs",
+    "messaging",
+    "message-bus",
+    "postgresql",
+    "pg-boss"
+  ],
+  "files": [
+    "lib",
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "nest build",
+    "prettier": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
+    "prettier:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint": "eslint \"{src,test}/**/*.ts\" --fix",
+    "test": "jest --config ./test/jest-unit.json"
+  },
+  "dependencies": {
+    "pg-boss": "^10.1.5"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^10.x||^11.x",
+    "@nestjs/core": "^10.x||^11.x",
+    "@nestjstools/messaging": "^4.x",
+    "reflect-metadata": "^0.2.0",
+    "rxjs": "^7.x"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.16",
+    "@nestjs/common": "^11.1.13",
+    "@nestjs/core": "^11.1.13",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.19.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.8.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
