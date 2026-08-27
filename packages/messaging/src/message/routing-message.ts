@@ -1,14 +1,13 @@
-import { MessageOptions } from './message-options';
 import { Message } from './message';
 
 export class RoutingMessage implements Message {
   constructor(
     public readonly message: object,
     public readonly messageRoutingKey: string,
-    public readonly messageOptions: MessageOptions | undefined = undefined,
+    public readonly messageOptions?: unknown,
   ) {}
 
-  createWithOptions(options: MessageOptions): RoutingMessage {
+  createWithOptions(options: unknown): RoutingMessage {
     return new RoutingMessage(this.message, this.messageRoutingKey, options);
   }
 }

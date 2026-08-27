@@ -1,6 +1,9 @@
 import { RoutingMessage } from '../message/routing-message';
 import { Middleware } from './middleware';
-import { MessageHandlerRegistry } from '../handler/message-handler.registry';
+import {
+  MessageHandlerRegistry,
+  MessageHandlerWrapper,
+} from '../handler/message-handler.registry';
 import { Inject, Injectable } from '@nestjs/common';
 import { Service } from '../dependency-injection/service';
 import { MessagingMiddleware } from '../dependency-injection/decorator';
@@ -37,12 +40,12 @@ export class HandlerMiddleware implements Middleware {
 
   private async handleParallel(
     message: RoutingMessage,
-    handlers: IMessageHandler<any>[],
+    handlers: MessageHandlerWrapper<any>[],
   ): Promise<any> {
     const errors: HandlerError[] = [];
 
     if (1 === handlers.length) {
-      const handler = handlers[0];
+      const handler = handlers[0].handler;
       this.logHandlerMessage(
         handler.constructor.name,
         message.messageRoutingKey,
@@ -65,24 +68,19 @@ export class HandlerMiddleware implements Middleware {
       }
     }
 
-    const results = await Promise.allSettled(
-      handlers.map(async (handler) => {
-        try {
-          this.logHandlerMessage(
-            handler.constructor.name,
-            message.messageRoutingKey,
-          );
-          return await handler.handle(
-            this.convertToInstance(handler, message.message),
-          );
-        } catch (err) {
-          return Promise.reject({
-            handler: handler.constructor.name,
-            error: err instanceof Error ? err : new Error(String(err)),
-          });
-        }
-      }),
-    );
+    const results: PromiseSettledResult<unknown>[] = [];
+    const priorities = [
+      ...new Set(handlers.map(({ priority }) => priority)),
+    ].sort((first, second) => second - first);
+
+    for (const priority of priorities) {
+      const priorityResults = await Promise.allSettled(
+        handlers
+          .filter((handler) => handler.priority === priority)
+          .map(({ handler }) => this.executeHandler(handler, message)),
+      );
+      results.push(...priorityResults);
+    }
 
     for (const result of results) {
       if (result.status === 'rejected') {
@@ -99,6 +97,26 @@ export class HandlerMiddleware implements Middleware {
     return Promise.resolve(null);
   }
 
+  private async executeHandler(
+    handler: IMessageHandler<any>,
+    message: RoutingMessage,
+  ): Promise<unknown> {
+    try {
+      this.logHandlerMessage(
+        handler.constructor.name,
+        message.messageRoutingKey,
+      );
+      return await handler.handle(
+        this.convertToInstance(handler, message.message),
+      );
+    } catch (err) {
+      return Promise.reject({
+        handler: handler.constructor.name,
+        error: err instanceof Error ? err : new Error(String(err)),
+      });
+    }
+  }
+
   private convertToInstance(handler: object, message: object): object {
     const instance = Reflect.getMetadata(
       'design:paramtypes',
@@ -110,7 +128,7 @@ export class HandlerMiddleware implements Middleware {
       return message;
     }
 
-    return plainToInstance(instance[0], message);
+    return plainToInstance(instance[0], structuredClone(message));
   }
 
   private logHandlerMessage(handler: string, messageRoutingKey: string): void {

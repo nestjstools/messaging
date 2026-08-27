@@ -13,7 +13,10 @@ describe('MessageHandlerRegistry', () => {
 
   test('should register a handler for a given name', () => {
     registry.register(['testEvent'], mockHandler);
-    expect(registry.getByRoutingKey('testEvent')).toContain(mockHandler);
+    expect(registry.getByRoutingKey('testEvent')).toContainEqual({
+      handler: mockHandler,
+      priority: 0,
+    });
   });
 
   test('should not register the same handler twice for the same name', () => {

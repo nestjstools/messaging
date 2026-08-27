@@ -13,11 +13,39 @@ export const MESSAGING_MESSAGE_METADATA = 'MESSAGING_MESSAGE_METADATA';
 export const MESSAGING_LIFECYCLE_HOOK_METADATA =
   'MESSAGING_LIFECYCLE_HOOK_METADATA';
 
-export const MessageHandler = (...routingKey: string[]): ClassDecorator => {
+export interface MessageHandlerOptions {
+  priority?: number;
+}
+
+export interface MessageHandlerConfig extends MessageHandlerOptions {
+  routingKey: string | string[];
+}
+
+export interface MessageHandlerMetadata {
+  routingKey: string[];
+  options?: MessageHandlerOptions;
+}
+
+export function MessageHandler(...routingKey: string[]): ClassDecorator;
+export function MessageHandler(config: MessageHandlerConfig): ClassDecorator;
+export function MessageHandler(
+  ...args: string[] | [config: MessageHandlerConfig]
+): ClassDecorator {
+  const [firstArgument] = args;
+  const metadata: MessageHandlerMetadata =
+    typeof firstArgument === 'object'
+      ? {
+          routingKey: Array.isArray(firstArgument.routingKey)
+            ? firstArgument.routingKey
+            : [firstArgument.routingKey],
+          options: { priority: firstArgument.priority },
+        }
+      : { routingKey: args as string[] };
+
   return (target) => {
-    Reflect.defineMetadata(MESSAGE_HANDLER_METADATA, routingKey, target);
+    Reflect.defineMetadata(MESSAGE_HANDLER_METADATA, metadata, target);
   };
-};
+}
 
 export const ChannelFactory = (
   channelConfig: ChannelConfig,
