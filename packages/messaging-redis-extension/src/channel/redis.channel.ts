@@ -12,8 +12,7 @@ export class RedisChannel extends Channel<RedisChannelConfig> {
       connection: this.config.connection,
       prefix: config.keyPrefix,
       defaultJobOptions: {
-        removeOnComplete: config.bullJobOptions?.removeOnComplete,
-        removeOnFail: config.bullJobOptions?.removeOnFail,
+        ...config.bullJobOptions,
       },
     });
   }
