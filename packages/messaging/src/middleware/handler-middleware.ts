@@ -128,7 +128,7 @@ export class HandlerMiddleware implements Middleware {
       return message;
     }
 
-    return plainToInstance(instance[0], structuredClone(message));
+    return plainToInstance(instance[0], message);
   }
 
   private logHandlerMessage(handler: string, messageRoutingKey: string): void {
