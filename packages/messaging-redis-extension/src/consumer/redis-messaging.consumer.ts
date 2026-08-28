@@ -41,14 +41,16 @@ export class RedisMessagingConsumer
     errored: ConsumerDispatchedMessageError,
     channel: RedisChannel,
   ): Promise<void> {
-    void errored;
     void channel;
-    return Promise.resolve();
+    // ConsumerMessageBus handles the error for logging and lifecycle hooks, but
+    // resolves afterwards. Rethrowing here makes the BullMQ processor fail so
+    // its configured attempts, backoff, and failed-job handling are applied.
+    return Promise.reject(errored.error);
   }
 
   async onModuleDestroy(): Promise<any> {
     if (this.channel) {
-      await this.worker.close();
+      await this.worker?.close();
       await this.channel.queue.close();
     }
   }

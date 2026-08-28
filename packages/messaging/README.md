@@ -33,6 +33,7 @@ message handling pipelines while ensuring flexibility and reliability.
 - [Amazon SQS channel adapter](https://www.npmjs.com/package/@nestjstools/messaging-amazon-sqs-extension)
 - [Google PubSub channel Adapter](https://www.npmjs.com/package/@nestjstools/messaging-google-pubsub-extension)
 - [Nats channel Adapter](https://www.npmjs.com/package/@nestjstools/messaging-nats-extension)
+- [MQTT channel Adapter](https://www.npmjs.com/package/@nestjstools/messaging-mqtt-extension)
 - [Azure Service Bus](https://www.npmjs.com/package/@nestjstools/messaging-azure-service-bus-extension)
 
 ---
@@ -450,4 +451,3 @@ export class AppModule {
 | **`middlewares`**                      | List of middlewares to apply to the channel.             | `[]`              |
 | **`avoidErrorsForNotExistedHandlers`** | Avoid errors if no handler is available for the message. | `false`           |
 | **`normalizer`**                       | Set your custom normalizer for messages                  |                   |
-

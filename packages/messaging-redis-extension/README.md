@@ -79,6 +79,13 @@ import {MessagingRedisExtensionModule, RedisChannelConfig} from '@nestjstools/me
                   port: 6379,
                   host: '127.0.0.1',
                },
+               bullJobOptions: {
+                  attempts: 3,
+                  backoff: {
+                     type: 'exponential',
+                     delay: 1000,
+                  },
+               },
             }),
             new RedisChannelConfig({
                name: 'redis-event',
@@ -131,6 +138,13 @@ This configuration provides a solid foundation for integrating redis as part of 
 ## Configuration options
 
 ### RedisChannel
+
+### Retries
+
+Redis channels use BullMQ jobs. Configure `bullJobOptions.attempts` and
+`bullJobOptions.backoff` to retry a message after a handler fails. A failed
+handler causes the worker job to fail, so BullMQ applies the configured retry
+policy; without `attempts`, the job is failed once and is not retried.
 
 #### **RedisChannelConfig**
 

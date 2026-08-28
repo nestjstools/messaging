@@ -65,6 +65,7 @@ Supported transports include:
 | [`@nestjstools/messaging-amazon-sqs-extension`](https://www.npmjs.com/package/@nestjstools/messaging-amazon-sqs-extension)               | Amazon SQS adapter        |
 | [`@nestjstools/messaging-google-pubsub-extension`](https://www.npmjs.com/package/@nestjstools/messaging-google-pubsub-extension)         | Google Pub/Sub adapter    |
 | [`@nestjstools/messaging-nats-extension`](https://www.npmjs.com/package/@nestjstools/messaging-nats-extension)                           | NATS adapter              |
+| [`@nestjstools/messaging-mqtt-extension`](https://www.npmjs.com/package/@nestjstools/messaging-mqtt-extension)                           | MQTT adapter              |
 | [`@nestjstools/messaging-azure-service-bus-extension`](https://www.npmjs.com/package/@nestjstools/messaging-azure-service-bus-extension) | Azure Service Bus adapter |
 
 ---

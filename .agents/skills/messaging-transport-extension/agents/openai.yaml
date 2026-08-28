@@ -1,0 +1,4 @@
+interface:
+  display_name: "Messaging Transport Extension"
+  short_description: "Create NestJS Messaging transport adapters"
+  default_prompt: "Create a new transport extension for this NestJS Messaging monorepo, following local adapter conventions and validating runtime dependency compatibility."
