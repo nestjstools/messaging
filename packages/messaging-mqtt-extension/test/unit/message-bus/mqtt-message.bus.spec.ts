@@ -1,5 +1,5 @@
-import { MqttMessageBus } from './mqtt-message.bus';
-import { MqttMessageOptions } from '../message/mqtt-message-options';
+import { MqttMessageBus } from '../../../src/message-bus/mqtt-message.bus';
+import { MqttMessageOptions } from '../../../src/message/mqtt-message-options';
 
 describe('MqttMessageBus', () => {
   it('publishes an envelope, retaining the original routing key when topic is overridden', async () => {

@@ -1,4 +1,4 @@
-import { MqttChannelConfig } from './mqtt.channel-config';
+import { MqttChannelConfig } from '../../../src/channel/mqtt.channel-config';
 
 describe('MqttChannelConfig', () => {
   it('applies MQTT defaults', () => {

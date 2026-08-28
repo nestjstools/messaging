@@ -1,5 +1,5 @@
-import { MqttChannel } from './mqtt.channel';
-import { MqttChannelConfig } from './mqtt.channel-config';
+import { MqttChannel } from '../../../src/channel/mqtt.channel';
+import { MqttChannelConfig } from '../../../src/channel/mqtt.channel-config';
 
 describe('MqttChannel', () => {
   it('closes its owned client on channel destruction', async () => {

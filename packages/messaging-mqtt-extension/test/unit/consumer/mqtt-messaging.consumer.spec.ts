@@ -1,5 +1,5 @@
-import { MqttMessagingConsumer } from './mqtt-messaging.consumer';
-import { MqttChannelConfig } from '../channel/mqtt.channel-config';
+import { MqttMessagingConsumer } from '../../../src/consumer/mqtt-messaging.consumer';
+import { MqttChannelConfig } from '../../../src/channel/mqtt.channel-config';
 
 describe('MqttMessagingConsumer', () => {
   it('uses the fixed routing key for a matching wildcard subscription', async () => {
