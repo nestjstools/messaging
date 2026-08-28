@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging-mqtt-extension",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MQTT transport extension for NestJS Messaging",
   "author": "Sebastian Iwanczyszyn",
   "license": "MIT",
