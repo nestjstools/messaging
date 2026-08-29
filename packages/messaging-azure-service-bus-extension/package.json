@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging-azure-service-bus-extension",
-  "version": "3.0.0",
+  "version": "2.2.0",
   "type": "module",
   "description": "Extension to handle messages and dispatch them over Azure service bus",
   "author": "Sebastian Iwanczyszyn",
@@ -52,8 +52,8 @@
     "@azure/service-bus": "^7.9.5"
   },
   "peerDependencies": {
-    "@nestjs/common": "^12.x",
-    "@nestjs/core": "^12.x",
+    "@nestjs/common": "^10.x || ^11.x || ^12.x",
+    "@nestjs/core": "^10.x || ^11.x || ^12.x",
     "@nestjstools/messaging": "^5.x",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.x"

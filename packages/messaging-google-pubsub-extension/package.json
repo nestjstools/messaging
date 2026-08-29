@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging-google-pubsub-extension",
-  "version": "3.0.0",
+  "version": "2.3.0",
   "type": "module",
   "description": "Extension to handle messages and dispatch them over Google PubSub",
   "author": "Sebastian Iwanczyszyn",
@@ -56,8 +56,8 @@
     "@google-cloud/pubsub": "^6.0.1"
   },
   "peerDependencies": {
-    "@nestjs/common": "^12.x",
-    "@nestjs/core": "^12.x",
+    "@nestjs/common": "^10.x || ^11.x || ^12.x",
+    "@nestjs/core": "^10.x || ^11.x || ^12.x",
     "@nestjstools/messaging": "^5.x",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.x"

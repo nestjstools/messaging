@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging-mqtt-extension",
-  "version": "2.0.0",
+  "version": "1.1.0",
   "type": "module",
   "description": "MQTT transport extension for NestJS Messaging",
   "author": "Sebastian Iwanczyszyn",
@@ -37,8 +37,8 @@
     "mqtt": "^5.14.1"
   },
   "peerDependencies": {
-    "@nestjs/common": "^12.x",
-    "@nestjs/core": "^12.x",
+    "@nestjs/common": "^10.x || ^11.x || ^12.x",
+    "@nestjs/core": "^10.x || ^11.x || ^12.x",
     "@nestjstools/messaging": "^5.x",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.x"
