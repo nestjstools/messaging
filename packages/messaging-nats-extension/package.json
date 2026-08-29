@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging-nats-extension",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Extension to handle messages and dispatch them over Nats",
   "author": "Sebastian Iwanczyszyn",
   "license": "MIT",
@@ -57,18 +57,18 @@
     "@nats-io/transport-node": "^3.4.0"
   },
   "peerDependencies": {
-    "@nestjs/common": "^10.x||^11.x",
-    "@nestjs/core": "^10.x||^11.x",
+    "@nestjs/common": "^10.x||^11.x||^12.x",
+    "@nestjs/core": "^10.x||^11.x||^12.x",
     "@nestjstools/messaging": "^4.x",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.x"
   },
   "devDependencies": {
-    "@nestjs/cli": "^11.0.0",
-    "@nestjs/common": "^11.0.0",
-    "@nestjs/core": "^11.0.0",
-    "@nestjs/schematics": "^11.0.0",
-    "@nestjs/testing": "^11.0.0",
+    "@nestjs/cli": "^12.0.0",
+    "@nestjs/common": "^12.0.0",
+    "@nestjs/core": "^12.0.0",
+    "@nestjs/schematics": "^12.0.0",
+    "@nestjs/testing": "^12.0.0",
     "@nestjstools/messaging": "4.0.0",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.2",

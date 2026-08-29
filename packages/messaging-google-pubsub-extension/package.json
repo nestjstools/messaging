@@ -1,6 +1,6 @@
 {
   "name": "@nestjstools/messaging-google-pubsub-extension",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Extension to handle messages and dispatch them over Google PubSub",
   "author": "Sebastian Iwanczyszyn",
   "publishConfig": {
@@ -55,8 +55,8 @@
     "@google-cloud/pubsub": "^6.0.1"
   },
   "peerDependencies": {
-    "@nestjs/common": "^10.x||^11.x",
-    "@nestjs/core": "^10.x||^11.x",
+    "@nestjs/common": "^10.x||^11.x||^12.x",
+    "@nestjs/core": "^10.x||^11.x||^12.x",
     "@nestjstools/messaging": "^4.x",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.x"
@@ -64,11 +64,11 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
-    "@nestjs/cli": "^11.0.0",
-    "@nestjs/common": "^11.x",
-    "@nestjs/core": "^11.x",
-    "@nestjs/schematics": "^11.0.0",
-    "@nestjs/testing": "^11.0.1",
+    "@nestjs/cli": "^12.0.0",
+    "@nestjs/common": "^12.0.0",
+    "@nestjs/core": "^12.0.0",
+    "@nestjs/schematics": "^12.0.0",
+    "@nestjs/testing": "^12.0.0",
     "@nestjstools/messaging": "4.0.0",
     "@swc/cli": "^0.6.0",
     "@swc/core": "^1.10.7",
