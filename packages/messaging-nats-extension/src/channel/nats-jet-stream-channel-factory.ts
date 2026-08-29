@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ChannelFactory, IChannelFactory } from '@nestjstools/messaging';
-import { NatsJetStreamChannelConfig } from './nats-jet-stream-channel.config';
-import { NatsJetStreamChannel } from './nats-jet-stream.channel';
+import { NatsJetStreamChannelConfig } from './nats-jet-stream-channel.config.js';
+import { NatsJetStreamChannel } from './nats-jet-stream.channel.js';
 
 @Injectable()
 @ChannelFactory(NatsJetStreamChannelConfig)

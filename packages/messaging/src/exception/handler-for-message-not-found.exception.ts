@@ -1,4 +1,4 @@
-import { MessagingException } from './messaging.exception';
+import { MessagingException } from './messaging.exception.js';
 
 export class HandlerForMessageNotFoundException extends MessagingException {
   constructor(routingKey: string) {

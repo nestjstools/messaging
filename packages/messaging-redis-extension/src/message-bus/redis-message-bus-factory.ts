@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { RedisMessageBus } from './redis-message.bus';
-import { RedisChannel } from '../channel/redis.channel';
+import { RedisMessageBus } from './redis-message.bus.js';
+import { RedisChannel } from '../channel/redis.channel.js';
 import { IMessageBusFactory } from '@nestjstools/messaging';
 import { MessageBusFactory } from '@nestjstools/messaging';
 import { IMessageBus } from '@nestjstools/messaging';

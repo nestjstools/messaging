@@ -1,6 +1,6 @@
 import { Injectable, LoggerService } from '@nestjs/common';
-import { MessagingLogger } from './messaging-logger';
-import { Log } from './log';
+import { MessagingLogger } from './messaging-logger.js';
+import { Log } from './log.js';
 
 @Injectable()
 export class NestLogger implements MessagingLogger {

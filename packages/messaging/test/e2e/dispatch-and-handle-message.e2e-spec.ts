@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, Logger } from '@nestjs/common';
-import { TestModule } from '../support/app/test.module';
+import { TestModule } from '../support/app/test.module.js';
 import {
   DefaultMessageOptions,
   IMessageBus,
   MessageResponse,
   RoutingMessage,
-} from '../../src';
-import { TestMessage } from '../support/app/test.message';
-import { SpyDataService } from '../support/app/spy-data.service';
-import { Service } from '../../src/dependency-injection/service';
-import { ObjectForwardMessageNormalizer } from '../../src/normalizer/object-forward-message.normalizer';
-import { HandlersException } from '../../src/exception/handlers.exception';
+} from '../../src.js';
+import { TestMessage } from '../support/app/test.message.js';
+import { SpyDataService } from '../support/app/spy-data.service.js';
+import { Service } from '../../src/dependency-injection/service.js';
+import { ObjectForwardMessageNormalizer } from '../../src/normalizer/object-forward-message.normalizer.js';
+import { HandlersException } from '../../src/exception/handlers.exception.js';
 
 describe('DispatchAndHandleMessage', () => {
   let app: INestApplication;

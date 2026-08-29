@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
-import { AmazonSqsMessagingConsumer } from './consumer/amazon-sqs-messaging.consumer';
-import { AmazonSqsChannelFactory } from './channel/amazon-sqs.channel-factory';
-import { AmazonSqsMessageBusFactory } from './message-bus/amazon-sqs-message-bus-factory';
+import { AmazonSqsMessagingConsumer } from './consumer/amazon-sqs-messaging.consumer.js';
+import { AmazonSqsChannelFactory } from './channel/amazon-sqs.channel-factory.js';
+import { AmazonSqsMessageBusFactory } from './message-bus/amazon-sqs-message-bus-factory.js';
 
 @Global()
 @Module({

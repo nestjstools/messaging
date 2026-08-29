@@ -6,14 +6,14 @@ import {
   MessageConsumer,
 } from '@nestjstools/messaging';
 import { Injectable } from '@nestjs/common';
-import { NatsJetStreamChannel } from '../channel/nats-jet-stream.channel';
+import { NatsJetStreamChannel } from '../channel/nats-jet-stream.channel.js';
 import {
   AckPolicy,
   DeliverPolicy,
   RetentionPolicy,
   StorageType as NatsStorageType,
 } from '@nats-io/jetstream';
-import { StorageType } from '../channel/nats-jet-stream-channel.config';
+import { StorageType } from '../channel/nats-jet-stream-channel.config.js';
 
 @Injectable()
 @MessageConsumer(NatsJetStreamChannel)
@@ -40,7 +40,7 @@ export class NatsJetStreamMessagingConsumer implements IMessagingConsumer<NatsJe
         });
       }
     } catch (err) {
-      if (err.constructor.name === 'StreamNotFoundError') {
+      if (err instanceof Error && err.constructor.name === 'StreamNotFoundError') {
         // Stream does not exist — safe to create
         await jsm.streams.add({
           name: channel.config.streamConfig.streamName,

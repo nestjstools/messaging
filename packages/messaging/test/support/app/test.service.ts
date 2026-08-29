@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SpyDataService } from './spy-data.service';
+import { SpyDataService } from './spy-data.service.js';
 
 @Injectable()
 export class TestService {

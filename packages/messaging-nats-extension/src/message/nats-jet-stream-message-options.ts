@@ -1,5 +1,5 @@
 import type { JetStreamPublishOptions } from '@nats-io/jetstream';
-import { NatsMessageOptions } from './nats-message-options';
+import { NatsMessageOptions } from './nats-message-options.js';
 
 export interface NatsJetStreamMessageOptionsProps extends Pick<
   Partial<JetStreamPublishOptions>,

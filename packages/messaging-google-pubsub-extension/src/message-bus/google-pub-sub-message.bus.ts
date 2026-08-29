@@ -1,10 +1,10 @@
 import { RoutingMessage } from '@nestjstools/messaging';
 import { IMessageBus } from '@nestjstools/messaging';
 import { Injectable } from '@nestjs/common';
-import { GooglePubSubChannel } from '../channel/google-pub-sub.channel';
+import { GooglePubSubChannel } from '../channel/google-pub-sub.channel.js';
 import { Buffer } from 'buffer';
-import { ROUTING_KEY_ATTRIBUTE_NAME } from '../const';
-import { GooglePubSubMessageOptions } from '../message/google-pub-sub-message-options';
+import { ROUTING_KEY_ATTRIBUTE_NAME } from '../const.js';
+import { GooglePubSubMessageOptions } from '../message/google-pub-sub-message-options.js';
 
 @Injectable()
 export class GooglePubSubMessageBus implements IMessageBus {

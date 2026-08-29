@@ -1,4 +1,4 @@
-import { ConsumerMessage } from './consumer-message';
+import { ConsumerMessage } from './consumer-message.js';
 
 export class ConsumerDispatchedMessageError {
   constructor(

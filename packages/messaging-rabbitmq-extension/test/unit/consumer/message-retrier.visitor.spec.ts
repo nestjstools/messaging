@@ -1,22 +1,23 @@
-import { MessageRetrierVisitor } from '../../../src/consumer/message-retrier.visitor';
-import { AmqpChannel } from '../../../src/channel/amqp.channel';
+import { type Mocked, type Mock, vi } from 'vitest';
+import { MessageRetrierVisitor } from '../../../src/consumer/message-retrier.visitor.js';
+import { AmqpChannel } from '../../../src/channel/amqp.channel.js';
 import {
   RABBITMQ_HEADER_RETRY_COUNT,
   RABBITMQ_HEADER_ROUTING_KEY,
-} from '../../../src/const';
+} from '../../../src/const.js';
 import { ConsumerDispatchedMessageError } from '@nestjstools/messaging';
 import { ChannelWrapper } from 'amqp-connection-manager';
 
 describe('MessageRetrierVisitor', () => {
   let visitor: MessageRetrierVisitor;
-  let mockAmqpChannel: jest.Mocked<ChannelWrapper>;
-  let mockChannel: jest.Mocked<AmqpChannel>;
+  let mockAmqpChannel: Mocked<ChannelWrapper>;
+  let mockChannel: Mocked<AmqpChannel>;
 
   beforeEach(() => {
     visitor = new MessageRetrierVisitor();
 
     mockAmqpChannel = {
-      publish: jest.fn().mockResolvedValue(undefined),
+      publish: vi.fn().mockResolvedValue(undefined),
     } as any;
 
     mockChannel = {

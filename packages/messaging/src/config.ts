@@ -1,8 +1,8 @@
-import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-message.normalizer';
+import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-message.normalizer.js';
 import { Type } from '@nestjs/common';
 import { DynamicModule } from '@nestjs/common/interfaces/modules/dynamic-module.interface';
 import { ForwardReference } from '@nestjs/common/interfaces/modules/forward-reference.interface';
-import { MessagingLogger } from './logger/messaging-logger';
+import { MessagingLogger } from './logger/messaging-logger.js';
 
 export type DefineChannels = ChannelConfig[];
 

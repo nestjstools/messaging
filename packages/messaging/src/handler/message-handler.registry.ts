@@ -1,6 +1,6 @@
-import { IMessageHandler } from './i-message.handler';
-import { HandlerForMessageNotFoundException } from '../exception/handler-for-message-not-found.exception';
-import { MessageHandlerOptions } from '../dependency-injection/decorator';
+import { IMessageHandler } from './i-message.handler.js';
+import { HandlerForMessageNotFoundException } from '../exception/handler-for-message-not-found.exception.js';
+import { MessageHandlerOptions } from '../dependency-injection/decorator.js';
 
 export class MessageHandlerWrapper<T> {
   constructor(

@@ -1,4 +1,4 @@
-import { NatsChannel } from '../channel/nats.channel';
+import { NatsChannel } from '../channel/nats.channel.js';
 import {
   ConsumerMessage,
   IMessagingConsumer,

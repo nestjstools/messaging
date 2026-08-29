@@ -1,5 +1,6 @@
-import { MqttMessagingConsumer } from '../../../src/consumer/mqtt-messaging.consumer';
-import { MqttChannelConfig } from '../../../src/channel/mqtt.channel-config';
+import { vi } from 'vitest';
+import { MqttMessagingConsumer } from '../../../src/consumer/mqtt-messaging.consumer.js';
+import { MqttChannelConfig } from '../../../src/channel/mqtt.channel-config.js';
 
 describe('MqttMessagingConsumer', () => {
   it('uses the fixed routing key for a matching wildcard subscription', async () => {
@@ -7,8 +8,8 @@ describe('MqttMessagingConsumer', () => {
       | ((topic: string, payload: Buffer, packet: any) => void)
       | undefined;
     const client = {
-      subscribe: jest.fn((_topics, callback) => callback()),
-      on: jest.fn((_event, callback) => {
+      subscribe: vi.fn((_topics, callback) => callback()),
+      on: vi.fn((_event, callback) => {
         listener = callback;
       }),
     };
@@ -20,9 +21,9 @@ describe('MqttMessagingConsumer', () => {
           { topicFilter: 'devices/+/status', routingKey: 'device.status' },
         ],
       }),
-      start: jest.fn().mockResolvedValue(client),
+      start: vi.fn().mockResolvedValue(client),
     };
-    const dispatcher = { dispatch: jest.fn().mockResolvedValue(undefined) };
+    const dispatcher = { dispatch: vi.fn().mockResolvedValue(undefined) };
     await new MqttMessagingConsumer().consume(
       dispatcher as any,
       channel as any,
@@ -49,10 +50,10 @@ describe('MqttMessagingConsumer', () => {
       | ((topic: string, payload: Buffer, packet: any) => void)
       | undefined;
     const client = {
-      on: jest.fn((_event, callback) => {
+      on: vi.fn((_event, callback) => {
         listener = callback;
       }),
-      subscribe: jest.fn((_topics, callback) => callback()),
+      subscribe: vi.fn((_topics, callback) => callback()),
     };
     const channel = {
       config: new MqttChannelConfig({
@@ -60,9 +61,9 @@ describe('MqttMessagingConsumer', () => {
         brokerUrl: 'mqtt://localhost',
         subscriptions: [{ topicFilter: 'orders/events' }],
       }),
-      start: jest.fn().mockResolvedValue(client),
+      start: vi.fn().mockResolvedValue(client),
     };
-    const dispatcher = { dispatch: jest.fn().mockResolvedValue(undefined) };
+    const dispatcher = { dispatch: vi.fn().mockResolvedValue(undefined) };
 
     await new MqttMessagingConsumer().consume(
       dispatcher as any,

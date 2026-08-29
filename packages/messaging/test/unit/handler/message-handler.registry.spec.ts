@@ -1,6 +1,7 @@
-import { MessageHandlerRegistry } from '../../../src/handler/message-handler.registry';
-import { IMessageHandler } from '../../../src';
-import { HandlerForMessageNotFoundException } from '../../../src/exception/handler-for-message-not-found.exception';
+import { vi } from 'vitest';
+import { MessageHandlerRegistry } from '../../../src/handler/message-handler.registry.js';
+import { IMessageHandler } from '../../../src.js';
+import { HandlerForMessageNotFoundException } from '../../../src/exception/handler-for-message-not-found.exception.js';
 
 describe('MessageHandlerRegistry', () => {
   let registry: MessageHandlerRegistry;
@@ -8,7 +9,7 @@ describe('MessageHandlerRegistry', () => {
 
   beforeEach(() => {
     registry = new MessageHandlerRegistry();
-    mockHandler = { handle: jest.fn() } as IMessageHandler<any>;
+    mockHandler = { handle: vi.fn() } as IMessageHandler<any>;
   });
 
   test('should register a handler for a given name', () => {

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { IMessageBus, RoutingMessage } from '@nestjstools/messaging';
 import type { IClientPublishOptions } from 'mqtt';
-import { MqttChannel } from '../channel/mqtt.channel';
-import { MqttMessageEnvelope } from '../message/mqtt-message-envelope';
-import { MqttMessageOptions } from '../message/mqtt-message-options';
+import { MqttChannel } from '../channel/mqtt.channel.js';
+import { MqttMessageEnvelope } from '../message/mqtt-message-envelope.js';
+import { MqttMessageOptions } from '../message/mqtt-message-options.js';
 
 @Injectable()
 export class MqttMessageBus implements IMessageBus {

@@ -1,7 +1,7 @@
-import { IMessageHandler, MessageHandler } from '../../../src';
+import { IMessageHandler, MessageHandler } from '../../../src.js';
 import { Injectable } from '@nestjs/common';
-import { TestMessage } from './test.message';
-import { TestService } from './test.service';
+import { TestMessage } from './test.message.js';
+import { TestService } from './test.service.js';
 
 @Injectable()
 @MessageHandler('message.void')

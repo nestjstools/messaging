@@ -1,7 +1,7 @@
-import { AmazonSqsChannel } from './amazon-sqs.channel';
+import { AmazonSqsChannel } from './amazon-sqs.channel.js';
 import { Injectable } from '@nestjs/common';
 import { ChannelFactory, IChannelFactory } from '@nestjstools/messaging';
-import { AmazonSqsChannelConfig } from './amazon-sqs.channel-config';
+import { AmazonSqsChannelConfig } from './amazon-sqs.channel-config.js';
 
 @Injectable()
 @ChannelFactory(AmazonSqsChannelConfig)

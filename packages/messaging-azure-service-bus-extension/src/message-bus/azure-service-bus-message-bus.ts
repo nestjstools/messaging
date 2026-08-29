@@ -1,9 +1,9 @@
 import { RoutingMessage } from '@nestjstools/messaging';
 import { IMessageBus } from '@nestjstools/messaging';
 import { Injectable } from '@nestjs/common';
-import { AzureServiceBusChannel } from '../channel/azure-service-bus.channel';
+import { AzureServiceBusChannel } from '../channel/azure-service-bus.channel.js';
 import { ServiceBusMessage } from '@azure/service-bus';
-import { ROUTING_KEY_ATTRIBUTE_NAME } from '../const';
+import { ROUTING_KEY_ATTRIBUTE_NAME } from '../const.js';
 
 @Injectable()
 export class AzureServiceBusMessageBus implements IMessageBus {

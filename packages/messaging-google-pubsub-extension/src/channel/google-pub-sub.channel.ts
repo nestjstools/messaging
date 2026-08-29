@@ -1,5 +1,5 @@
 import { Channel } from '@nestjstools/messaging';
-import { GooglePubSubChannelConfig } from './google-pub-sub.channel-config';
+import { GooglePubSubChannelConfig } from './google-pub-sub.channel-config.js';
 import { PubSub } from '@google-cloud/pubsub';
 
 export class GooglePubSubChannel extends Channel<GooglePubSubChannelConfig> {

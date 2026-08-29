@@ -1,8 +1,8 @@
-import { BaseRegistry } from '../shared/base-registry';
+import { BaseRegistry } from '../shared/base-registry.js';
 import {
   MessagingLifecycleHookListener,
   LifecycleHook,
-} from './messaging-lifecycle-hook-listener';
+} from './messaging-lifecycle-hook-listener.js';
 
 export class MessagingLifecycleHookRegistry extends BaseRegistry<MessagingLifecycleHookListener> {
   getAllByHook(hook: LifecycleHook): MessagingLifecycleHookListener[] {

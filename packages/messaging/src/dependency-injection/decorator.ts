@@ -1,5 +1,5 @@
-import { ChannelConfig } from '../config';
-import { LifecycleHook } from '../lifecycle-hook/messaging-lifecycle-hook-listener';
+import { ChannelConfig } from '../config.js';
+import { LifecycleHook } from '../lifecycle-hook/messaging-lifecycle-hook-listener.js';
 
 export const MESSAGE_HANDLER_METADATA = 'MESSAGE_HANDLER_METADATA';
 export const CHANNEL_FACTORY_METADATA = 'CHANNEL_FACTORY_METADATA';

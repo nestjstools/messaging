@@ -1,6 +1,6 @@
 import { Channel } from '@nestjstools/messaging';
 import { connect, type IClientOptions, type MqttClient } from 'mqtt';
-import { MqttChannelConfig } from './mqtt.channel-config';
+import { MqttChannelConfig } from './mqtt.channel-config.js';
 
 export class MqttChannel extends Channel<MqttChannelConfig> {
   private client?: MqttClient;

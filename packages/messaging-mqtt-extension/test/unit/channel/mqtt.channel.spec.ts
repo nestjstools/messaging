@@ -1,9 +1,10 @@
-import { MqttChannel } from '../../../src/channel/mqtt.channel';
-import { MqttChannelConfig } from '../../../src/channel/mqtt.channel-config';
+import { vi } from 'vitest';
+import { MqttChannel } from '../../../src/channel/mqtt.channel.js';
+import { MqttChannelConfig } from '../../../src/channel/mqtt.channel-config.js';
 
 describe('MqttChannel', () => {
   it('closes its owned client on channel destruction', async () => {
-    const end = jest.fn((_force, _options, callback) => callback());
+    const end = vi.fn((_force, _options, callback) => callback());
     const channel = new MqttChannel(
       new MqttChannelConfig({ name: 'events', brokerUrl: 'mqtt://localhost' }),
     );

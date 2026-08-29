@@ -1,4 +1,4 @@
-import { AmazonSqsChannel } from '../channel/amazon-sqs.channel';
+import { AmazonSqsChannel } from '../channel/amazon-sqs.channel.js';
 import {
   ConsumerMessage,
   IMessagingConsumer,

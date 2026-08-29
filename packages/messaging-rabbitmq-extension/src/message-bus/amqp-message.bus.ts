@@ -1,11 +1,11 @@
 import { RoutingMessage } from '@nestjstools/messaging';
 import { IMessageBus } from '@nestjstools/messaging';
 import { Injectable } from '@nestjs/common';
-import { AmqpChannel } from '../channel/amqp.channel';
-import { AmqpMessageOptions } from '../message/amqp-message-options';
-import { AmqpMessageBuilder } from './amqp-message.builder';
-import { RABBITMQ_HEADER_ROUTING_KEY } from '../const';
-import { ExchangeType } from '../channel/rmq-channel.config';
+import { AmqpChannel } from '../channel/amqp.channel.js';
+import { AmqpMessageOptions } from '../message/amqp-message-options.js';
+import { AmqpMessageBuilder } from './amqp-message.builder.js';
+import { RABBITMQ_HEADER_ROUTING_KEY } from '../const.js';
+import { ExchangeType } from '../channel/rmq-channel.config.js';
 import { ChannelWrapper } from 'amqp-connection-manager';
 
 @Injectable()

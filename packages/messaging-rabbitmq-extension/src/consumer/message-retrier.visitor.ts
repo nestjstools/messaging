@@ -1,13 +1,13 @@
-import { AmqpChannel } from '../channel/amqp.channel';
+import { AmqpChannel } from '../channel/amqp.channel.js';
 import {
   RABBITMQ_HEADER_RETRY_COUNT,
   RABBITMQ_HEADER_ROUTING_KEY,
-} from '../const';
+} from '../const.js';
 import { Injectable } from '@nestjs/common';
 import { ConsumerDispatchedMessageError } from '@nestjstools/messaging';
 import { ChannelWrapper } from 'amqp-connection-manager';
 import { Options } from 'amqplib';
-import { ExchangeType } from '../channel/rmq-channel.config';
+import { ExchangeType } from '../channel/rmq-channel.config.js';
 
 @Injectable()
 export class MessageRetrierVisitor {

@@ -1,7 +1,7 @@
-import { RedisChannel } from './redis.channel';
+import { RedisChannel } from './redis.channel.js';
 import { Injectable } from '@nestjs/common';
 import { ChannelFactory, IChannelFactory } from '@nestjstools/messaging';
-import { RedisChannelConfig } from './redis.channel-config';
+import { RedisChannelConfig } from './redis.channel-config.js';
 
 @Injectable()
 @ChannelFactory(RedisChannelConfig)

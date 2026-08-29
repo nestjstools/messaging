@@ -4,8 +4,8 @@ import {
   IMessageBusFactory,
   MessageBusFactory,
 } from '@nestjstools/messaging';
-import { MqttChannel } from '../channel/mqtt.channel';
-import { MqttMessageBus } from './mqtt-message.bus';
+import { MqttChannel } from '../channel/mqtt.channel.js';
+import { MqttMessageBus } from './mqtt-message.bus.js';
 @Injectable()
 @MessageBusFactory(MqttChannel)
 export class MqttMessageBusFactory implements IMessageBusFactory<MqttChannel> {

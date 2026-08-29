@@ -1,6 +1,6 @@
-import { Channel } from './channel';
-import { MessagingLogger } from '../logger/messaging-logger';
-import { MessagingException } from '../exception/messaging.exception';
+import { Channel } from './channel.js';
+import { MessagingLogger } from '../logger/messaging-logger.js';
+import { MessagingException } from '../exception/messaging.exception.js';
 
 export class ChannelRegistry {
   private registry: Map<string, Channel<any>> = new Map();

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { IChannelFactory } from '../i-channel-factory';
-import { ChannelFactory } from '../../dependency-injection/decorator';
-import { ChannelConfig, InMemoryChannelConfig } from '../../config';
-import { Channel } from '../channel';
-import { InMemoryChannel } from '../in-memory.channel';
-import { InvalidChannelConfigException } from '../../exception/invalid-channel-config.exception';
+import { IChannelFactory } from '../i-channel-factory.js';
+import { ChannelFactory } from '../../dependency-injection/decorator.js';
+import { ChannelConfig, InMemoryChannelConfig } from '../../config.js';
+import { Channel } from '../channel.js';
+import { InMemoryChannel } from '../in-memory.channel.js';
+import { InvalidChannelConfigException } from '../../exception/invalid-channel-config.exception.js';
 
 @Injectable()
 @ChannelFactory(InMemoryChannelConfig)

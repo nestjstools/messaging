@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { NatsMessageBus } from './nats-message-bus';
+import { NatsMessageBus } from './nats-message-bus.js';
 import { IMessageBusFactory } from '@nestjstools/messaging';
 import { MessageBusFactory } from '@nestjstools/messaging';
 import { IMessageBus } from '@nestjstools/messaging';
-import { NatsChannel } from '../channel/nats.channel';
+import { NatsChannel } from '../channel/nats.channel.js';
 
 @Injectable()
 @MessageBusFactory(NatsChannel)

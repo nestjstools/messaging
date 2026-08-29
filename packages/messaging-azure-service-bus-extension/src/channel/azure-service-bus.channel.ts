@@ -2,7 +2,7 @@ import { Channel } from '@nestjstools/messaging';
 import {
   AzureServiceBusChannelConfig,
   Mode,
-} from './azure-service-bus-channel.config';
+} from './azure-service-bus-channel.config.js';
 import {
   ServiceBusAdministrationClient,
   ServiceBusClient,

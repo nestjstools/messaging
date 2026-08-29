@@ -3,9 +3,9 @@ import {
   Middleware,
   MiddlewareContext,
   RoutingMessage,
-} from '../../../src';
+} from '../../../src.js';
 import { Injectable } from '@nestjs/common';
-import { SpyDataService } from './spy-data.service';
+import { SpyDataService } from './spy-data.service.js';
 
 @Injectable()
 @MessagingMiddleware('spy_logger_middleware')

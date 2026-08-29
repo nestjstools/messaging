@@ -1,5 +1,5 @@
-import { ConsumerDispatchedMessageError } from './consumer-dispatched-message-error';
-import { ConsumerMessageBus } from '../bus/consumer.message-bus';
+import { ConsumerDispatchedMessageError } from './consumer-dispatched-message-error.js';
+import { ConsumerMessageBus } from '../bus/consumer.message-bus.js';
 
 export interface IMessagingConsumer<T> {
   consume(dispatcher: ConsumerMessageBus, channel: T): Promise<void>;

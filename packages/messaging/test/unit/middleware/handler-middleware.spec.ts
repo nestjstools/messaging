@@ -1,11 +1,12 @@
-import { HandlerMiddleware } from '../../../src/middleware/handler-middleware';
-import { MessageHandlerRegistry } from '../../../src/handler/message-handler.registry';
-import { SpyLogger } from '../../support/logger/spy.logger';
+import { vi } from 'vitest';
+import { HandlerMiddleware } from '../../../src/middleware/handler-middleware.js';
+import { MessageHandlerRegistry } from '../../../src/handler/message-handler.registry.js';
+import { SpyLogger } from '../../support/logger/spy.logger.js';
 import {
   IMessageHandler,
   MiddlewareContext,
   RoutingMessage,
-} from '../../../src';
+} from '../../../src.js';
 
 describe('HandlerMiddleware', () => {
   let logger: SpyLogger;
@@ -15,7 +16,7 @@ describe('HandlerMiddleware', () => {
     logger = SpyLogger.create();
     registry = new MessageHandlerRegistry();
     registry.register(['abc'], {
-      handle: jest.fn(() => null),
+      handle: vi.fn(() => null),
     } as IMessageHandler<any>);
   });
 
@@ -40,11 +41,11 @@ describe('HandlerMiddleware', () => {
 
   test('should wrap rejected handler errors when multiple handlers are registered', async () => {
     const firstHandler = {
-      handle: jest.fn(() => Promise.resolve()),
+      handle: vi.fn(() => Promise.resolve()),
     } as IMessageHandler<any>;
 
     const secondHandler = {
-      handle: jest.fn(() => Promise.reject(new Error('Expected error'))),
+      handle: vi.fn(() => Promise.reject(new Error('Expected error'))),
     } as IMessageHandler<any>;
 
     registry = new MessageHandlerRegistry();
@@ -71,12 +72,12 @@ describe('HandlerMiddleware', () => {
   test('should execute higher-priority handlers before lower-priority handlers', async () => {
     const executionOrder: string[] = [];
     const lowerPriorityHandler = {
-      handle: jest.fn(async () => {
+      handle: vi.fn(async () => {
         executionOrder.push('lower');
       }),
     } as IMessageHandler<any>;
     const higherPriorityHandler = {
-      handle: jest.fn(async () => {
+      handle: vi.fn(async () => {
         executionOrder.push('higher:start');
         await Promise.resolve();
         executionOrder.push('higher:end');

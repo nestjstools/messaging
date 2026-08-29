@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ExceptionListenerRegistry } from './exception-listener.registry';
-import { Service } from '../dependency-injection/service';
-import { ExceptionContext } from './exception-context';
+import { ExceptionListenerRegistry } from './exception-listener.registry.js';
+import { Service } from '../dependency-injection/service.js';
+import { ExceptionContext } from './exception-context.js';
 
 @Injectable()
 export class ExceptionListenerHandler {

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { MessagingLifecycleHookRegistry } from './messaging-lifecycle-hook.registry';
+import { MessagingLifecycleHookRegistry } from './messaging-lifecycle-hook.registry.js';
 import {
   LifecycleHook,
   HookMessage,
-} from './messaging-lifecycle-hook-listener';
+} from './messaging-lifecycle-hook-listener.js';
 
 @Injectable()
 export class MessagingLifecycleHookHandler {

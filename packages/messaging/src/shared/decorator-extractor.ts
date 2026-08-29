@@ -1,4 +1,4 @@
-import { MESSAGING_MIDDLEWARE_METADATA } from '../dependency-injection/decorator';
+import { MESSAGING_MIDDLEWARE_METADATA } from '../dependency-injection/decorator.js';
 
 export class DecoratorExtractor {
   static extractMessageMiddleware(instance: object): string {

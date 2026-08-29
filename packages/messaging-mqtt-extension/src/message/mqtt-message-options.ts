@@ -1,5 +1,5 @@
 import type { IClientPublishOptions } from 'mqtt';
-import type { MqttQoS } from '../channel/mqtt.channel-config';
+import type { MqttQoS } from '../channel/mqtt.channel-config.js';
 
 export interface MqttV5Properties extends NonNullable<
   IClientPublishOptions['properties']

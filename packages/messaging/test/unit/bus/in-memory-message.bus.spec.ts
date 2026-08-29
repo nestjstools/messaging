@@ -1,14 +1,15 @@
+import { vi } from 'vitest';
 import {
   IMessageHandler,
   InMemoryMessageBus,
   Middleware,
   RoutingMessage,
-} from '../../../src';
-import { MessageHandlerRegistry } from '../../../src/handler/message-handler.registry';
-import { MiddlewareRegistry } from '../../../src/middleware/middleware.registry';
-import { InMemoryChannel } from '../../../src/channel/in-memory.channel';
-import { NormalizerRegistry } from '../../../src/normalizer/normalizer.registry';
-import { MessagingLifecycleHookHandler } from '../../../src/lifecycle-hook/messaging-lifecycle-hook-handler';
+} from '../../../src.js';
+import { MessageHandlerRegistry } from '../../../src/handler/message-handler.registry.js';
+import { MiddlewareRegistry } from '../../../src/middleware/middleware.registry.js';
+import { InMemoryChannel } from '../../../src/channel/in-memory.channel.js';
+import { NormalizerRegistry } from '../../../src/normalizer/normalizer.registry.js';
+import { MessagingLifecycleHookHandler } from '../../../src/lifecycle-hook/messaging-lifecycle-hook-handler.js';
 
 describe('InMemoryMessageBus', () => {
   let handlerRegistry: MessageHandlerRegistry;
@@ -22,14 +23,14 @@ describe('InMemoryMessageBus', () => {
     middlewareRegistry = new MiddlewareRegistry();
     normalizerRegistry = new NormalizerRegistry();
     messagingHookHandler = {
-      handleAfterConsumerDispatchMessage: jest.fn(),
-      handleAfterMessageDenormalized: jest.fn(),
-      handleBeforeMessageHandler: jest.fn(),
-      handleAfterMessageHandlerExecuted: jest.fn(),
+      handleAfterConsumerDispatchMessage: vi.fn(),
+      handleAfterMessageDenormalized: vi.fn(),
+      handleBeforeMessageHandler: vi.fn(),
+      handleAfterMessageHandlerExecuted: vi.fn(),
     } as unknown as MessagingLifecycleHookHandler;
 
     defaultMiddleware = {
-      process: jest.fn().mockImplementation(() => {
+      process: vi.fn().mockImplementation(() => {
         return { response: 'response from mocked handler' };
       }),
     } as unknown as Middleware;
@@ -92,7 +93,7 @@ describe('InMemoryMessageBus', () => {
 
   it('should run middlewares at the end', async () => {
     const handler = {
-      handle: jest.fn(),
+      handle: vi.fn(),
     } as unknown as IMessageHandler<any>;
 
     handlerRegistry.register(['my_routing.key'], handler);

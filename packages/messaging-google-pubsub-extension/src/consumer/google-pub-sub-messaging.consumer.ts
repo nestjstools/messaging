@@ -1,4 +1,4 @@
-import { GooglePubSubChannel } from '../channel/google-pub-sub.channel';
+import { GooglePubSubChannel } from '../channel/google-pub-sub.channel.js';
 import {
   ConsumerMessage,
   IMessagingConsumer,
@@ -7,12 +7,12 @@ import {
   ConsumerMessageBus,
 } from '@nestjstools/messaging';
 import { Injectable } from '@nestjs/common';
-import { ROUTING_KEY_ATTRIBUTE_NAME } from '../const';
+import { ROUTING_KEY_ATTRIBUTE_NAME } from '../const.js';
 
 @Injectable()
 @MessageConsumer(GooglePubSubChannel)
 export class GooglePubSubMessagingConsumer implements IMessagingConsumer<GooglePubSubChannel> {
-  private channel: GooglePubSubChannel;
+  private channel!: GooglePubSubChannel;
 
   async consume(
     dispatcher: ConsumerMessageBus,

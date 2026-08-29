@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { MessageResponse } from '../message/message-response';
-import { IMessageBus } from './i-message-bus';
-import { MessageBusCollection } from './message-bus.collection';
-import { RoutingMessage } from '../message/routing-message';
-import { MessageFactory } from '../message/message.factory';
-import { NormalizerRegistry } from '../normalizer/normalizer.registry';
-import { MessagingLifecycleHookHandler } from '../lifecycle-hook/messaging-lifecycle-hook-handler';
-import { HookMessage } from '../lifecycle-hook/messaging-lifecycle-hook-listener';
+import { MessageResponse } from '../message/message-response.js';
+import { IMessageBus } from './i-message-bus.js';
+import { MessageBusCollection } from './message-bus.collection.js';
+import { RoutingMessage } from '../message/routing-message.js';
+import { MessageFactory } from '../message/message.factory.js';
+import { NormalizerRegistry } from '../normalizer/normalizer.registry.js';
+import { MessagingLifecycleHookHandler } from '../lifecycle-hook/messaging-lifecycle-hook-handler.js';
+import { HookMessage } from '../lifecycle-hook/messaging-lifecycle-hook-listener.js';
 
 @Injectable()
 export class DistributedMessageBus implements IMessageBus {

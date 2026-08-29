@@ -6,7 +6,7 @@ import {
   ConsumerDispatchedMessageError,
 } from '@nestjstools/messaging';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
-import { RedisChannel } from '../channel/redis.channel';
+import { RedisChannel } from '../channel/redis.channel.js';
 import { Worker } from 'bullmq';
 
 @Injectable()

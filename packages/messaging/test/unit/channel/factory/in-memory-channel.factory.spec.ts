@@ -3,8 +3,8 @@ import {
   InMemoryChannelConfig,
   InMemoryChannelFactory,
   InvalidChannelConfigException,
-} from '../../../../src';
-import { InMemoryChannel } from '../../../../src/channel/in-memory.channel';
+} from '../../../../src.js';
+import { InMemoryChannel } from '../../../../src/channel/in-memory.channel.js';
 
 describe('InMemoryChannelFactory', () => {
   let factory: InMemoryChannelFactory;

@@ -1,5 +1,5 @@
-import { DefaultMessageOptions } from './default-message-options';
-import { Message } from './message';
+import { DefaultMessageOptions } from './default-message-options.js';
+import { Message } from './message.js';
 
 export class SealedRoutingMessage implements Message {
   constructor(

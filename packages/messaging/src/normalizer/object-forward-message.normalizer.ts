@@ -1,6 +1,6 @@
-import { MessageNormalizer } from './message-normalizer';
-import { MessagingNormalizer } from '../dependency-injection/decorator';
-import { MessagingException } from '../exception/messaging.exception';
+import { MessageNormalizer } from './message-normalizer.js';
+import { MessagingNormalizer } from '../dependency-injection/decorator.js';
+import { MessagingException } from '../exception/messaging.exception.js';
 
 @MessagingNormalizer()
 export class ObjectForwardMessageNormalizer implements MessageNormalizer {

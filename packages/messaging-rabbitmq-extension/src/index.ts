@@ -1,3 +1,3 @@
-export * from './messaging-rabbitmq-extension.module';
-export * from './channel/rmq-channel.config';
-export * from './message/amqp-message-options';
+export * from './messaging-rabbitmq-extension.module.js';
+export * from './channel/rmq-channel.config.js';
+export * from './message/amqp-message-options.js';
