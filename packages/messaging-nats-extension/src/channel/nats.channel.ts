@@ -1,5 +1,5 @@
 import { Channel } from '@nestjstools/messaging';
-import { NatsChannelConfig } from './nats-channel.config';
+import { NatsChannelConfig } from './nats-channel.config.js';
 import { NatsConnection } from '@nats-io/nats-core';
 import { connect } from '@nats-io/transport-node';
 

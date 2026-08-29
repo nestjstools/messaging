@@ -1,6 +1,7 @@
-import { MiddlewareRegistry } from '../../../src/middleware/middleware.registry';
-import { Middleware } from '../../../src';
-import { MessagingException } from '../../../src/exception/messaging.exception';
+import { vi } from 'vitest';
+import { MiddlewareRegistry } from '../../../src/middleware/middleware.registry.js';
+import { Middleware } from '../../../src.js';
+import { MessagingException } from '../../../src/exception/messaging.exception.js';
 
 describe('MiddlewareRegistry', () => {
   let registry: MiddlewareRegistry;
@@ -8,7 +9,7 @@ describe('MiddlewareRegistry', () => {
 
   beforeEach(() => {
     registry = new MiddlewareRegistry();
-    mockMiddleware = { execute: jest.fn() } as unknown as Middleware;
+    mockMiddleware = { execute: vi.fn() } as unknown as Middleware;
   });
 
   test('should register a middleware for a given name', () => {
@@ -30,7 +31,7 @@ describe('MiddlewareRegistry', () => {
 
   test('should retrieve all registered middleware', () => {
     const anotherMockMiddleware = {
-      execute: jest.fn(),
+      execute: vi.fn(),
     } as unknown as Middleware;
     registry.register('middleware1', mockMiddleware);
     registry.register('middleware2', anotherMockMiddleware);

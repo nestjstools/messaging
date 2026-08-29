@@ -7,8 +7,8 @@ import {
   MessageConsumer,
 } from '@nestjstools/messaging';
 import type { IPublishPacket } from 'mqtt';
-import { MqttChannel } from '../channel/mqtt.channel';
-import type { MqttMessageEnvelope } from '../message/mqtt-message-envelope';
+import { MqttChannel } from '../channel/mqtt.channel.js';
+import type { MqttMessageEnvelope } from '../message/mqtt-message-envelope.js';
 
 @Injectable()
 @MessageConsumer(MqttChannel)

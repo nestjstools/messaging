@@ -1,5 +1,5 @@
 import { Channel } from '@nestjstools/messaging';
-import { AmazonSqsChannelConfig } from './amazon-sqs.channel-config';
+import { AmazonSqsChannelConfig } from './amazon-sqs.channel-config.js';
 import { CreateQueueCommand, SQSClient } from '@aws-sdk/client-sqs';
 
 export class AmazonSqsChannel extends Channel<AmazonSqsChannelConfig> {

@@ -1,7 +1,7 @@
-import { GooglePubSubChannel } from './google-pub-sub.channel';
+import { GooglePubSubChannel } from './google-pub-sub.channel.js';
 import { Injectable } from '@nestjs/common';
 import { ChannelFactory, IChannelFactory } from '@nestjstools/messaging';
-import { GooglePubSubChannelConfig } from './google-pub-sub.channel-config';
+import { GooglePubSubChannelConfig } from './google-pub-sub.channel-config.js';
 
 @Injectable()
 @ChannelFactory(GooglePubSubChannelConfig)

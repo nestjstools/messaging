@@ -2,8 +2,8 @@ import { RoutingMessage } from '@nestjstools/messaging';
 import { IMessageBus } from '@nestjstools/messaging';
 import { Injectable } from '@nestjs/common';
 import { headers } from '@nats-io/nats-core';
-import { NatsJetStreamChannel } from '../channel/nats-jet-stream.channel';
-import { NatsJetStreamMessageOptions } from '../message/nats-jet-stream-message-options';
+import { NatsJetStreamChannel } from '../channel/nats-jet-stream.channel.js';
+import { NatsJetStreamMessageOptions } from '../message/nats-jet-stream-message-options.js';
 
 @Injectable()
 export class NatsJetStreamMessageBus implements IMessageBus {
@@ -20,6 +20,8 @@ export class NatsJetStreamMessageBus implements IMessageBus {
         `Message options must be a ${NatsJetStreamMessageOptions.name} object`,
       );
     }
+    const natsMessageOptions =
+      messageOptions as NatsJetStreamMessageOptions | undefined;
 
     const js = await this.channel.jetStreamClient();
 
@@ -33,8 +35,8 @@ export class NatsJetStreamMessageBus implements IMessageBus {
       routingKey = message.messageRoutingKey;
     }
 
-    if (messageOptions instanceof NatsJetStreamMessageOptions) {
-      for (const [key, value] of Object.entries(messageOptions.headers)) {
+    if (natsMessageOptions) {
+      for (const [key, value] of Object.entries(natsMessageOptions.headers)) {
         h.set(key, value);
       }
     }
@@ -43,15 +45,17 @@ export class NatsJetStreamMessageBus implements IMessageBus {
 
     js.publish(routingKey, JSON.stringify(message.message), {
       headers: h,
-      ...(messageOptions?.ttl !== undefined ? { ttl: messageOptions.ttl } : {}),
-      ...(messageOptions?.retries !== undefined
-        ? { retries: messageOptions.retries }
+      ...(natsMessageOptions?.ttl !== undefined
+        ? { ttl: natsMessageOptions.ttl }
         : {}),
-      ...(messageOptions?.schedule !== undefined
-        ? { schedule: messageOptions.schedule }
+      ...(natsMessageOptions?.retries !== undefined
+        ? { retries: natsMessageOptions.retries }
         : {}),
-      ...(messageOptions?.timeout !== undefined
-        ? { timeout: messageOptions.timeout }
+      ...(natsMessageOptions?.schedule !== undefined
+        ? { schedule: natsMessageOptions.schedule }
+        : {}),
+      ...(natsMessageOptions?.timeout !== undefined
+        ? { timeout: natsMessageOptions.timeout }
         : {}),
     }).catch((err) => {});
   }

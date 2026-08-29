@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { DiscoveryService } from '@nestjs/core';
-import { Channel } from '../channel';
-import { ChannelConfig } from '../../config';
-import { CHANNEL_FACTORY_METADATA } from '../../dependency-injection/decorator';
-import { UnsupportedChannelFactoryException } from '../../exception/unsupported-channel-factory.exception';
+import { Channel } from '../channel.js';
+import { ChannelConfig } from '../../config.js';
+import { CHANNEL_FACTORY_METADATA } from '../../dependency-injection/decorator.js';
+import { UnsupportedChannelFactoryException } from '../../exception/unsupported-channel-factory.exception.js';
 
 @Injectable()
 export class CompositeChannelFactory {

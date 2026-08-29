@@ -1,4 +1,4 @@
-import { MessageAttributeValue } from '@aws-sdk/client-sqs/dist-types/models/models_0';
+import type { MessageAttributeValue } from '@aws-sdk/client-sqs';
 
 export class AmazonSqsMessageOptions {
   constructor(

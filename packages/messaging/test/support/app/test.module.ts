@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { InMemoryChannelConfig, MessagingModule } from '../../../src';
+import { InMemoryChannelConfig, MessagingModule } from '../../../src.js';
 import {
   ReturnedHandler,
   ThrowableHandler,
   VoidHandler,
   VoidSecondHandler,
-} from './test.handler';
-import { SpyDataService } from './spy-data.service';
-import { TestService } from './test.service';
-import { SpyDataMiddleware } from './spy-data-middleware.service';
+} from './test.handler.js';
+import { SpyDataService } from './spy-data.service.js';
+import { TestService } from './test.service.js';
+import { SpyDataMiddleware } from './spy-data-middleware.service.js';
 
 @Module({
   imports: [

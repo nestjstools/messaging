@@ -1,9 +1,8 @@
 import { Channel } from '@nestjstools/messaging';
-import { RedisChannelConfig } from './redis.channel-config';
+import { RedisChannelConfig } from './redis.channel-config.js';
 import { Queue } from 'bullmq';
 
 export class RedisChannel extends Channel<RedisChannelConfig> {
-  public readonly config: RedisChannelConfig;
   public readonly queue: Queue;
 
   constructor(config: RedisChannelConfig) {

@@ -1,36 +1,37 @@
+import { type Mocked, type Mock, vi } from 'vitest';
 import { ChannelWrapper } from 'amqp-connection-manager';
 import { Channel, ConsumeMessage } from 'amqplib';
 import {
   ConsumerDispatchedMessageError,
   ConsumerMessageBus,
 } from '@nestjstools/messaging';
-import { RabbitmqMessagingConsumer } from '../../../src/consumer/rabbitmq-messaging.consumer';
-import { RabbitmqMigrator } from '../../../src/migrator/rabbitmq.migrator';
-import { MessageRetrierVisitor } from '../../../src/consumer/message-retrier.visitor';
-import { MessageDeadLetterVisitor } from '../../../src/consumer/message-dead-letter.visitor';
-import { AmqpChannel } from '../../../src/channel/amqp.channel';
+import { RabbitmqMessagingConsumer } from '../../../src/consumer/rabbitmq-messaging.consumer.js';
+import { RabbitmqMigrator } from '../../../src/migrator/rabbitmq.migrator.js';
+import { MessageRetrierVisitor } from '../../../src/consumer/message-retrier.visitor.js';
+import { MessageDeadLetterVisitor } from '../../../src/consumer/message-dead-letter.visitor.js';
+import { AmqpChannel } from '../../../src/channel/amqp.channel.js';
 import {
   RABBITMQ_HEADER_RETRY_COUNT,
   RABBITMQ_HEADER_ROUTING_KEY,
-} from '../../../src/const';
+} from '../../../src/const.js';
 
 describe('RabbitmqMessagingConsumer', () => {
   let consumer: RabbitmqMessagingConsumer;
-  let mockMigrator: jest.Mocked<RabbitmqMigrator>;
-  let mockRetrier: jest.Mocked<MessageRetrierVisitor>;
-  let mockDeadLetter: jest.Mocked<MessageDeadLetterVisitor>;
+  let mockMigrator: Mocked<RabbitmqMigrator>;
+  let mockRetrier: Mocked<MessageRetrierVisitor>;
+  let mockDeadLetter: Mocked<MessageDeadLetterVisitor>;
 
   beforeEach(() => {
     mockMigrator = {
-      run: jest.fn().mockResolvedValue(undefined),
+      run: vi.fn().mockResolvedValue(undefined),
     } as any;
 
     mockRetrier = {
-      retryMessage: jest.fn().mockResolvedValue(undefined),
+      retryMessage: vi.fn().mockResolvedValue(undefined),
     } as any;
 
     mockDeadLetter = {
-      sendToDeadLetter: jest.fn().mockResolvedValue(undefined),
+      sendToDeadLetter: vi.fn().mockResolvedValue(undefined),
     } as any;
 
     consumer = new RabbitmqMessagingConsumer(
@@ -43,18 +44,18 @@ describe('RabbitmqMessagingConsumer', () => {
   describe('consume', () => {
     const createChannel = (overrides?: Partial<AmqpChannel>): AmqpChannel => {
       const rawChannel = {
-        consume: jest.fn(),
-        prefetch: jest.fn().mockResolvedValue(undefined),
-        ack: jest.fn(),
-        nack: jest.fn(),
-      } as unknown as jest.Mocked<Channel>;
+        consume: vi.fn(),
+        prefetch: vi.fn().mockResolvedValue(undefined),
+        ack: vi.fn(),
+        nack: vi.fn(),
+      } as unknown as Mocked<Channel>;
 
       const wrapper = {
-        waitForConnect: jest.fn().mockResolvedValue(undefined),
-        addSetup: jest.fn().mockImplementation(async (setupFn) => {
+        waitForConnect: vi.fn().mockResolvedValue(undefined),
+        addSetup: vi.fn().mockImplementation(async (setupFn) => {
           await setupFn(rawChannel);
         }),
-      } as unknown as jest.Mocked<ChannelWrapper>;
+      } as unknown as Mocked<ChannelWrapper>;
 
       const channel = {
         config: {
@@ -64,11 +65,11 @@ describe('RabbitmqMessagingConsumer', () => {
           deadLetterQueueFeature: true,
         },
         connection: {
-          close: jest.fn().mockResolvedValue(undefined),
+          close: vi.fn().mockResolvedValue(undefined),
         },
-        createChannelWrapper: jest.fn().mockReturnValue(wrapper),
+        createChannelWrapper: vi.fn().mockReturnValue(wrapper),
         ...overrides,
-      } as unknown as jest.Mocked<AmqpChannel>;
+      } as unknown as Mocked<AmqpChannel>;
 
       return channel;
     };
@@ -92,7 +93,7 @@ describe('RabbitmqMessagingConsumer', () => {
     it('should throw when channel has no active connection', async () => {
       const channel = createChannel({ connection: undefined });
       const dispatcher = {
-        dispatch: jest.fn(),
+        dispatch: vi.fn(),
       } as unknown as ConsumerMessageBus;
 
       await expect(consumer.consume(dispatcher, channel)).rejects.toThrow(
@@ -105,31 +106,31 @@ describe('RabbitmqMessagingConsumer', () => {
     it('should dispatch parsed message and ack with retry metadata defaults', async () => {
       const channel = createChannel();
       const dispatcher = {
-        dispatch: jest.fn().mockResolvedValue(undefined),
+        dispatch: vi.fn().mockResolvedValue(undefined),
       } as unknown as ConsumerMessageBus;
 
       await consumer.consume(dispatcher, channel);
 
       const wrapper =
-        channel.createChannelWrapper() as unknown as jest.Mocked<ChannelWrapper>;
+        channel.createChannelWrapper() as unknown as Mocked<ChannelWrapper>;
       const rawChannel = {
-        consume: jest.fn(),
-        prefetch: jest.fn().mockResolvedValue(undefined),
-        ack: jest.fn(),
-        nack: jest.fn(),
-      } as unknown as jest.Mocked<Channel>;
-      const setupFn = (wrapper.addSetup as jest.Mock).mock.calls[0][0];
+        consume: vi.fn(),
+        prefetch: vi.fn().mockResolvedValue(undefined),
+        ack: vi.fn(),
+        nack: vi.fn(),
+      } as unknown as Mocked<Channel>;
+      const setupFn = (wrapper.addSetup as Mock).mock.calls[0][0];
       await setupFn(rawChannel);
       expect(rawChannel.prefetch).toHaveBeenCalledWith(10, false);
 
-      const consumeHandler = (rawChannel.consume as jest.Mock).mock
+      const consumeHandler = (rawChannel.consume as Mock).mock
         .calls[0][1] as (msg: ConsumeMessage | null) => Promise<void>;
       const msg = createMessage({ hello: 'world' });
 
       await consumeHandler(msg);
 
       expect(dispatcher.dispatch).toHaveBeenCalledTimes(1);
-      const dispatchedMessage = (dispatcher.dispatch as jest.Mock).mock
+      const dispatchedMessage = (dispatcher.dispatch as Mock).mock
         .calls[0][0];
       expect(dispatchedMessage.message).toEqual({ hello: 'world' });
       expect(dispatchedMessage.routingKey).toBe('fallback.routing');
@@ -144,23 +145,23 @@ describe('RabbitmqMessagingConsumer', () => {
     it('should use routing key from header and retry count from metadata', async () => {
       const channel = createChannel();
       const dispatcher = {
-        dispatch: jest.fn().mockResolvedValue(undefined),
+        dispatch: vi.fn().mockResolvedValue(undefined),
       } as unknown as ConsumerMessageBus;
 
       await consumer.consume(dispatcher, channel);
 
       const wrapper =
-        channel.createChannelWrapper() as unknown as jest.Mocked<ChannelWrapper>;
+        channel.createChannelWrapper() as unknown as Mocked<ChannelWrapper>;
       const rawChannel = {
-        consume: jest.fn(),
-        prefetch: jest.fn().mockResolvedValue(undefined),
-        ack: jest.fn(),
-        nack: jest.fn(),
-      } as unknown as jest.Mocked<Channel>;
-      const setupFn = (wrapper.addSetup as jest.Mock).mock.calls[0][0];
+        consume: vi.fn(),
+        prefetch: vi.fn().mockResolvedValue(undefined),
+        ack: vi.fn(),
+        nack: vi.fn(),
+      } as unknown as Mocked<Channel>;
+      const setupFn = (wrapper.addSetup as Mock).mock.calls[0][0];
       await setupFn(rawChannel);
 
-      const consumeHandler = (rawChannel.consume as jest.Mock).mock
+      const consumeHandler = (rawChannel.consume as Mock).mock
         .calls[0][1] as (msg: ConsumeMessage | null) => Promise<void>;
       const msg = createMessage(
         { hello: 'world' },
@@ -173,7 +174,7 @@ describe('RabbitmqMessagingConsumer', () => {
 
       await consumeHandler(msg);
 
-      const dispatchedMessage = (dispatcher.dispatch as jest.Mock).mock
+      const dispatchedMessage = (dispatcher.dispatch as Mock).mock
         .calls[0][0];
       expect(dispatchedMessage.routingKey).toBe('original.routing');
       expect(dispatchedMessage.metadata).toEqual({
@@ -185,23 +186,23 @@ describe('RabbitmqMessagingConsumer', () => {
     it('should nack malformed json without requeue', async () => {
       const channel = createChannel();
       const dispatcher = {
-        dispatch: jest.fn().mockResolvedValue(undefined),
+        dispatch: vi.fn().mockResolvedValue(undefined),
       } as unknown as ConsumerMessageBus;
 
       await consumer.consume(dispatcher, channel);
 
       const wrapper =
-        channel.createChannelWrapper() as unknown as jest.Mocked<ChannelWrapper>;
+        channel.createChannelWrapper() as unknown as Mocked<ChannelWrapper>;
       const rawChannel = {
-        consume: jest.fn(),
-        prefetch: jest.fn().mockResolvedValue(undefined),
-        ack: jest.fn(),
-        nack: jest.fn(),
-      } as unknown as jest.Mocked<Channel>;
-      const setupFn = (wrapper.addSetup as jest.Mock).mock.calls[0][0];
+        consume: vi.fn(),
+        prefetch: vi.fn().mockResolvedValue(undefined),
+        ack: vi.fn(),
+        nack: vi.fn(),
+      } as unknown as Mocked<Channel>;
+      const setupFn = (wrapper.addSetup as Mock).mock.calls[0][0];
       await setupFn(rawChannel);
 
-      const consumeHandler = (rawChannel.consume as jest.Mock).mock
+      const consumeHandler = (rawChannel.consume as Mock).mock
         .calls[0][1] as (msg: ConsumeMessage | null) => Promise<void>;
       const msg = {
         content: Buffer.from('{broken-json'),
@@ -218,8 +219,8 @@ describe('RabbitmqMessagingConsumer', () => {
   });
 
   describe('onError', () => {
-    let channel: jest.Mocked<AmqpChannel>;
-    let amqpChannel: jest.Mocked<ChannelWrapper>;
+    let channel: Mocked<AmqpChannel>;
+    let amqpChannel: Mocked<ChannelWrapper>;
 
     beforeEach(() => {
       channel = {
@@ -376,7 +377,7 @@ describe('RabbitmqMessagingConsumer', () => {
 
   describe('onModuleDestroy', () => {
     it('should close all registered channel connections', async () => {
-      const close = jest.fn().mockResolvedValue(undefined);
+      const close = vi.fn().mockResolvedValue(undefined);
       const channel = {
         connection: {
           close,

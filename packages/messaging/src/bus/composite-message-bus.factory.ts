@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { DiscoveryService } from '@nestjs/core';
-import { DefaultMessageBus } from '../dependency-injection/injectable';
-import { IMessageBus } from './i-message-bus';
-import { Channel } from '../channel/channel';
-import { InMemoryChannel } from '../channel/in-memory.channel';
-import { MESSAGE_BUS_FACTORY_METADATA } from '../dependency-injection/decorator';
-import { MessagingException } from '../exception/messaging.exception';
+import { DefaultMessageBus } from '../dependency-injection/injectable.js';
+import { IMessageBus } from './i-message-bus.js';
+import { Channel } from '../channel/channel.js';
+import { InMemoryChannel } from '../channel/in-memory.channel.js';
+import { MESSAGE_BUS_FACTORY_METADATA } from '../dependency-injection/decorator.js';
+import { MessagingException } from '../exception/messaging.exception.js';
 
 @Injectable()
 export class CompositeMessageBusFactory {

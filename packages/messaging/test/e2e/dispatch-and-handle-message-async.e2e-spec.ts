@@ -5,13 +5,13 @@ import {
   IMessageBus,
   MessageResponse,
   RoutingMessage,
-} from '../../src';
-import { TestMessage } from '../support/app/test.message';
-import { SpyDataService } from '../support/app/spy-data.service';
-import { Service } from '../../src/dependency-injection/service';
-import { ObjectForwardMessageNormalizer } from '../../src/normalizer/object-forward-message.normalizer';
-import { HandlersException } from '../../src/exception/handlers.exception';
-import { TestAsyncModule } from '../support/app/test-async.module';
+} from '../../src.js';
+import { TestMessage } from '../support/app/test.message.js';
+import { SpyDataService } from '../support/app/spy-data.service.js';
+import { Service } from '../../src/dependency-injection/service.js';
+import { ObjectForwardMessageNormalizer } from '../../src/normalizer/object-forward-message.normalizer.js';
+import { HandlersException } from '../../src/exception/handlers.exception.js';
+import { TestAsyncModule } from '../support/app/test-async.module.js';
 
 /**
  * @description Same test as DispatchAndHandleMessage but test async loading MessagingModule

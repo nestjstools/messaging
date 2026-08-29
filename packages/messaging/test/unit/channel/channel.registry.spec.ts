@@ -1,7 +1,8 @@
-import { ChannelRegistry } from '../../../src/channel/channel.registry';
-import { MessagingLogger } from '../../../src/logger/messaging-logger';
-import { Channel } from '../../../src';
-import { MessagingException } from '../../../src/exception/messaging.exception';
+import { vi } from 'vitest';
+import { ChannelRegistry } from '../../../src/channel/channel.registry.js';
+import { MessagingLogger } from '../../../src/logger/messaging-logger.js';
+import { Channel } from '../../../src.js';
+import { MessagingException } from '../../../src/exception/messaging.exception.js';
 import { Logger } from '@nestjs/common';
 
 describe('ChannelRegistry', () => {
@@ -10,7 +11,7 @@ describe('ChannelRegistry', () => {
   let mockChannel: Channel<any>;
 
   beforeEach(() => {
-    mockLogger = { log: jest.fn() } as unknown as Logger;
+    mockLogger = { log: vi.fn() } as unknown as Logger;
     mockChannel = {
       config: { name: 'testChannel' },
     } as unknown as Channel<any>;

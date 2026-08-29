@@ -1,10 +1,10 @@
 import { Global, Module } from '@nestjs/common';
-import { AmqpMessageBusFactory } from './message-bus/amqp-message-bus-factory';
-import { RabbitmqMessagingConsumer } from './consumer/rabbitmq-messaging.consumer';
-import { RabbitmqMigrator } from './migrator/rabbitmq.migrator';
-import { RmqChannelFactory } from './channel/rmq-channel-factory';
-import { MessageRetrierVisitor } from './consumer/message-retrier.visitor';
-import { MessageDeadLetterVisitor } from './consumer/message-dead-letter.visitor';
+import { AmqpMessageBusFactory } from './message-bus/amqp-message-bus-factory.js';
+import { RabbitmqMessagingConsumer } from './consumer/rabbitmq-messaging.consumer.js';
+import { RabbitmqMigrator } from './migrator/rabbitmq.migrator.js';
+import { RmqChannelFactory } from './channel/rmq-channel-factory.js';
+import { MessageRetrierVisitor } from './consumer/message-retrier.visitor.js';
+import { MessageDeadLetterVisitor } from './consumer/message-dead-letter.visitor.js';
 
 @Global()
 @Module({

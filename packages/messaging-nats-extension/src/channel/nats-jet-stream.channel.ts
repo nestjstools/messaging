@@ -7,7 +7,7 @@ import {
   JetStreamManager,
 } from '@nats-io/jetstream';
 import { connect } from '@nats-io/transport-node';
-import { NatsJetStreamChannelConfig } from './nats-jet-stream-channel.config';
+import { NatsJetStreamChannelConfig } from './nats-jet-stream-channel.config.js';
 
 export class NatsJetStreamChannel extends Channel<NatsJetStreamChannelConfig> {
   public readonly client: Promise<NatsConnection>;

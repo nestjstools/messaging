@@ -1,20 +1,20 @@
-import { RoutingMessage } from '../message/routing-message';
-import { Middleware } from './middleware';
+import { RoutingMessage } from '../message/routing-message.js';
+import { Middleware } from './middleware.js';
 import {
   MessageHandlerRegistry,
   MessageHandlerWrapper,
-} from '../handler/message-handler.registry';
+} from '../handler/message-handler.registry.js';
 import { Inject, Injectable } from '@nestjs/common';
-import { Service } from '../dependency-injection/service';
-import { MessagingMiddleware } from '../dependency-injection/decorator';
-import { MiddlewareContext } from './middleware.context';
-import { IMessageHandler } from '../handler/i-message.handler';
-import { Log } from '../logger/log';
-import { MessagingLogger } from '../logger/messaging-logger';
+import { Service } from '../dependency-injection/service.js';
+import { MessagingMiddleware } from '../dependency-injection/decorator.js';
+import { MiddlewareContext } from './middleware.context.js';
+import { IMessageHandler } from '../handler/i-message.handler.js';
+import { Log } from '../logger/log.js';
+import { MessagingLogger } from '../logger/messaging-logger.js';
 import {
   HandlerError,
   HandlersException,
-} from '../exception/handlers.exception';
+} from '../exception/handlers.exception.js';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
@@ -57,7 +57,10 @@ export class HandlerMiddleware implements Middleware {
         return Promise.resolve(result);
       } catch (error) {
         const exception = new HandlersException([
-          new HandlerError(handler.constructor.name, error),
+          new HandlerError(
+            handler.constructor.name,
+            error instanceof Error ? error : new Error(String(error)),
+          ),
         ]);
         this.logHandlerErrorMessage(
           handler.constructor.name,

@@ -1,4 +1,4 @@
-import { MessagingException } from './messaging.exception';
+import { MessagingException } from './messaging.exception.js';
 
 export class HandlersException extends MessagingException {
   constructor(public readonly errors: HandlerError[]) {

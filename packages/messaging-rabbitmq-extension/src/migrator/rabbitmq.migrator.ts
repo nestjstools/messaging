@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ChannelWrapper } from 'amqp-connection-manager';
 import { Channel } from 'amqplib';
-import { AmqpChannel } from '../channel/amqp.channel';
+import { AmqpChannel } from '../channel/amqp.channel.js';
 
 @Injectable()
 export class RabbitmqMigrator {

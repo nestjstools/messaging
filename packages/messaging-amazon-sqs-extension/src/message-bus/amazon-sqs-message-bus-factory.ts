@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { AmazonSqsMessageBus } from './amazon-sqs-message.bus';
+import { AmazonSqsMessageBus } from './amazon-sqs-message.bus.js';
 import { IMessageBusFactory } from '@nestjstools/messaging';
 import { MessageBusFactory } from '@nestjstools/messaging';
 import { IMessageBus } from '@nestjstools/messaging';
-import { AmazonSqsChannel } from '../channel/amazon-sqs.channel';
+import { AmazonSqsChannel } from '../channel/amazon-sqs.channel.js';
 
 @Injectable()
 @MessageBusFactory(AmazonSqsChannel)

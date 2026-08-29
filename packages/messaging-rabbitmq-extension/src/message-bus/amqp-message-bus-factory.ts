@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { AmqpMessageBus } from './amqp-message.bus';
-import { AmqpChannel } from '../channel/amqp.channel';
+import { AmqpMessageBus } from './amqp-message.bus.js';
+import { AmqpChannel } from '../channel/amqp.channel.js';
 import { IMessageBusFactory } from '@nestjstools/messaging';
 import { MessageBusFactory } from '@nestjstools/messaging';
 import { IMessageBus } from '@nestjstools/messaging';

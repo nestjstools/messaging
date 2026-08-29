@@ -1,10 +1,10 @@
 import { RoutingMessage } from '@nestjstools/messaging';
 import { IMessageBus } from '@nestjstools/messaging';
 import { Injectable } from '@nestjs/common';
-import { AmazonSqsChannel } from '../channel/amazon-sqs.channel';
+import { AmazonSqsChannel } from '../channel/amazon-sqs.channel.js';
 import { SendMessageCommand } from '@aws-sdk/client-sqs';
-import { AmazonSqsMessageOptions } from '../message/amazon-sqs-message-options';
-import { MessageAttributeValue } from '@aws-sdk/client-sqs/dist-types/models/models_0';
+import { AmazonSqsMessageOptions } from '../message/amazon-sqs-message-options.js';
+import type { MessageAttributeValue } from '@aws-sdk/client-sqs';
 
 @Injectable()
 export class AmazonSqsMessageBus implements IMessageBus {

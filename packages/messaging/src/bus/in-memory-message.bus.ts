@@ -1,20 +1,20 @@
-import { IMessageBus } from './i-message-bus';
-import { MessageHandlerRegistry } from '../handler/message-handler.registry';
-import { MiddlewareRegistry } from '../middleware/middleware.registry';
-import { InMemoryChannel } from '../channel/in-memory.channel';
-import { HandlerMiddleware } from '../middleware/handler-middleware';
-import { MiddlewareContext } from '../middleware/middleware.context';
-import { DecoratorExtractor } from '../shared/decorator-extractor';
-import { Middleware } from '../middleware/middleware';
-import { SealedRoutingMessage } from '../message/sealed-routing-message';
-import { ObjectForwardMessageNormalizer } from '../normalizer/object-forward-message.normalizer';
-import { MessageFactory } from '../message/message.factory';
-import { Message } from '../message/message';
-import { RoutingMessage } from '../message/routing-message';
-import { NormalizerRegistry } from '../normalizer/normalizer.registry';
-import { DefaultMessageOptions } from '../message/default-message-options';
-import { MessagingLifecycleHookHandler } from '../lifecycle-hook/messaging-lifecycle-hook-handler';
-import { HookMessage } from '../lifecycle-hook/messaging-lifecycle-hook-listener';
+import { IMessageBus } from './i-message-bus.js';
+import { MessageHandlerRegistry } from '../handler/message-handler.registry.js';
+import { MiddlewareRegistry } from '../middleware/middleware.registry.js';
+import { InMemoryChannel } from '../channel/in-memory.channel.js';
+import { HandlerMiddleware } from '../middleware/handler-middleware.js';
+import { MiddlewareContext } from '../middleware/middleware.context.js';
+import { DecoratorExtractor } from '../shared/decorator-extractor.js';
+import { Middleware } from '../middleware/middleware.js';
+import { SealedRoutingMessage } from '../message/sealed-routing-message.js';
+import { ObjectForwardMessageNormalizer } from '../normalizer/object-forward-message.normalizer.js';
+import { MessageFactory } from '../message/message.factory.js';
+import { Message } from '../message/message.js';
+import { RoutingMessage } from '../message/routing-message.js';
+import { NormalizerRegistry } from '../normalizer/normalizer.registry.js';
+import { DefaultMessageOptions } from '../message/default-message-options.js';
+import { MessagingLifecycleHookHandler } from '../lifecycle-hook/messaging-lifecycle-hook-handler.js';
+import { HookMessage } from '../lifecycle-hook/messaging-lifecycle-hook-listener.js';
 
 export class InMemoryMessageBus implements IMessageBus {
   constructor(

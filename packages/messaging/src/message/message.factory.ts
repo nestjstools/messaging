@@ -1,6 +1,6 @@
-import { Message } from './message';
-import { SealedRoutingMessage } from './sealed-routing-message';
-import { RoutingMessage } from './routing-message';
+import { Message } from './message.js';
+import { SealedRoutingMessage } from './sealed-routing-message.js';
+import { RoutingMessage } from './routing-message.js';
 
 export class MessageFactory {
   static creteSealedFromMessage(

@@ -1,8 +1,8 @@
 import { RoutingMessage } from '@nestjstools/messaging';
 import { IMessageBus } from '@nestjstools/messaging';
 import { Injectable } from '@nestjs/common';
-import { RedisChannel } from '../channel/redis.channel';
-import { RedisMessageOptions } from '../message/redis-message-options';
+import { RedisChannel } from '../channel/redis.channel.js';
+import { RedisMessageOptions } from '../message/redis-message-options.js';
 
 @Injectable()
 export class RedisMessageBus implements IMessageBus {

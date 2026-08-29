@@ -1,4 +1,4 @@
-import { ExceptionListener } from './exception-listener';
-import { BaseRegistry } from '../shared/base-registry';
+import { ExceptionListener } from './exception-listener.js';
+import { BaseRegistry } from '../shared/base-registry.js';
 
 export class ExceptionListenerRegistry extends BaseRegistry<ExceptionListener> {}

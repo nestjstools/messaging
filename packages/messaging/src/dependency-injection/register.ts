@@ -1,7 +1,7 @@
 import { DiscoveryService, ModuleRef } from '@nestjs/core';
-import { MessageHandlerRegistry } from '../handler/message-handler.registry';
-import { MessagingLogger } from '../logger/messaging-logger';
-import { Service } from './service';
+import { MessageHandlerRegistry } from '../handler/message-handler.registry.js';
+import { MessagingLogger } from '../logger/messaging-logger.js';
+import { Service } from './service.js';
 import {
   MESSAGE_HANDLER_METADATA,
   MessageHandlerMetadata,
@@ -9,13 +9,13 @@ import {
   MESSAGING_LIFECYCLE_HOOK_METADATA,
   MESSAGING_MIDDLEWARE_METADATA,
   MESSAGING_NORMALIZER_METADATA,
-} from './decorator';
-import { DEFAULT_MIDDLEWARE, DEFAULT_NORMALIZER } from '../const';
-import { Registry } from '../shared/registry';
-import { MiddlewareRegistry } from '../middleware/middleware.registry';
-import { ExceptionListenerRegistry } from '../exception-listener/exception-listener.registry';
-import { NormalizerRegistry } from '../normalizer/normalizer.registry';
-import { MessagingLifecycleHookRegistry } from '../lifecycle-hook/messaging-lifecycle-hook.registry';
+} from './decorator.js';
+import { DEFAULT_MIDDLEWARE, DEFAULT_NORMALIZER } from '../const.js';
+import { Registry } from '../shared/registry.js';
+import { MiddlewareRegistry } from '../middleware/middleware.registry.js';
+import { ExceptionListenerRegistry } from '../exception-listener/exception-listener.registry.js';
+import { NormalizerRegistry } from '../normalizer/normalizer.registry.js';
+import { MessagingLifecycleHookRegistry } from '../lifecycle-hook/messaging-lifecycle-hook.registry.js';
 
 export const registerHandlers = (
   moduleRef: ModuleRef,

@@ -1,46 +1,47 @@
-import { ConsumerMessageBus } from '../../../src';
-import { IMessageBus } from '../../../src';
-import { TestChannel } from '../../support/test.channel';
-import { InMemoryChannelConfig } from '../../../src';
-import { SpyLogger } from '../../support/logger/spy.logger';
-import { IMessagingConsumer } from '../../../src';
-import { ExceptionListenerHandler } from '../../../src/exception-listener/exception-listener-handler';
-import { ConsumerMessage } from '../../../src';
-import { SealedRoutingMessage } from '../../../src/message/sealed-routing-message';
-import { DefaultMessageOptions } from '../../../src';
-import { ObjectForwardMessageNormalizer } from '../../../src/normalizer/object-forward-message.normalizer';
-import { ConsumerDispatchedMessageError } from '../../../src';
-import { HandlerError, HandlersException } from '../../../src';
-import { ExceptionContext } from '../../../src';
-import { MessagingLifecycleHookHandler } from '../../../src/lifecycle-hook/messaging-lifecycle-hook-handler';
+import { type Mock, vi } from 'vitest';
+import { ConsumerMessageBus } from '../../../src.js';
+import { IMessageBus } from '../../../src.js';
+import { TestChannel } from '../../support/test.channel.js';
+import { InMemoryChannelConfig } from '../../../src.js';
+import { SpyLogger } from '../../support/logger/spy.logger.js';
+import { IMessagingConsumer } from '../../../src.js';
+import { ExceptionListenerHandler } from '../../../src/exception-listener/exception-listener-handler.js';
+import { ConsumerMessage } from '../../../src.js';
+import { SealedRoutingMessage } from '../../../src/message/sealed-routing-message.js';
+import { DefaultMessageOptions } from '../../../src.js';
+import { ObjectForwardMessageNormalizer } from '../../../src/normalizer/object-forward-message.normalizer.js';
+import { ConsumerDispatchedMessageError } from '../../../src.js';
+import { HandlerError, HandlersException } from '../../../src.js';
+import { ExceptionContext } from '../../../src.js';
+import { MessagingLifecycleHookHandler } from '../../../src/lifecycle-hook/messaging-lifecycle-hook-handler.js';
 import { Logger } from '@nestjs/common';
-import { MessagingLifecycleHookRegistry } from '../../../src/lifecycle-hook/messaging-lifecycle-hook.registry';
+import { MessagingLifecycleHookRegistry } from '../../../src/lifecycle-hook/messaging-lifecycle-hook.registry.js';
 
 describe('ConsumerMessageBus', () => {
   let messageBus: IMessageBus;
-  let messageBusDispatchMock: jest.Mock;
+  let messageBusDispatchMock: Mock;
   let logger: SpyLogger;
   let consumer: IMessagingConsumer<any>;
-  let consumerOnErrorMock: jest.Mock;
+  let consumerOnErrorMock: Mock;
   let exceptionListenerHandler: ExceptionListenerHandler;
-  let exceptionHandlerMock: jest.Mock;
+  let exceptionHandlerMock: Mock;
   let messagingLifecycleHookHandler: MessagingLifecycleHookHandler;
   let channel: TestChannel;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
-    messageBusDispatchMock = jest.fn().mockResolvedValue(undefined);
+    messageBusDispatchMock = vi.fn().mockResolvedValue(undefined);
     messageBus = {
       dispatch: messageBusDispatchMock,
     } as unknown as IMessageBus;
     logger = new SpyLogger(new Logger(), false, false);
-    consumerOnErrorMock = jest.fn().mockResolvedValue(undefined);
+    consumerOnErrorMock = vi.fn().mockResolvedValue(undefined);
     consumer = {
-      consume: jest.fn(),
+      consume: vi.fn(),
       onError: consumerOnErrorMock,
     } as unknown as IMessagingConsumer<any>;
-    exceptionHandlerMock = jest.fn().mockResolvedValue(undefined);
+    exceptionHandlerMock = vi.fn().mockResolvedValue(undefined);
     exceptionListenerHandler = {
       handleError: exceptionHandlerMock,
     } as unknown as ExceptionListenerHandler;
@@ -87,7 +88,7 @@ describe('ConsumerMessageBus', () => {
 
   it('should call onError and exception listener when message bus dispatch throws regular error', async () => {
     const error = new Error('boom');
-    messageBusDispatchMock = jest.fn().mockRejectedValue(error);
+    messageBusDispatchMock = vi.fn().mockRejectedValue(error);
     messageBus = {
       dispatch: messageBusDispatchMock,
     } as unknown as IMessageBus;
@@ -105,8 +106,8 @@ describe('ConsumerMessageBus', () => {
     await subjectUnderTest.dispatch(consumerMessage);
 
     expect(consumer.onError).toHaveBeenCalledTimes(1);
-    const errorArg = (consumer.onError as jest.Mock).mock.calls[0][0];
-    const channelArg = (consumer.onError as jest.Mock).mock.calls[0][1];
+    const errorArg = (consumer.onError as Mock).mock.calls[0][0];
+    const channelArg = (consumer.onError as Mock).mock.calls[0][1];
     expect(errorArg).toBeInstanceOf(ConsumerDispatchedMessageError);
     expect(errorArg).toEqual(
       new ConsumerDispatchedMessageError(consumerMessage, error),
@@ -135,7 +136,7 @@ describe('ConsumerMessageBus', () => {
       new HandlerError('MyHandler', new Error('handler failed')),
     ]);
 
-    messageBusDispatchMock = jest.fn().mockRejectedValue(handlersError);
+    messageBusDispatchMock = vi.fn().mockRejectedValue(handlersError);
     messageBus = {
       dispatch: messageBusDispatchMock,
     } as unknown as IMessageBus;

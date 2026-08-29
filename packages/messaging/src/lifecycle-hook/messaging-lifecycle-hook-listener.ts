@@ -1,6 +1,6 @@
-import { ConsumerMessage } from '../consumer/consumer-message';
-import { RoutingMessage } from '../message/routing-message';
-import { SealedRoutingMessage } from '../message/sealed-routing-message';
+import { ConsumerMessage } from '../consumer/consumer-message.js';
+import { RoutingMessage } from '../message/routing-message.js';
+import { SealedRoutingMessage } from '../message/sealed-routing-message.js';
 
 export class HookMessage<T = any> {
   constructor(

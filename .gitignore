@@ -8,3 +8,7 @@ packages/*/yarn.lock
 packages/*/package-lock.json
 packages/*/node_modules
 packages/*/lib
+packages/*/tsconfig.build.tsbuildinfo
+packages/*/vitest.*.config.d.ts
+packages/*/vitest.*.config.js
+packages/*/vitest.*.config.js.map

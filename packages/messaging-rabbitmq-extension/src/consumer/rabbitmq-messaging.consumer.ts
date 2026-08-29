@@ -1,18 +1,18 @@
-import { AmqpChannel } from '../channel/amqp.channel';
+import { AmqpChannel } from '../channel/amqp.channel.js';
 import {
   RABBITMQ_HEADER_RETRY_COUNT,
   RABBITMQ_HEADER_ROUTING_KEY,
-} from '../const';
+} from '../const.js';
 import { ConsumerMessageBus, IMessagingConsumer } from '@nestjstools/messaging';
 import { ConsumerMessage } from '@nestjstools/messaging';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { MessageConsumer } from '@nestjstools/messaging';
 import { ConsumerDispatchedMessageError } from '@nestjstools/messaging';
-import { RabbitmqMigrator } from '../migrator/rabbitmq.migrator';
+import { RabbitmqMigrator } from '../migrator/rabbitmq.migrator.js';
 import { ChannelWrapper } from 'amqp-connection-manager';
 import { Channel, ConsumeMessage } from 'amqplib';
-import { MessageRetrierVisitor } from './message-retrier.visitor';
-import { MessageDeadLetterVisitor } from './message-dead-letter.visitor';
+import { MessageRetrierVisitor } from './message-retrier.visitor.js';
+import { MessageDeadLetterVisitor } from './message-dead-letter.visitor.js';
 
 @Injectable()
 @MessageConsumer(AmqpChannel)

@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DiscoveryService } from '@nestjs/core';
-import { Service } from '../dependency-injection/service';
-import { IMessageBus } from '../bus/i-message-bus';
-import { ChannelRegistry } from '../channel/channel.registry';
-import { MessagingLogger } from '../logger/messaging-logger';
-import { InMemoryChannel } from '../channel/in-memory.channel';
-import { MESSAGE_CONSUMER_METADATA } from '../dependency-injection/decorator';
-import { IMessagingConsumer } from './i-messaging-consumer';
-import { ExceptionListenerHandler } from '../exception-listener/exception-listener-handler';
-import { ConsumerMessageBus } from '../bus/consumer.message-bus';
-import { MessagingLifecycleHookHandler } from '../lifecycle-hook/messaging-lifecycle-hook-handler';
+import { Service } from '../dependency-injection/service.js';
+import { IMessageBus } from '../bus/i-message-bus.js';
+import { ChannelRegistry } from '../channel/channel.registry.js';
+import { MessagingLogger } from '../logger/messaging-logger.js';
+import { InMemoryChannel } from '../channel/in-memory.channel.js';
+import { MESSAGE_CONSUMER_METADATA } from '../dependency-injection/decorator.js';
+import { IMessagingConsumer } from './i-messaging-consumer.js';
+import { ExceptionListenerHandler } from '../exception-listener/exception-listener-handler.js';
+import { ConsumerMessageBus } from '../bus/consumer.message-bus.js';
+import { MessagingLifecycleHookHandler } from '../lifecycle-hook/messaging-lifecycle-hook-handler.js';
 
 @Injectable()
 export class DistributedConsumer {

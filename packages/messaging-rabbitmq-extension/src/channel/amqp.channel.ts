@@ -1,5 +1,5 @@
 import { Channel } from '@nestjstools/messaging';
-import { RmqChannelConfig as ExtensionAmqpChannelConfig } from './rmq-channel.config';
+import { RmqChannelConfig as ExtensionAmqpChannelConfig } from './rmq-channel.config.js';
 import {
   AmqpConnectionManager,
   ChannelWrapper,
@@ -8,11 +8,9 @@ import {
 
 export class AmqpChannel extends Channel<ExtensionAmqpChannelConfig> {
   public connection: AmqpConnectionManager;
-  public readonly config: ExtensionAmqpChannelConfig;
 
   constructor(config: ExtensionAmqpChannelConfig) {
     super(config);
-    this.config = config;
     this.connection = connect(this.config.connectionUri, {
       reconnectTimeInSeconds: 5,
       heartbeatIntervalInSeconds: 30,

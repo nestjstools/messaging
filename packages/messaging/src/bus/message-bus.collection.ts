@@ -1,5 +1,5 @@
-import { IMessageBus } from './i-message-bus';
-import { Channel } from '../channel/channel';
+import { IMessageBus } from './i-message-bus.js';
+import { Channel } from '../channel/channel.js';
 
 export class MessageBusCollection {
   constructor(private collection: Collection[] = []) {}

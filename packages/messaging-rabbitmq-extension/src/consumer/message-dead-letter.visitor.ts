@@ -1,5 +1,5 @@
-import { AmqpChannel } from '../channel/amqp.channel';
-import { RABBITMQ_HEADER_ROUTING_KEY } from '../const';
+import { AmqpChannel } from '../channel/amqp.channel.js';
+import { RABBITMQ_HEADER_ROUTING_KEY } from '../const.js';
 import { Injectable } from '@nestjs/common';
 import { ConsumerDispatchedMessageError } from '@nestjstools/messaging';
 import { ChannelWrapper } from 'amqp-connection-manager';

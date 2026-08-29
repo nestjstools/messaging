@@ -1,17 +1,18 @@
+import { type Mock, vi } from 'vitest';
 import { Logger } from '@nestjs/common';
 import { DiscoveryService } from '@nestjs/core';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
-import { InMemoryChannel } from '../../../src/channel/in-memory.channel';
-import { ChannelRegistry } from '../../../src/channel/channel.registry';
-import { DistributedConsumer } from '../../../src/consumer/distributed.consumer';
-import { IMessagingConsumer } from '../../../src';
-import { InMemoryChannelConfig } from '../../../src';
-import { SpyLogger } from '../../support/logger/spy.logger';
-import { TestChannel } from '../../support/test.channel';
-import { IMessageBus } from '../../../src';
-import { ExceptionListenerHandler } from '../../../src/exception-listener/exception-listener-handler';
-import { ConsumerMessageBus } from '../../../src';
-import { MessagingLifecycleHookHandler } from '../../../src/lifecycle-hook/messaging-lifecycle-hook-handler';
+import { InMemoryChannel } from '../../../src/channel/in-memory.channel.js';
+import { ChannelRegistry } from '../../../src/channel/channel.registry.js';
+import { DistributedConsumer } from '../../../src/consumer/distributed.consumer.js';
+import { IMessagingConsumer } from '../../../src.js';
+import { InMemoryChannelConfig } from '../../../src.js';
+import { SpyLogger } from '../../support/logger/spy.logger.js';
+import { TestChannel } from '../../support/test.channel.js';
+import { IMessageBus } from '../../../src.js';
+import { ExceptionListenerHandler } from '../../../src/exception-listener/exception-listener-handler.js';
+import { ConsumerMessageBus } from '../../../src.js';
+import { MessagingLifecycleHookHandler } from '../../../src/lifecycle-hook/messaging-lifecycle-hook-handler.js';
 
 describe('DistributedConsumer', () => {
   let subjectUnderTest: DistributedConsumer;
@@ -19,33 +20,33 @@ describe('DistributedConsumer', () => {
   let logger: SpyLogger;
   let exceptionListenerHandler: ExceptionListenerHandler;
   let discoveryService: DiscoveryService;
-  let consumeMock: jest.Mock;
-  let onErrorMock: jest.Mock;
+  let consumeMock: Mock;
+  let onErrorMock: Mock;
   let messagingLifecycleHookHandler: MessagingLifecycleHookHandler;
 
   beforeEach(() => {
     logger = new SpyLogger(new Logger(), false, false);
     exceptionListenerHandler = {
-      handleError: jest.fn(),
+      handleError: vi.fn(),
     } as unknown as ExceptionListenerHandler;
     messageBus = {
-      dispatch: jest.fn(),
+      dispatch: vi.fn(),
     } as unknown as IMessageBus;
 
     messagingLifecycleHookHandler = {
-      handleAfterMessageDenormalized: jest.fn().mockResolvedValue(undefined),
-      handleBeforeMessageHandler: jest.fn().mockResolvedValue(undefined),
-      handleAfterMessageHandlerExecuted: jest.fn().mockResolvedValue(undefined),
-      handleOnFailedMessageConsumer: jest.fn().mockResolvedValue(undefined),
-      handleBeforeMessageNormalization: jest.fn().mockResolvedValue(undefined),
-      handleAfterMessageNormalization: jest.fn().mockResolvedValue(undefined),
+      handleAfterMessageDenormalized: vi.fn().mockResolvedValue(undefined),
+      handleBeforeMessageHandler: vi.fn().mockResolvedValue(undefined),
+      handleAfterMessageHandlerExecuted: vi.fn().mockResolvedValue(undefined),
+      handleOnFailedMessageConsumer: vi.fn().mockResolvedValue(undefined),
+      handleBeforeMessageNormalization: vi.fn().mockResolvedValue(undefined),
+      handleAfterMessageNormalization: vi.fn().mockResolvedValue(undefined),
     } as unknown as MessagingLifecycleHookHandler;
 
-    consumeMock = jest.fn().mockResolvedValue(undefined);
-    onErrorMock = jest.fn().mockResolvedValue(undefined);
+    consumeMock = vi.fn().mockResolvedValue(undefined);
+    onErrorMock = vi.fn().mockResolvedValue(undefined);
 
-    Reflect.hasMetadata = jest.fn().mockReturnValue(true);
-    Reflect.getMetadata = jest.fn().mockReturnValue(TestChannel);
+    Reflect.hasMetadata = vi.fn().mockReturnValue(true);
+    Reflect.getMetadata = vi.fn().mockReturnValue(TestChannel);
   });
 
   it('should create ConsumerMessageBus and call consume for matching channel consumer', async () => {
@@ -63,7 +64,7 @@ describe('DistributedConsumer', () => {
     } as unknown as InstanceWrapper;
 
     discoveryService = {
-      getProviders: jest.fn().mockReturnValue([instanceWrapper]),
+      getProviders: vi.fn().mockReturnValue([instanceWrapper]),
     } as unknown as DiscoveryService;
 
     subjectUnderTest = new DistributedConsumer(
@@ -95,7 +96,7 @@ describe('DistributedConsumer', () => {
     );
 
     discoveryService = {
-      getProviders: jest.fn(),
+      getProviders: vi.fn(),
     } as unknown as DiscoveryService;
 
     subjectUnderTest = new DistributedConsumer(
@@ -126,7 +127,7 @@ describe('DistributedConsumer', () => {
     );
 
     discoveryService = {
-      getProviders: jest.fn(),
+      getProviders: vi.fn(),
     } as unknown as DiscoveryService;
 
     subjectUnderTest = new DistributedConsumer(
@@ -150,7 +151,7 @@ describe('DistributedConsumer', () => {
     );
 
     discoveryService = {
-      getProviders: jest.fn().mockReturnValue([]),
+      getProviders: vi.fn().mockReturnValue([]),
     } as unknown as DiscoveryService;
 
     subjectUnderTest = new DistributedConsumer(
@@ -190,7 +191,7 @@ describe('DistributedConsumer', () => {
     ] as unknown as InstanceWrapper[];
 
     discoveryService = {
-      getProviders: jest.fn().mockReturnValue(providers),
+      getProviders: vi.fn().mockReturnValue(providers),
     } as unknown as DiscoveryService;
 
     subjectUnderTest = new DistributedConsumer(

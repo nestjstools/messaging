@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { AzureServiceBusMessageBus } from './azure-service-bus-message-bus';
+import { AzureServiceBusMessageBus } from './azure-service-bus-message-bus.js';
 import { IMessageBusFactory } from '@nestjstools/messaging';
 import { MessageBusFactory } from '@nestjstools/messaging';
 import { IMessageBus } from '@nestjstools/messaging';
-import { AzureServiceBusChannel } from '../channel/azure-service-bus.channel';
+import { AzureServiceBusChannel } from '../channel/azure-service-bus.channel.js';
 
 @Injectable()
 @MessageBusFactory(AzureServiceBusChannel)

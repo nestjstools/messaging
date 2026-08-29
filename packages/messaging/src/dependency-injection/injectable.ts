@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { Service } from './service';
+import { Service } from './service.js';
 
 export const MessageBus = (busName) => Inject(busName);
 

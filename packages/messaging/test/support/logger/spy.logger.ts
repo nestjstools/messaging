@@ -1,4 +1,4 @@
-import { NestLogger } from '../../../src/logger/nest-logger';
+import { NestLogger } from '../../../src/logger/nest-logger.js';
 import { Logger } from '@nestjs/common';
 
 export class SpyLogger extends NestLogger {

@@ -1,5 +1,5 @@
-import { Registry } from './registry';
-import { MessagingException } from '../exception/messaging.exception';
+import { Registry } from './registry.js';
+import { MessagingException } from '../exception/messaging.exception.js';
 
 export abstract class BaseRegistry<T extends object> implements Registry<T> {
   protected registry: Map<string, T> = new Map();

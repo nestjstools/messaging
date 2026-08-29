@@ -1,4 +1,4 @@
-import { Middleware } from '../middleware/middleware';
+import { Middleware } from '../middleware/middleware.js';
 
 export class DefaultMessageOptions {
   constructor(

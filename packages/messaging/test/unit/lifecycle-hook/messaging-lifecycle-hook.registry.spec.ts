@@ -1,8 +1,9 @@
-import { MessagingLifecycleHookRegistry } from '../../../src/lifecycle-hook/messaging-lifecycle-hook.registry';
+import { vi } from 'vitest';
+import { MessagingLifecycleHookRegistry } from '../../../src/lifecycle-hook/messaging-lifecycle-hook.registry.js';
 import {
   LifecycleHook,
   MessagingLifecycleHookListener,
-} from '../../../src/lifecycle-hook/messaging-lifecycle-hook-listener';
+} from '../../../src/lifecycle-hook/messaging-lifecycle-hook-listener.js';
 
 describe('MessagingLifecycleHookRegistry', () => {
   let registry: MessagingLifecycleHookRegistry;
@@ -12,10 +13,10 @@ describe('MessagingLifecycleHookRegistry', () => {
   beforeEach(() => {
     registry = new MessagingLifecycleHookRegistry();
     beforeListener = {
-      on: jest.fn(),
+      on: vi.fn(),
     } as unknown as MessagingLifecycleHookListener;
     afterDenormalizedListener = {
-      on: jest.fn(),
+      on: vi.fn(),
     } as unknown as MessagingLifecycleHookListener;
   });
 

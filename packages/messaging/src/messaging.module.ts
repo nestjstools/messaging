@@ -15,38 +15,38 @@ import {
   MessagingModuleAsyncOptions,
   MessagingModuleOptions,
   MandatoryMessagingModuleOptions,
-} from './config';
-import { Service } from './dependency-injection/service';
-import { CompositeChannelFactory } from './channel/factory/composite-channel.factory';
-import { ChannelRegistry } from './channel/channel.registry';
-import { CompositeMessageBusFactory } from './bus/composite-message-bus.factory';
-import { DistributedMessageBus } from './bus/distributed-message.bus';
+} from './config.js';
+import { Service } from './dependency-injection/service.js';
+import { CompositeChannelFactory } from './channel/factory/composite-channel.factory.js';
+import { ChannelRegistry } from './channel/channel.registry.js';
+import { CompositeMessageBusFactory } from './bus/composite-message-bus.factory.js';
+import { DistributedMessageBus } from './bus/distributed-message.bus.js';
 import { DiscoveryModule, DiscoveryService, ModuleRef } from '@nestjs/core';
-import { InMemoryMessageBus } from './bus/in-memory-message.bus';
-import { MessageHandlerRegistry } from './handler/message-handler.registry';
-import { Channel } from './channel/channel';
-import { NestLogger } from './logger/nest-logger';
-import { InMemoryChannelFactory } from './channel/factory/in-memory-channel.factory';
-import { DistributedConsumer } from './consumer/distributed.consumer';
+import { InMemoryMessageBus } from './bus/in-memory-message.bus.js';
+import { MessageHandlerRegistry } from './handler/message-handler.registry.js';
+import { Channel } from './channel/channel.js';
+import { NestLogger } from './logger/nest-logger.js';
+import { InMemoryChannelFactory } from './channel/factory/in-memory-channel.factory.js';
+import { DistributedConsumer } from './consumer/distributed.consumer.js';
 import {
   registerExceptionListener,
   registerHandlers,
   registerMessagingHooks,
   registerMessageNormalizers,
   registerMiddlewares,
-} from './dependency-injection/register';
-import { MiddlewareRegistry } from './middleware/middleware.registry';
-import { InMemoryMessageBusFactory } from './bus/in-memory-message-bus.factory';
-import { InMemoryChannel } from './channel/in-memory.channel';
-import { HandlerMiddleware } from './middleware/handler-middleware';
-import { MessageBusCollection } from './bus/message-bus.collection';
-import { NormalizerRegistry } from './normalizer/normalizer.registry';
-import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-message.normalizer';
-import { ExceptionListenerRegistry } from './exception-listener/exception-listener.registry';
-import { ExceptionListenerHandler } from './exception-listener/exception-listener-handler';
-import { MessagingLogger } from './logger/messaging-logger';
-import { MessagingLifecycleHookHandler } from './lifecycle-hook/messaging-lifecycle-hook-handler';
-import { MessagingLifecycleHookRegistry } from './lifecycle-hook/messaging-lifecycle-hook.registry';
+} from './dependency-injection/register.js';
+import { MiddlewareRegistry } from './middleware/middleware.registry.js';
+import { InMemoryMessageBusFactory } from './bus/in-memory-message-bus.factory.js';
+import { InMemoryChannel } from './channel/in-memory.channel.js';
+import { HandlerMiddleware } from './middleware/handler-middleware.js';
+import { MessageBusCollection } from './bus/message-bus.collection.js';
+import { NormalizerRegistry } from './normalizer/normalizer.registry.js';
+import { ObjectForwardMessageNormalizer } from './normalizer/object-forward-message.normalizer.js';
+import { ExceptionListenerRegistry } from './exception-listener/exception-listener.registry.js';
+import { ExceptionListenerHandler } from './exception-listener/exception-listener-handler.js';
+import { MessagingLogger } from './logger/messaging-logger.js';
+import { MessagingLifecycleHookHandler } from './lifecycle-hook/messaging-lifecycle-hook-handler.js';
+import { MessagingLifecycleHookRegistry } from './lifecycle-hook/messaging-lifecycle-hook.registry.js';
 
 @Module({})
 export class MessagingModule

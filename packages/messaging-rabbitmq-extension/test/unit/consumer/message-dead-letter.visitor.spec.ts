@@ -1,19 +1,20 @@
-import { MessageDeadLetterVisitor } from '../../../src/consumer/message-dead-letter.visitor';
-import { AmqpChannel } from '../../../src/channel/amqp.channel';
-import { RABBITMQ_HEADER_ROUTING_KEY } from '../../../src/const';
+import { type Mocked, type Mock, vi } from 'vitest';
+import { MessageDeadLetterVisitor } from '../../../src/consumer/message-dead-letter.visitor.js';
+import { AmqpChannel } from '../../../src/channel/amqp.channel.js';
+import { RABBITMQ_HEADER_ROUTING_KEY } from '../../../src/const.js';
 import { ConsumerDispatchedMessageError } from '@nestjstools/messaging';
 import { ChannelWrapper } from 'amqp-connection-manager';
 
 describe('MessageDeadLetterVisitor', () => {
   let visitor: MessageDeadLetterVisitor;
-  let mockAmqpChannel: jest.Mocked<ChannelWrapper>;
-  let mockChannel: jest.Mocked<AmqpChannel>;
+  let mockAmqpChannel: Mocked<ChannelWrapper>;
+  let mockChannel: Mocked<AmqpChannel>;
 
   beforeEach(() => {
     visitor = new MessageDeadLetterVisitor();
 
     mockAmqpChannel = {
-      publish: jest.fn(),
+      publish: vi.fn(),
     } as any;
 
     mockChannel = {
