@@ -4,6 +4,8 @@ import { JobsOptions } from 'bullmq';
 export class RedisChannelConfig extends ChannelConfig {
   public readonly connection: Connection;
   public readonly queue: string;
+  /** Maximum number of messages processed concurrently per worker. Defaults to 1. */
+  public readonly concurrency?: number;
   /**
    * @description
    * This prefix is not used as RedisOptions keyPrefix, it is used as prefix for BullMQ
@@ -26,6 +28,7 @@ export class RedisChannelConfig extends ChannelConfig {
     normalizer,
     keyPrefix,
     bullJobOptions,
+    concurrency = 1,
   }: RedisChannelConfig) {
     super(
       name,
@@ -46,10 +49,15 @@ export class RedisChannelConfig extends ChannelConfig {
       throw new Error('Redis connection host and integer port are required');
     }
 
+    if (!Number.isInteger(concurrency) || concurrency < 1) {
+      throw new Error('Redis concurrency must be a positive integer');
+    }
+
     this.connection = connection;
     this.queue = queue;
     this.keyPrefix = keyPrefix;
     this.bullJobOptions = bullJobOptions;
+    this.concurrency = concurrency;
   }
 }
 
