@@ -31,6 +31,7 @@ export class RedisMessagingConsumer
       {
         connection: this.channel.config.connection,
         prefix: channel.config.keyPrefix,
+        concurrency: channel.config.concurrency,
       },
     );
 

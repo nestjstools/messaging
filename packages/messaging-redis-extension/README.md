@@ -75,6 +75,7 @@ import {MessagingRedisExtensionModule, RedisChannelConfig} from '@nestjstools/me
                middlewares: [],
                avoidErrorsForNotExistedHandlers: false,
                queue: 'command-queue',
+               concurrency: 5, // Optional; defaults to 1
                connection: {
                   port: 6379,
                   host: '127.0.0.1',
@@ -139,6 +140,14 @@ This configuration provides a solid foundation for integrating redis as part of 
 
 ### RedisChannel
 
+### Concurrency
+
+Set `concurrency` to a positive integer to control how many messages each BullMQ
+worker can process at the same time. It defaults to `1`, so each worker processes
+one message at a time. This provides a consumer limit similar to RabbitMQ's `qos`.
+The limit applies per worker, so multiple application instances can process more
+messages in total. Values greater than `1` allow messages to finish out of order.
+
 ### Retries
 
 Redis channels use BullMQ jobs. Configure `bullJobOptions.attempts` and
@@ -153,6 +162,7 @@ policy; without `attempts`, the job is failed once and is not retried.
 | **`name`**                             | Name of the Redis channel (e.g., `'redis-command'`).                 |                   |
 | **`connection`**                       | Redis connection configuration (host, port, password, db).           |                   |
 | **`queue`**                            | The Redis queue to consume messages from (e.g., `'my_app.command'`). |                   |
+| **`concurrency`**                      | Maximum concurrent messages per worker; a positive integer.          | `1`               |
 | **`enableConsumer`**                   | Enables or disables the consumer for this channel.                   | `true`            |
 | **`avoidErrorsForNotExistedHandlers`** | Avoid errors if no handler is available for the message.             | `false`           |
 | **`keyPrefix`**                        | Optional prefix for keys stored in Redis.                            |                   |
